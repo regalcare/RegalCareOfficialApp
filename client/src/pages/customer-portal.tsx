@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import MemberDashboard from "./member-dashboard";
 
 interface SignupData {
   name: string;
@@ -70,7 +71,7 @@ const plans: Plan[] = [
 ];
 
 export default function CustomerPortal() {
-  const [step, setStep] = useState<'signup' | 'plans' | 'benefits' | 'payment' | 'confirmation'>('signup');
+  const [step, setStep] = useState<'signup' | 'plans' | 'benefits' | 'payment' | 'confirmation' | 'member'>('signup');
   const [signupData, setSignupData] = useState<SignupData>({
     name: "",
     phone: "",
@@ -85,13 +86,16 @@ export default function CustomerPortal() {
     nameOnCard: "",
     billingAddress: ""
   });
+  const [createdCustomer, setCreatedCustomer] = useState<any>(null);
   const { toast } = useToast();
 
   const createCustomerMutation = useMutation({
     mutationFn: async (customerData: any) => {
-      await apiRequest("POST", "/api/customers", customerData);
+      const response = await apiRequest("POST", "/api/customers", customerData);
+      return response;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setCreatedCustomer(data);
       setStep('confirmation');
       toast({
         title: "Welcome to regal care!",
@@ -548,20 +552,39 @@ export default function CustomerPortal() {
               </p>
             </div>
 
-            <Button 
-              className="w-full" 
-              onClick={() => {
-                setStep('signup');
-                setSignupData({ name: "", phone: "", email: "", address: "" });
-                setSelectedPlan("");
-                setPaymentData({ cardNumber: "", expiryDate: "", cvv: "", nameOnCard: "", billingAddress: "" });
-              }}
-            >
-              Sign Up Another Customer
-            </Button>
+            <div className="space-y-3">
+              <Button 
+                className="w-full" 
+                onClick={() => setStep('member')}
+              >
+                Go to Member Dashboard
+              </Button>
+              <Button 
+                variant="outline"
+                className="w-full" 
+                onClick={() => {
+                  setStep('signup');
+                  setSignupData({ name: "", phone: "", email: "", address: "" });
+                  setSelectedPlan("");
+                  setPaymentData({ cardNumber: "", expiryDate: "", cvv: "", nameOnCard: "", billingAddress: "" });
+                  setCreatedCustomer(null);
+                }}
+              >
+                Sign Up Another Customer
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
+    );
+  }
+
+  if (step === 'member' && createdCustomer) {
+    return (
+      <MemberDashboard 
+        customerId={createdCustomer.id} 
+        customerData={createdCustomer}
+      />
     );
   }
 

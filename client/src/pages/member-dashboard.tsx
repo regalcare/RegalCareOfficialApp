@@ -7,11 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MessageCircle, Calendar, User, Send, Clock, CheckCircle, Phone, Mail, MapPin } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MessageCircle, Calendar, Settings, Send, Clock, CheckCircle, Phone, Mail, MapPin, X } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Customer, Message, BinCleaningAppointment } from "@shared/schema";
-import { format } from "date-fns";
+import { format, addDays, startOfWeek, isSameDay, isAfter } from "date-fns";
 
 interface MemberDashboardProps {
   customerId: number;
@@ -20,6 +21,10 @@ interface MemberDashboardProps {
 
 export default function MemberDashboard({ customerId, customerData }: MemberDashboardProps) {
   const [newMessage, setNewMessage] = useState("");
+  const [serviceDate, setServiceDate] = useState("");
+  const [serviceTime, setServiceTime] = useState("");
+  const [serviceType, setServiceType] = useState("");
+  const [binCount, setBinCount] = useState("1");
   const { toast } = useToast();
 
   const { data: messages, isLoading: messagesLoading } = useQuery<Message[]>({
@@ -51,6 +56,30 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
     },
   });
 
+  const scheduleServiceMutation = useMutation({
+    mutationFn: async (serviceData: any) => {
+      await apiRequest("POST", "/api/bin-cleaning", serviceData);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/bin-cleaning"] });
+      setServiceDate("");
+      setServiceTime("");
+      setServiceType("");
+      setBinCount("1");
+      toast({
+        title: "Service scheduled",
+        description: "Your service has been scheduled successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to schedule service. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
@@ -63,8 +92,65 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
     });
   };
 
+  const handleScheduleService = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!serviceDate || !serviceTime || !serviceType) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Calculate price based on service type
+    const servicePrice = serviceType === "bin-cleaning" ? 2500 : 5000; // $25 for bin cleaning, $50 for pressure washing
+
+    scheduleServiceMutation.mutate({
+      customerId: customerId,
+      customerName: customerData.name,
+      address: customerData.address,
+      date: serviceDate,
+      startTime: serviceTime,
+      endTime: serviceTime === "08:00" ? "09:00" : serviceTime === "10:00" ? "11:00" : serviceTime === "12:00" ? "13:00" : serviceTime === "14:00" ? "15:00" : "16:00",
+      binCount: parseInt(binCount),
+      price: servicePrice,
+      status: "scheduled",
+    });
+  };
+
   const customerMessages = messages?.filter(msg => msg.customerId === customerId) || [];
   const customerAppointments = appointments?.filter(apt => apt.customerId === customerId) || [];
+
+  // Generate calendar data for Tuesdays
+  const generateTuesdayCalendar = () => {
+    const calendar = [];
+    const today = new Date();
+    const startDate = new Date(today.getFullYear(), today.getMonth() - 2, 1); // Start 2 months ago
+    
+    for (let i = 0; i < 16; i++) { // Show 16 weeks of Tuesdays
+      const tuesday = addDays(startDate, i * 7);
+      // Find the Tuesday of this week
+      const weekStart = startOfWeek(tuesday, { weekStartsOn: 1 }); // Monday = 1
+      const tuesdayOfWeek = addDays(weekStart, 1); // Tuesday is day 1 after Monday
+      
+      // Check if this Tuesday has a completed pickup
+      const hasPickup = Math.random() > 0.3; // Simulate pickup completion
+      const isCompleted = isAfter(today, tuesdayOfWeek) ? hasPickup : false;
+      const isFuture = isAfter(tuesdayOfWeek, today);
+      
+      calendar.push({
+        date: tuesdayOfWeek,
+        isCompleted,
+        isFuture,
+        isToday: isSameDay(tuesdayOfWeek, today),
+      });
+    }
+    
+    return calendar;
+  };
+
+  const tuesdayCalendar = generateTuesdayCalendar();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -93,12 +179,12 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               Messages
             </TabsTrigger>
             <TabsTrigger value="schedule" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Schedule
+              <Settings className="h-4 w-4" />
+              Schedule a Service
             </TabsTrigger>
-            <TabsTrigger value="account" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              Account
+            <TabsTrigger value="calendar" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Calendar
             </TabsTrigger>
           </TabsList>
 
@@ -174,152 +260,231 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
+                    <Settings className="h-5 w-5" />
+                    Schedule a Service
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleScheduleService} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="serviceType">Service Type</Label>
+                        <Select value={serviceType} onValueChange={setServiceType}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select service type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="bin-cleaning">Bin Cleaning - $25</SelectItem>
+                            <SelectItem value="pressure-washing">Pressure Washing - $50</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="binCount">Number of Bins</Label>
+                        <Select value={binCount} onValueChange={setBinCount}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select number of bins" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">1 Bin</SelectItem>
+                            <SelectItem value="2">2 Bins</SelectItem>
+                            <SelectItem value="3">3 Bins</SelectItem>
+                            <SelectItem value="4">4 Bins</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="serviceDate">Service Date</Label>
+                        <Input
+                          id="serviceDate"
+                          type="date"
+                          value={serviceDate}
+                          onChange={(e) => setServiceDate(e.target.value)}
+                          min={new Date().toISOString().split('T')[0]}
+                          required
+                        />
+                        <p className="text-sm text-gray-600 mt-1">
+                          Services available Monday and Thursday only
+                        </p>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="serviceTime">Preferred Time</Label>
+                        <Select value={serviceTime} onValueChange={setServiceTime}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select time" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="08:00">8:00 AM</SelectItem>
+                            <SelectItem value="10:00">10:00 AM</SelectItem>
+                            <SelectItem value="12:00">12:00 PM</SelectItem>
+                            <SelectItem value="14:00">2:00 PM</SelectItem>
+                            <SelectItem value="16:00">4:00 PM</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h3 className="font-semibold text-blue-800 mb-2">Service Information</h3>
+                      <ul className="text-sm text-blue-700 space-y-1">
+                        <li>• Bin cleaning services available Monday and Thursday</li>
+                        <li>• Service window: 8:00 AM - 4:00 PM</li>
+                        <li>• Professional cleaning equipment used</li>
+                        <li>• Eco-friendly cleaning products</li>
+                      </ul>
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full"
+                      disabled={scheduleServiceMutation.isPending}
+                    >
+                      {scheduleServiceMutation.isPending ? 'Scheduling...' : 'Schedule Service'}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+
+              {/* Current Appointments */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Scheduled Services</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {appointmentsLoading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-pulse">Loading appointments...</div>
+                    </div>
+                  ) : customerAppointments.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      No services scheduled yet.
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {customerAppointments.map((appointment) => (
+                        <div key={appointment.id} className="border rounded-lg p-4">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className={`p-2 rounded-full ${
+                                appointment.status === 'completed' ? 'bg-green-100' : 'bg-yellow-100'
+                              }`}>
+                                {appointment.status === 'completed' ? (
+                                  <CheckCircle className="h-4 w-4 text-green-600" />
+                                ) : (
+                                  <Clock className="h-4 w-4 text-yellow-600" />
+                                )}
+                              </div>
+                              <div>
+                                <p className="font-medium">{appointment.date}</p>
+                                <p className="text-sm text-gray-600">
+                                  {appointment.startTime} - {appointment.endTime}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <Badge variant={appointment.status === 'completed' ? 'default' : 'secondary'}>
+                                {appointment.status}
+                              </Badge>
+                              <p className="text-sm text-gray-600 mt-1">
+                                {appointment.binCount} bin{appointment.binCount > 1 ? 's' : ''}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="calendar" className="mt-6">
+            <div className="grid gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
-                    Your Schedule
+                    Tuesday Pickup Calendar
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="bg-blue-50 p-4 rounded-lg">
-                      <h3 className="font-semibold text-blue-800 mb-2">Weekly Pickup Schedule</h3>
+                      <h3 className="font-semibold text-blue-800 mb-2">Your Weekly Schedule</h3>
                       <div className="flex items-center gap-2 text-blue-700">
                         <Clock className="h-4 w-4" />
-                        <span>Every Monday - Route: {customerData.route}</span>
+                        <span>Every Tuesday - Trash Bin Valet Service</span>
                       </div>
                       <p className="text-sm text-blue-600 mt-2">
                         Bins moved to curb by 7:00 AM, returned by 6:00 PM
                       </p>
                     </div>
 
-                    {appointmentsLoading ? (
-                      <div className="text-center py-8">
-                        <div className="animate-pulse">Loading appointments...</div>
+                    <div className="grid gap-3">
+                      <div className="flex items-center gap-4 text-sm">
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                          <span>Completed</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                          <span>Not Completed</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
+                          <span>Scheduled</span>
+                        </div>
                       </div>
-                    ) : customerAppointments.length === 0 ? (
-                      <div className="text-center py-8 text-gray-500">
-                        No bin cleaning appointments scheduled yet.
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        <h3 className="font-semibold">Bin Cleaning Appointments</h3>
-                        {customerAppointments.map((appointment) => (
-                          <div key={appointment.id} className="border rounded-lg p-4">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <div className={`p-2 rounded-full ${
-                                  appointment.status === 'completed' ? 'bg-green-100' : 'bg-yellow-100'
-                                }`}>
-                                  {appointment.status === 'completed' ? (
-                                    <CheckCircle className="h-4 w-4 text-green-600" />
-                                  ) : (
-                                    <Clock className="h-4 w-4 text-yellow-600" />
-                                  )}
-                                </div>
-                                <div>
-                                  <p className="font-medium">{appointment.date}</p>
-                                  <p className="text-sm text-gray-600">
-                                    {appointment.startTime} - {appointment.endTime}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <Badge variant={appointment.status === 'completed' ? 'default' : 'secondary'}>
-                                  {appointment.status}
-                                </Badge>
-                                <p className="text-sm text-gray-600 mt-1">
-                                  {appointment.binCount} bin{appointment.binCount > 1 ? 's' : ''}
-                                </p>
-                              </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {tuesdayCalendar.map((day, index) => (
+                          <div
+                            key={index}
+                            className={`p-3 rounded-lg border text-center ${
+                              day.isToday 
+                                ? 'bg-blue-100 border-blue-300' 
+                                : 'bg-white border-gray-200'
+                            }`}
+                          >
+                            <div className="text-sm font-medium text-gray-900">
+                              {format(day.date, 'MMM d')}
                             </div>
+                            <div className="text-xs text-gray-500 mb-2">
+                              {format(day.date, 'yyyy')}
+                            </div>
+                            <div className="flex justify-center">
+                              {day.isFuture ? (
+                                <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                              ) : day.isCompleted ? (
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <X className="h-4 w-4 text-red-500" />
+                              )}
+                            </div>
+                            {day.isToday && (
+                              <div className="text-xs text-blue-600 mt-1 font-medium">
+                                Today
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="account" className="mt-6">
-            <div className="grid gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    Account Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div>
-                        <Label className="text-sm font-medium text-gray-700">Name</Label>
-                        <div className="flex items-center gap-2 mt-1">
-                          <User className="h-4 w-4 text-gray-400" />
-                          <span>{customerData.name}</span>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <Label className="text-sm font-medium text-gray-700">Phone</Label>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Phone className="h-4 w-4 text-gray-400" />
-                          <span>{customerData.phone}</span>
-                        </div>
-                      </div>
-                      
-                      {customerData.email && (
-                        <div>
-                          <Label className="text-sm font-medium text-gray-700">Email</Label>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Mail className="h-4 w-4 text-gray-400" />
-                            <span>{customerData.email}</span>
-                          </div>
-                        </div>
-                      )}
-                      
-                      <div>
-                        <Label className="text-sm font-medium text-gray-700">Service Address</Label>
-                        <div className="flex items-center gap-2 mt-1">
-                          <MapPin className="h-4 w-4 text-gray-400" />
-                          <span>{customerData.address}</span>
-                        </div>
-                      </div>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="bg-gray-50 p-4 rounded-lg">
-                        <h3 className="font-semibold mb-3">Current Plan</h3>
-                        <div className="space-y-2">
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Plan:</span>
-                            <Badge variant="secondary">
-                              {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)}
-                            </Badge>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Monthly Rate:</span>
-                            <span className="font-semibold">${customerData.monthlyRate}</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Status:</span>
-                            <Badge variant={customerData.status === 'active' ? 'default' : 'secondary'}>
-                              {customerData.status}
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="bg-blue-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-blue-800 mb-2">Need Help?</h3>
-                        <p className="text-sm text-blue-700 mb-3">
-                          Contact our customer service team for any questions or concerns.
-                        </p>
-                        <Button variant="outline" size="sm">
-                          Contact Support
-                        </Button>
-                      </div>
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <h3 className="font-semibold mb-2">Service Notes</h3>
+                      <ul className="text-sm text-gray-600 space-y-1">
+                        <li>• Service may be delayed due to weather conditions</li>
+                        <li>• Holiday schedules announced in advance</li>
+                        <li>• Contact us if your bins are not serviced by 7 PM</li>
+                        <li>• Bins should be accessible and not blocked by vehicles</li>
+                      </ul>
                     </div>
                   </div>
                 </CardContent>
