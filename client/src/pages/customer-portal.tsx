@@ -70,7 +70,7 @@ const plans: Plan[] = [
 ];
 
 export default function CustomerPortal() {
-  const [step, setStep] = useState<'signup' | 'plans' | 'confirmation'>('signup');
+  const [step, setStep] = useState<'signup' | 'plans' | 'benefits' | 'payment' | 'confirmation'>('signup');
   const [signupData, setSignupData] = useState<SignupData>({
     name: "",
     phone: "",
@@ -78,6 +78,13 @@ export default function CustomerPortal() {
     address: ""
   });
   const [selectedPlan, setSelectedPlan] = useState<string>("");
+  const [paymentData, setPaymentData] = useState({
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    nameOnCard: "",
+    billingAddress: ""
+  });
   const { toast } = useToast();
 
   const createCustomerMutation = useMutation({
@@ -115,13 +122,18 @@ export default function CustomerPortal() {
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);
-    const selectedPlanData = plans.find(p => p.id === planId);
+    setStep('benefits');
+  };
+
+  const handlePaymentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const selectedPlanData = plans.find(p => p.id === selectedPlan);
     
     createCustomerMutation.mutate({
       ...signupData,
       route: "Route A", // Default route assignment
       status: "active",
-      plan: planId,
+      plan: selectedPlan,
       monthlyRate: selectedPlanData?.price.toString() || "59.99"
     });
   };
@@ -281,6 +293,229 @@ export default function CustomerPortal() {
     );
   }
 
+  if (step === 'benefits') {
+    const selectedPlanData = plans.find(p => p.id === selectedPlan);
+    
+    return (
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your regal care Benefits</h1>
+            <p className="text-gray-600">Review what's included with your {selectedPlanData?.name} plan</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Benefits Summary */}
+            <Card className="h-fit">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <div className={`p-2 rounded-full ${selectedPlanData?.color}`}>
+                    {selectedPlanData?.icon && <selectedPlanData.icon className="h-5 w-5" />}
+                  </div>
+                  {selectedPlanData?.name} Plan - ${selectedPlanData?.price}/month
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-4">
+                  {selectedPlanData?.features.map((feature, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* Terms and Commitment */}
+            <Card className="h-fit">
+              <CardHeader>
+                <CardTitle>Service Agreement</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-blue-800 mb-2">Service Details</h3>
+                  <ul className="text-sm text-blue-700 space-y-1">
+                    <li>• Service begins within 7 days of signup</li>
+                    <li>• Weekly pickup every {signupData.name ? 'Monday' : 'scheduled day'}</li>
+                    <li>• Bins moved to curb by 7 AM, returned by 6 PM</li>
+                    <li>• Holiday schedules may vary with advance notice</li>
+                  </ul>
+                </div>
+
+                <div className="bg-yellow-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-yellow-800 mb-2">Important Terms</h3>
+                  <ul className="text-sm text-yellow-700 space-y-1">
+                    <li>• Month-to-month service commitment</li>
+                    <li>• 30-day notice required for cancellation</li>
+                    <li>• Rates subject to change with 30-day notice</li>
+                    <li>• Additional fees may apply for special requests</li>
+                  </ul>
+                </div>
+
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-green-800 mb-2">Satisfaction Guarantee</h3>
+                  <p className="text-sm text-green-700">
+                    We guarantee reliable service. If you're not completely satisfied, 
+                    contact us within 24 hours for immediate resolution.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="flex justify-center gap-4 mt-8">
+            <Button 
+              variant="outline" 
+              onClick={() => setStep('plans')}
+              className="px-8"
+            >
+              ← Back to Plans
+            </Button>
+            <Button 
+              onClick={() => setStep('payment')}
+              className="px-8"
+            >
+              Continue to Payment
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (step === 'payment') {
+    const selectedPlanData = plans.find(p => p.id === selectedPlan);
+    
+    return (
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Information</h1>
+            <p className="text-gray-600">Complete your regal care subscription</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Order Summary */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Order Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Plan:</span>
+                  <span className="font-semibold">{selectedPlanData?.name}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Monthly Rate:</span>
+                  <span className="font-semibold">${selectedPlanData?.price}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-600">Setup Fee:</span>
+                  <span className="font-semibold">$0.00</span>
+                </div>
+                <div className="border-t pt-4">
+                  <div className="flex justify-between items-center text-lg font-bold">
+                    <span>Total Today:</span>
+                    <span>${selectedPlanData?.price}</span>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Then ${selectedPlanData?.price}/month
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Payment Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment Details</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handlePaymentSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="nameOnCard">Name on Card</Label>
+                    <Input
+                      id="nameOnCard"
+                      value={paymentData.nameOnCard}
+                      onChange={(e) => setPaymentData({...paymentData, nameOnCard: e.target.value})}
+                      placeholder="John Smith"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="cardNumber">Card Number</Label>
+                    <Input
+                      id="cardNumber"
+                      value={paymentData.cardNumber}
+                      onChange={(e) => setPaymentData({...paymentData, cardNumber: e.target.value})}
+                      placeholder="1234 5678 9012 3456"
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="expiryDate">Expiry Date</Label>
+                      <Input
+                        id="expiryDate"
+                        value={paymentData.expiryDate}
+                        onChange={(e) => setPaymentData({...paymentData, expiryDate: e.target.value})}
+                        placeholder="MM/YY"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="cvv">CVV</Label>
+                      <Input
+                        id="cvv"
+                        value={paymentData.cvv}
+                        onChange={(e) => setPaymentData({...paymentData, cvv: e.target.value})}
+                        placeholder="123"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="billingAddress">Billing Address</Label>
+                    <Input
+                      id="billingAddress"
+                      value={paymentData.billingAddress}
+                      onChange={(e) => setPaymentData({...paymentData, billingAddress: e.target.value})}
+                      placeholder="123 Main Street, City, State ZIP"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex gap-4 mt-6">
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      onClick={() => setStep('benefits')}
+                      className="flex-1"
+                    >
+                      ← Back
+                    </Button>
+                    <Button 
+                      type="submit"
+                      className="flex-1"
+                      disabled={createCustomerMutation.isPending}
+                    >
+                      {createCustomerMutation.isPending ? 'Processing...' : 'Complete Purchase'}
+                    </Button>
+                  </div>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (step === 'confirmation') {
     const selectedPlanData = plans.find(p => p.id === selectedPlan);
     
@@ -292,7 +527,7 @@ export default function CustomerPortal() {
               <Check className="h-8 w-8 text-green-600" />
             </div>
             <CardTitle className="text-2xl text-green-600">Welcome to regal care!</CardTitle>
-            <p className="text-gray-600">Your account has been successfully created</p>
+            <p className="text-gray-600">Your subscription is now active</p>
           </CardHeader>
           
           <CardContent className="space-y-4">
@@ -319,6 +554,7 @@ export default function CustomerPortal() {
                 setStep('signup');
                 setSignupData({ name: "", phone: "", email: "", address: "" });
                 setSelectedPlan("");
+                setPaymentData({ cardNumber: "", expiryDate: "", cvv: "", nameOnCard: "", billingAddress: "" });
               }}
             >
               Sign Up Another Customer
