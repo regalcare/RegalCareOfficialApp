@@ -397,6 +397,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         <li>• Professional cleaning equipment used</li>
                         <li>• Eco-friendly cleaning products</li>
                         <li>• Service scheduled during regular business hours</li>
+                        <li>• Bins shouldn't be blocked by locked gates</li>
                       </ul>
                     </div>
 
