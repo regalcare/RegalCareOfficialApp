@@ -14,6 +14,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Customer, Message, BinCleaningAppointment } from "@shared/schema";
 import { format, addDays, startOfWeek, isSameDay, isAfter } from "date-fns";
+import { useLocation } from "wouter";
 
 interface MemberDashboardProps {
   customerId: number;
@@ -27,6 +28,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
   const [binCount, setBinCount] = useState("1");
   const [showPlanModal, setShowPlanModal] = useState(false);
   const { toast } = useToast();
+  const [, setLocation] = useLocation();
 
   const { data: messages, isLoading: messagesLoading } = useQuery<Message[]>({
     queryKey: ["/api/messages"],
@@ -184,6 +186,12 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
 
   const tuesdayCalendar = generateTuesdayCalendar();
 
+  const handleUpgrade = (planType: string) => {
+    // Navigate to payment page with the selected plan
+    setLocation(`/customer?upgrade=${planType}`);
+    setShowPlanModal(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b">
@@ -286,7 +294,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            <span className="font-semibold">UNLIMITED bin cleanings (FREE)</span>
+                            <span className="font-semibold">4 FREE bin cleanings per month</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
@@ -324,7 +332,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                                 <li>• 15% discount on pressure washing</li>
                                 <li>• Priority support</li>
                               </ul>
-                              <Button className="w-full">Upgrade to Premium</Button>
+                              <Button onClick={() => handleUpgrade('premium')} className="w-full">Upgrade to Premium</Button>
                             </div>
                             
                             <div className="border rounded-lg p-4 hover:bg-purple-50 transition-colors">
@@ -336,12 +344,12 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                                 <span className="text-lg font-bold text-purple-600">$199.99/month</span>
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
-                                <li>• UNLIMITED bin cleanings</li>
+                                <li>• 4 FREE bin cleanings per month</li>
                                 <li>• Monthly pressure washing included</li>
                                 <li>• VIP support with dedicated line</li>
                                 <li>• Same-day service when available</li>
                               </ul>
-                              <Button className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
+                              <Button onClick={() => handleUpgrade('ultimate')} className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
                             </div>
                           </div>
                         )}
@@ -356,12 +364,12 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                               <span className="text-lg font-bold text-purple-600">$199.99/month</span>
                             </div>
                             <ul className="text-sm text-gray-600 space-y-1 mb-3">
-                              <li>• UNLIMITED bin cleanings (vs 2 free)</li>
+                              <li>• 4 FREE bin cleanings per month (vs 2 free per service)</li>
                               <li>• Monthly pressure washing included</li>
                               <li>• VIP support upgrade</li>
                               <li>• Same-day service when available</li>
                             </ul>
-                            <Button className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
+                            <Button onClick={() => handleUpgrade('ultimate')} className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
                           </div>
                         )}
                       </div>
