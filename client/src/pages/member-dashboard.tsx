@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageCircle, Calendar, Settings, Send, Clock, CheckCircle, Phone, Mail, MapPin, X } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { MessageCircle, Calendar, Settings, Send, Clock, CheckCircle, Phone, Mail, MapPin, X, Crown, Star, ArrowUp } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Customer, Message, BinCleaningAppointment } from "@shared/schema";
@@ -24,6 +25,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
   const [serviceDate, setServiceDate] = useState("");
   const [serviceType, setServiceType] = useState("");
   const [binCount, setBinCount] = useState("1");
+  const [showPlanModal, setShowPlanModal] = useState(false);
   const { toast } = useToast();
 
   const { data: messages, isLoading: messagesLoading } = useQuery<Message[]>({
@@ -192,9 +194,191 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               <p className="text-gray-600">regal care member dashboard</p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="bg-green-100 text-green-800">
-                {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan
-              </Badge>
+              <Dialog open={showPlanModal} onOpenChange={setShowPlanModal}>
+                <DialogTrigger asChild>
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 cursor-pointer hover:bg-green-200 transition-colors flex items-center gap-1">
+                    {customerData.plan === 'premium' && <Crown className="h-3 w-3" />}
+                    {customerData.plan === 'ultimate' && <Star className="h-3 w-3" />}
+                    {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan
+                  </Badge>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      {customerData.plan === 'premium' && <Crown className="h-5 w-5 text-yellow-500" />}
+                      {customerData.plan === 'ultimate' && <Star className="h-5 w-5 text-purple-500" />}
+                      Your {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan Benefits
+                    </DialogTitle>
+                  </DialogHeader>
+                  
+                  <div className="space-y-6">
+                    {/* Current Plan Benefits */}
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h3 className="font-semibold text-green-800 mb-3">What's Included in Your Plan</h3>
+                      
+                      {customerData.plan === 'basic' && (
+                        <div className="space-y-2 text-sm text-green-700">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Weekly trash can moving service
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            SMS notifications before pickup
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Customer support via messaging
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <X className="h-4 w-4 text-red-500" />
+                            <span className="text-gray-600">Bin cleaning: $40 per bin</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <X className="h-4 w-4 text-red-500" />
+                            <span className="text-gray-600">No pressure washing discount</span>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {customerData.plan === 'premium' && (
+                        <div className="space-y-2 text-sm text-green-700">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Weekly trash can moving service
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            SMS notifications before pickup
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Priority customer support
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            <span className="font-semibold">2 FREE bin cleanings per service</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Additional bins: $34 each (normally $40)
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            15% discount on pressure washing services
+                          </div>
+                        </div>
+                      )}
+                      
+                      {customerData.plan === 'ultimate' && (
+                        <div className="space-y-2 text-sm text-green-700">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Weekly trash can moving service
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            SMS notifications before pickup
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            VIP customer support with dedicated line
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            <span className="font-semibold">UNLIMITED bin cleanings (FREE)</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            <span className="font-semibold">Monthly pressure washing included</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Same-day service requests when available
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Upgrade Options */}
+                    {customerData.plan !== 'ultimate' && (
+                      <div className="border border-blue-200 rounded-lg p-4">
+                        <h3 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                          <ArrowUp className="h-4 w-4" />
+                          Upgrade Your Plan
+                        </h3>
+                        
+                        {customerData.plan === 'basic' && (
+                          <div className="space-y-4">
+                            <div className="border rounded-lg p-4 hover:bg-blue-50 transition-colors">
+                              <div className="flex items-center justify-between mb-2">
+                                <h4 className="font-medium flex items-center gap-2">
+                                  <Crown className="h-4 w-4 text-yellow-500" />
+                                  Premium Plan
+                                </h4>
+                                <span className="text-lg font-bold text-blue-600">$99.99/month</span>
+                              </div>
+                              <ul className="text-sm text-gray-600 space-y-1 mb-3">
+                                <li>• 2 FREE bin cleanings per service</li>
+                                <li>• $34 per additional bin (save $6)</li>
+                                <li>• 15% discount on pressure washing</li>
+                                <li>• Priority support</li>
+                              </ul>
+                              <Button className="w-full">Upgrade to Premium</Button>
+                            </div>
+                            
+                            <div className="border rounded-lg p-4 hover:bg-purple-50 transition-colors">
+                              <div className="flex items-center justify-between mb-2">
+                                <h4 className="font-medium flex items-center gap-2">
+                                  <Star className="h-4 w-4 text-purple-500" />
+                                  Ultimate Plan
+                                </h4>
+                                <span className="text-lg font-bold text-purple-600">$199.99/month</span>
+                              </div>
+                              <ul className="text-sm text-gray-600 space-y-1 mb-3">
+                                <li>• UNLIMITED bin cleanings</li>
+                                <li>• Monthly pressure washing included</li>
+                                <li>• VIP support with dedicated line</li>
+                                <li>• Same-day service when available</li>
+                              </ul>
+                              <Button className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {customerData.plan === 'premium' && (
+                          <div className="border rounded-lg p-4 hover:bg-purple-50 transition-colors">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="font-medium flex items-center gap-2">
+                                <Star className="h-4 w-4 text-purple-500" />
+                                Ultimate Plan
+                              </h4>
+                              <span className="text-lg font-bold text-purple-600">$199.99/month</span>
+                            </div>
+                            <ul className="text-sm text-gray-600 space-y-1 mb-3">
+                              <li>• UNLIMITED bin cleanings (vs 2 free)</li>
+                              <li>• Monthly pressure washing included</li>
+                              <li>• VIP support upgrade</li>
+                              <li>• Same-day service when available</li>
+                            </ul>
+                            <Button className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {customerData.plan === 'ultimate' && (
+                      <div className="bg-purple-50 p-4 rounded-lg text-center">
+                        <Star className="h-8 w-8 text-purple-500 mx-auto mb-2" />
+                        <h3 className="font-semibold text-purple-800">You're on our highest tier!</h3>
+                        <p className="text-sm text-purple-600 mt-1">
+                          Enjoy all premium benefits with unlimited services.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </DialogContent>
+              </Dialog>
               <Badge variant="outline">{customerData.status}</Badge>
             </div>
           </div>
