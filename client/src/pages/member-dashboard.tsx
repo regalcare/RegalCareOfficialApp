@@ -113,8 +113,28 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       return;
     }
 
-    // Calculate price based on service type
-    const servicePrice = serviceType === "bin-cleaning" ? 2500 : 5000; // $25 for bin cleaning, $50 for pressure washing
+    // Calculate price based on service type and customer plan
+    let servicePrice = 0;
+    
+    if (serviceType === "bin-cleaning") {
+      const binCountNum = parseInt(binCount);
+      const customerPlan = customerData.plan;
+      
+      if (customerPlan === 'basic') {
+        // Basic plan: $40 per bin
+        servicePrice = binCountNum * 4000; // $40.00 in cents
+      } else if (customerPlan === 'premium') {
+        // Premium plan: 2 free bins, then $34 per bin
+        const chargeableBins = Math.max(0, binCountNum - 2);
+        servicePrice = chargeableBins * 3400; // $34.00 in cents
+      } else if (customerPlan === 'ultimate') {
+        // Ultimate plan: included in plan (free)
+        servicePrice = 0;
+      }
+    } else if (serviceType === "pressure-washing") {
+      // Pressure washing is $50 regardless of plan
+      servicePrice = 5000; // $50.00 in cents
+    }
 
     scheduleServiceMutation.mutate({
       customerId: customerId,
@@ -284,7 +304,9 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                             <SelectValue placeholder="Select service type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="bin-cleaning">Bin Cleaning - $25</SelectItem>
+                            <SelectItem value="bin-cleaning">
+                              Bin Cleaning - {customerData.plan === 'basic' ? '$40 per bin' : customerData.plan === 'premium' ? '2 free, then $34 per bin' : 'Included in plan'}
+                            </SelectItem>
                             <SelectItem value="pressure-washing">Pressure Washing - $50</SelectItem>
                           </SelectContent>
                         </Select>
@@ -334,6 +356,39 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         Services only available on Tuesdays
                       </p>
                     </div>
+
+                    {/* Pricing Display */}
+                    {serviceType && (
+                      <div className="bg-green-50 p-4 rounded-lg">
+                        <h3 className="font-semibold text-green-800 mb-2">Pricing for Your {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan</h3>
+                        {serviceType === "bin-cleaning" ? (
+                          <div className="text-sm text-green-700">
+                            {customerData.plan === 'basic' && (
+                              <p>• Bin cleaning: $40.00 per bin</p>
+                            )}
+                            {customerData.plan === 'premium' && (
+                              <>
+                                <p>• First 2 bins: FREE</p>
+                                <p>• Additional bins: $34.00 each</p>
+                                {serviceType === "bin-cleaning" && binCount && parseInt(binCount) > 2 && (
+                                  <p className="font-semibold mt-2">Total cost: ${((parseInt(binCount) - 2) * 34).toFixed(2)}</p>
+                                )}
+                                {serviceType === "bin-cleaning" && binCount && parseInt(binCount) <= 2 && (
+                                  <p className="font-semibold mt-2 text-green-600">Total cost: FREE</p>
+                                )}
+                              </>
+                            )}
+                            {customerData.plan === 'ultimate' && (
+                              <p className="font-semibold text-green-600">• Bin cleaning: Included in your plan (FREE)</p>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-green-700">
+                            <p>• Pressure washing: $50.00</p>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="bg-blue-50 p-4 rounded-lg">
                       <h3 className="font-semibold text-blue-800 mb-2">Service Information</h3>
