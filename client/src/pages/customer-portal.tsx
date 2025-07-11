@@ -122,7 +122,7 @@ export default function CustomerPortal() {
       route: "Route A", // Default route assignment
       status: "active",
       plan: planId,
-      monthlyRate: selectedPlanData?.price || 25
+      monthlyRate: selectedPlanData?.price.toString() || "59.99"
     });
   };
 
