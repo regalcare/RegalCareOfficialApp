@@ -30,43 +30,41 @@ const plans: Plan[] = [
   {
     id: "basic",
     name: "Basic",
-    price: 25,
+    price: 59.99,
     icon: Shield,
     color: "bg-blue-50 border-blue-200 text-blue-800",
     features: [
-      "Weekly trash pickup",
-      "Curbside service",
-      "Email notifications",
-      "Basic customer support"
+      "Weekly trash bin valet service",
+      "Up to 3 cans included",
+      "Reliable weekly pickup",
+      "Email notifications"
     ]
   },
   {
     id: "premium",
     name: "Premium",
-    price: 40,
+    price: 99.99,
     icon: Zap,
     color: "bg-green-50 border-green-200 text-green-800",
     features: [
-      "Everything in Basic",
-      "Bin cleaning (2x/month)",
-      "Priority scheduling",
-      "SMS notifications",
-      "Same-day support"
+      "Weekly trash bin valet service",
+      "2 free bin cleanings per month",
+      "15% off all pressure washing services",
+      "Priority customer support"
     ],
     popular: true
   },
   {
     id: "ultimate",
     name: "Ultimate",
-    price: 60,
+    price: 199.99,
     icon: Crown,
     color: "bg-purple-50 border-purple-200 text-purple-800",
     features: [
-      "Everything in Premium",
-      "Weekly bin cleaning",
-      "Premium route priority",
-      "24/7 phone support",
-      "Special pickup requests"
+      "Weekly trash bin valet service",
+      "4 free bin cleanings per month",
+      "50% off all pressure washing services",
+      "Premium support & priority scheduling"
     ]
   }
 ];

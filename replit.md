@@ -20,6 +20,8 @@ Preferred communication style: Simple, everyday language.
 ✓ Added customer self-registration feature
 ✓ Restricted bin cleaning to Mondays/Thursdays only with 8am-4pm window
 ✓ Added sample data for demonstration purposes
+✓ Updated pricing structure: Basic ($59.99), Premium ($99.99), Ultimate ($199.99)
+✓ Enhanced plan features with bin cleaning and pressure washing discounts
 
 ## System Architecture
 

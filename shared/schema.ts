@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, varchar, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -11,7 +11,7 @@ export const customers = pgTable("customers", {
   route: text("route").notNull(),
   status: text("status").notNull().default("active"), // active, suspended, cancelled
   plan: text("plan").default("basic"), // basic, premium, ultimate
-  monthlyRate: integer("monthly_rate").default(25), // in dollars
+  monthlyRate: decimal("monthly_rate", { precision: 10, scale: 2 }).default("59.99"), // in dollars
   createdAt: timestamp("created_at").defaultNow(),
 });
 
