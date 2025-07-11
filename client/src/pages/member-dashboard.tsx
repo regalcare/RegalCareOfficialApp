@@ -123,7 +123,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       date: serviceDate,
       startTime: "09:00", // Default start time for Tuesday services
       endTime: "17:00", // Default end time for Tuesday services
-      binCount: parseInt(binCount),
+      binCount: serviceType === "bin-cleaning" ? parseInt(binCount) : 1, // Default to 1 for pressure washing
       price: servicePrice,
       status: "scheduled",
     });
@@ -290,20 +290,22 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         </Select>
                       </div>
                       
-                      <div>
-                        <Label htmlFor="binCount">Number of Bins</Label>
-                        <Select value={binCount} onValueChange={setBinCount}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select number of bins" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">1 Bin</SelectItem>
-                            <SelectItem value="2">2 Bins</SelectItem>
-                            <SelectItem value="3">3 Bins</SelectItem>
-                            <SelectItem value="4">4 Bins</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                      {serviceType === "bin-cleaning" && (
+                        <div>
+                          <Label htmlFor="binCount">Number of Bins</Label>
+                          <Select value={binCount} onValueChange={setBinCount}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select number of bins" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="1">1 Bin</SelectItem>
+                              <SelectItem value="2">2 Bins</SelectItem>
+                              <SelectItem value="3">3 Bins</SelectItem>
+                              <SelectItem value="4">4 Bins</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      )}
                     </div>
 
                     <div>
