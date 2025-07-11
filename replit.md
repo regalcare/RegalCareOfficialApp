@@ -1,8 +1,8 @@
-# TrashPro - Waste Management System
+# regal care - Waste Management System
 
 ## Overview
 
-TrashPro is a comprehensive waste management system designed for businesses that handle regular waste collection and bin cleaning services. The application provides two distinct interfaces:
+regal care is a comprehensive waste management system designed for businesses that handle regular waste collection and bin cleaning services. The application provides two distinct interfaces:
 
 1. **Business Dashboard** (/) - Full management interface for business owners
 2. **Customer Portal** (/customer) - Self-service interface for clients
