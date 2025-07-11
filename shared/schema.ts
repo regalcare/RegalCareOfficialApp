@@ -6,9 +6,12 @@ export const customers = pgTable("customers", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   phone: text("phone").notNull(),
+  email: text("email"),
   address: text("address").notNull(),
   route: text("route").notNull(),
   status: text("status").notNull().default("active"), // active, suspended, cancelled
+  plan: text("plan").default("basic"), // basic, premium, ultimate
+  monthlyRate: integer("monthly_rate").default(25), // in dollars
   createdAt: timestamp("created_at").defaultNow(),
 });
 

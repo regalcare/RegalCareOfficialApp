@@ -70,10 +70,10 @@ export class MemStorage implements IStorage {
   private addSampleData() {
     // Sample customers
     const sampleCustomers = [
-      { name: "John Smith", phone: "555-0123", address: "123 Oak Street", route: "Route A", status: "active" },
-      { name: "Sarah Johnson", phone: "555-0124", address: "456 Pine Avenue", route: "Route A", status: "active" },
-      { name: "Mike Davis", phone: "555-0125", address: "789 Maple Drive", route: "Route B", status: "active" },
-      { name: "Lisa Wilson", phone: "555-0126", address: "321 Elm Street", route: "Route B", status: "suspended" },
+      { name: "John Smith", phone: "555-0123", email: "john@example.com", address: "123 Oak Street", route: "Route A", status: "active", plan: "premium", monthlyRate: 40 },
+      { name: "Sarah Johnson", phone: "555-0124", email: "sarah@example.com", address: "456 Pine Avenue", route: "Route A", status: "active", plan: "basic", monthlyRate: 25 },
+      { name: "Mike Davis", phone: "555-0125", email: "mike@example.com", address: "789 Maple Drive", route: "Route B", status: "active", plan: "ultimate", monthlyRate: 60 },
+      { name: "Lisa Wilson", phone: "555-0126", email: "lisa@example.com", address: "321 Elm Street", route: "Route B", status: "suspended", plan: "basic", monthlyRate: 25 },
     ];
 
     sampleCustomers.forEach(customer => {

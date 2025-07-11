@@ -1,78 +1,93 @@
 import { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar, MessageSquare, SprayCan, Truck, Phone } from "lucide-react";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight } from "lucide-react";
+import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import CleaningForm from "@/components/cleaning-form";
-import type { Customer, Message, BinCleaningAppointment } from "@shared/schema";
-import { format } from "date-fns";
+
+interface SignupData {
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+}
+
+interface Plan {
+  id: string;
+  name: string;
+  price: number;
+  icon: any;
+  color: string;
+  features: string[];
+  popular?: boolean;
+}
+
+const plans: Plan[] = [
+  {
+    id: "basic",
+    name: "Basic",
+    price: 25,
+    icon: Shield,
+    color: "bg-blue-50 border-blue-200 text-blue-800",
+    features: [
+      "Weekly trash pickup",
+      "Curbside service",
+      "Email notifications",
+      "Basic customer support"
+    ]
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    price: 40,
+    icon: Zap,
+    color: "bg-green-50 border-green-200 text-green-800",
+    features: [
+      "Everything in Basic",
+      "Bin cleaning (2x/month)",
+      "Priority scheduling",
+      "SMS notifications",
+      "Same-day support"
+    ],
+    popular: true
+  },
+  {
+    id: "ultimate",
+    name: "Ultimate",
+    price: 60,
+    icon: Crown,
+    color: "bg-purple-50 border-purple-200 text-purple-800",
+    features: [
+      "Everything in Premium",
+      "Weekly bin cleaning",
+      "Premium route priority",
+      "24/7 phone support",
+      "Special pickup requests"
+    ]
+  }
+];
 
 export default function CustomerPortal() {
-  const [customerPhone, setCustomerPhone] = useState("");
-  const [customerData, setCustomerData] = useState<Customer | null>(null);
-  const [messageText, setMessageText] = useState("");
-  const [showCleaningForm, setShowCleaningForm] = useState(false);
-  const [showSignup, setShowSignup] = useState(false);
-  const [signupData, setSignupData] = useState({
+  const [step, setStep] = useState<'signup' | 'plans' | 'confirmation'>('signup');
+  const [signupData, setSignupData] = useState<SignupData>({
     name: "",
     phone: "",
-    address: "",
-    route: "Route A"
+    email: "",
+    address: ""
   });
+  const [selectedPlan, setSelectedPlan] = useState<string>("");
   const { toast } = useToast();
 
-  const { data: customers } = useQuery<Customer[]>({
-    queryKey: ["/api/customers"],
-  });
-
-  const { data: messages } = useQuery<Message[]>({
-    queryKey: ["/api/messages"],
-  });
-
-  const { data: appointments } = useQuery<BinCleaningAppointment[]>({
-    queryKey: ["/api/bin-cleaning"],
-  });
-
-  const sendMessageMutation = useMutation({
-    mutationFn: async (messageData: { customerId: number | null; customerName: string; message: string; isFromCustomer: boolean }) => {
-      await apiRequest("POST", "/api/messages", messageData);
+  const createCustomerMutation = useMutation({
+    mutationFn: async (customerData: any) => {
+      await apiRequest("POST", "/api/customers", customerData);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
-      setMessageText("");
-      toast({
-        title: "Message Sent",
-        description: "Your message has been sent successfully",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to send message",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const signupMutation = useMutation({
-    mutationFn: async (customerData: { name: string; phone: string; address: string; route: string }) => {
-      const response = await apiRequest("POST", "/api/customers", {
-        ...customerData,
-        status: "active"
-      });
-      return response;
-    },
-    onSuccess: (newCustomer) => {
-      queryClient.invalidateQueries({ queryKey: ["/api/customers"] });
-      setCustomerData(newCustomer);
-      setShowSignup(false);
-      setSignupData({ name: "", phone: "", address: "", route: "Route A" });
+      setStep('confirmation');
       toast({
         title: "Welcome to regal care!",
         description: "Your account has been created successfully",
@@ -87,35 +102,8 @@ export default function CustomerPortal() {
     },
   });
 
-  const handleLookup = () => {
-    const customer = customers?.find(c => c.phone === customerPhone);
-    if (customer) {
-      setCustomerData(customer);
-      toast({
-        title: "Account Found",
-        description: `Welcome back, ${customer.name}!`,
-      });
-    } else {
-      toast({
-        title: "Account Not Found",
-        description: "Please check your phone number or contact us to sign up",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSendMessage = () => {
-    if (!customerData || !messageText.trim()) return;
-
-    sendMessageMutation.mutate({
-      customerId: customerData.id,
-      customerName: customerData.name,
-      message: messageText,
-      isFromCustomer: true
-    });
-  };
-
-  const handleSignup = () => {
+  const handleSignupSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!signupData.name || !signupData.phone || !signupData.address) {
       toast({
         title: "Missing Information",
@@ -124,400 +112,224 @@ export default function CustomerPortal() {
       });
       return;
     }
-
-    // Check if phone number already exists
-    const existingCustomer = customers?.find(c => c.phone === signupData.phone);
-    if (existingCustomer) {
-      toast({
-        title: "Account Exists",
-        description: "An account with this phone number already exists",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    signupMutation.mutate(signupData);
+    setStep('plans');
   };
 
-  const customerMessages = messages?.filter(msg => msg.customerId === customerData?.id)
-    .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()) || [];
-
-  const customerAppointments = appointments?.filter(app => app.customerId === customerData?.id)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()) || [];
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active': return 'default';
-      case 'suspended': return 'secondary';
-      case 'cancelled': return 'destructive';
-      case 'completed': return 'default';
-      case 'scheduled': return 'secondary';
-      default: return 'outline';
-    }
+  const handlePlanSelect = (planId: string) => {
+    setSelectedPlan(planId);
+    const selectedPlanData = plans.find(p => p.id === planId);
+    
+    createCustomerMutation.mutate({
+      ...signupData,
+      route: "Route A", // Default route assignment
+      status: "active",
+      plan: planId,
+      monthlyRate: selectedPlanData?.price || 25
+    });
   };
 
-  const formatPrice = (priceInCents: number) => {
-    return `$${(priceInCents / 100).toFixed(2)}`;
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Truck className="text-white" size={16} />
+  if (step === 'signup') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Welcome to regal care</CardTitle>
+            <p className="text-gray-600">Sign up for professional waste management service</p>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSignupSubmit} className="space-y-4">
+              <div>
+                <Label htmlFor="name">Full Name *</Label>
+                <Input
+                  id="name"
+                  value={signupData.name}
+                  onChange={(e) => setSignupData({...signupData, name: e.target.value})}
+                  placeholder="Enter your full name"
+                  required
+                />
               </div>
-              <h1 className="text-xl font-bold text-gray-900">regal care Customer Portal</h1>
-            </div>
-            <div className="flex items-center space-x-4">
-              <a href="tel:555-0123" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
-                <Phone size={16} />
-                <span className="text-sm">Call Us: (555) 012-3456</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {!customerData ? (
-          /* Login/Signup Section */
-          <div className="max-w-md mx-auto">
-            {!showSignup ? (
-              /* Login Form */
-              <Card>
-                <CardHeader className="text-center">
-                  <CardTitle>Access Your Account</CardTitle>
-                  <p className="text-gray-600">Enter your phone number to view your service details</p>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number
-                    </label>
-                    <Input
-                      type="tel"
-                      placeholder="Enter your phone number"
-                      value={customerPhone}
-                      onChange={(e) => setCustomerPhone(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleLookup()}
-                    />
-                  </div>
-                  <Button onClick={handleLookup} className="w-full">
-                    Access My Account
-                  </Button>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">
-                      New customer? 
-                      <button 
-                        onClick={() => setShowSignup(true)}
-                        className="text-primary hover:underline ml-1"
-                      >
-                        Sign up here
-                      </button>
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            ) : (
-              /* Signup Form */
-              <Card>
-                <CardHeader className="text-center">
-                  <CardTitle>Sign Up for regal care Service</CardTitle>
-                  <p className="text-gray-600">Create your account and start your trash can moving service</p>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <Input
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={signupData.name}
-                      onChange={(e) => setSignupData(prev => ({ ...prev, name: e.target.value }))}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Phone Number *
-                    </label>
-                    <Input
-                      type="tel"
-                      placeholder="Enter your phone number"
-                      value={signupData.phone}
-                      onChange={(e) => setSignupData(prev => ({ ...prev, phone: e.target.value }))}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Service Address *
-                    </label>
-                    <Input
-                      type="text"
-                      placeholder="Enter your complete address"
-                      value={signupData.address}
-                      onChange={(e) => setSignupData(prev => ({ ...prev, address: e.target.value }))}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Preferred Route
-                    </label>
-                    <Select value={signupData.route} onValueChange={(value) => setSignupData(prev => ({ ...prev, route: value }))}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your preferred route" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="Route A">Route A - North Side</SelectItem>
-                        <SelectItem value="Route B">Route B - South Side</SelectItem>
-                        <SelectItem value="Route C">Route C - Downtown</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <h4 className="font-medium text-blue-900 mb-2">Service Details</h4>
-                    <ul className="text-sm text-blue-800 space-y-1">
-                      <li>• Weekly trash can moving from house to street</li>
-                      <li>• Bins returned to designated area after pickup</li>
-                      <li>• Reliable service on your scheduled day</li>
-                      <li>• Optional bin cleaning service available</li>
-                    </ul>
-                  </div>
-                  
-                  <Button 
-                    onClick={handleSignup} 
-                    className="w-full"
-                    disabled={signupMutation.isPending}
-                  >
-                    {signupMutation.isPending ? "Creating Account..." : "Sign Up for Service"}
-                  </Button>
-                  
-                  <div className="text-center">
-                    <button 
-                      onClick={() => setShowSignup(false)}
-                      className="text-sm text-gray-600 hover:text-gray-800"
-                    >
-                      Already have an account? Sign in here
-                    </button>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        ) : (
-          /* Customer Dashboard */
-          <div className="space-y-6">
-            {/* Welcome Section */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle>Welcome, {customerData.name}</CardTitle>
-                    <p className="text-gray-600">{customerData.address}</p>
-                  </div>
-                  <div className="text-right">
-                    <Badge variant={getStatusColor(customerData.status)} className="mb-2">
-                      {customerData.status}
-                    </Badge>
-                    <p className="text-sm text-gray-600">Route: {customerData.route}</p>
-                  </div>
+              
+              <div>
+                <Label htmlFor="phone">Phone Number *</Label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={signupData.phone}
+                    onChange={(e) => setSignupData({...signupData, phone: e.target.value})}
+                    placeholder="(555) 123-4567"
+                    className="pl-10"
+                    required
+                  />
                 </div>
-              </CardHeader>
-            </Card>
+              </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Service Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Truck size={20} />
-                    <span>Your Service</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-medium text-gray-900">Trash Can Moving Service</h4>
-                      <p className="text-sm text-gray-600">
-                        We move your trash cans from the side of your house to the street for pickup
-                      </p>
-                    </div>
-                    <div className="border-t pt-4">
-                      <p className="text-sm"><strong>Route:</strong> {customerData.route}</p>
-                      <p className="text-sm"><strong>Status:</strong> {customerData.status}</p>
-                      <p className="text-sm"><strong>Address:</strong> {customerData.address}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              <div>
+                <Label htmlFor="email">Email Address</Label>
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="email"
+                    type="email"
+                    value={signupData.email}
+                    onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                    placeholder="your@email.com"
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <Label htmlFor="address">Service Address *</Label>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    id="address"
+                    value={signupData.address}
+                    onChange={(e) => setSignupData({...signupData, address: e.target.value})}
+                    placeholder="123 Main Street, City, State"
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
 
-              {/* Bin Cleaning Service */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <SprayCan size={20} />
-                    <span>Bin Cleaning</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <p className="text-sm text-gray-600">
-                      Schedule professional bin cleaning service to keep your trash cans fresh and sanitary
-                    </p>
-                    <Button 
-                      onClick={() => setShowCleaningForm(true)}
-                      className="w-full"
-                    >
-                      Schedule Bin Cleaning
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+              <Button type="submit" className="w-full">
+                Continue to Plans
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-            {/* Recent Appointments */}
-            {customerAppointments.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Calendar size={20} />
-                    <span>Your Appointments</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {customerAppointments.slice(0, 3).map((appointment) => (
-                      <div key={appointment.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div>
-                          <p className="font-medium text-gray-900">Bin Cleaning</p>
-                          <p className="text-sm text-gray-600">
-                            {format(new Date(appointment.date), 'PPP')} • 8:00 AM - 4:00 PM
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            {appointment.binCount} bin{appointment.binCount > 1 ? 's' : ''} • {formatPrice(appointment.price)}
-                          </p>
-                        </div>
-                        <Badge variant={getStatusColor(appointment.status)}>
-                          {appointment.status}
-                        </Badge>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+  if (step === 'plans') {
+    return (
+      <div className="min-h-screen bg-gray-50 p-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Choose Your Plan</h1>
+            <p className="text-gray-600">Select the service level that works best for you</p>
+          </div>
 
-            {/* Messages */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <MessageSquare size={20} />
-                  <span>Messages</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {/* Send Message */}
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-medium text-gray-900 mb-2">Send us a message</h4>
-                    <div className="space-y-2">
-                      <Textarea
-                        placeholder="Type your message here..."
-                        value={messageText}
-                        onChange={(e) => setMessageText(e.target.value)}
-                        rows={3}
-                      />
-                      <Button 
-                        onClick={handleSendMessage}
-                        disabled={!messageText.trim() || sendMessageMutation.isPending}
-                        size="sm"
-                      >
-                        {sendMessageMutation.isPending ? "Sending..." : "Send Message"}
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Message History */}
-                  {customerMessages.length > 0 && (
-                    <div>
-                      <h4 className="font-medium text-gray-900 mb-2">Recent Messages</h4>
-                      <div className="space-y-2 max-h-60 overflow-y-auto">
-                        {customerMessages.slice(0, 5).map((message) => (
-                          <div
-                            key={message.id}
-                            className={`p-3 rounded-lg ${
-                              message.isFromCustomer ? 'bg-blue-50 ml-4' : 'bg-gray-50 mr-4'
-                            }`}
-                          >
-                            <p className="text-sm">{message.message}</p>
-                            <p className="text-xs text-gray-500 mt-1">
-                              {message.createdAt ? format(new Date(message.createdAt), 'PPp') : 'Unknown time'} 
-                              {message.isFromCustomer ? ' (You)' : ' (TrashPro)'}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {plans.map((plan) => {
+              const IconComponent = plan.icon;
+              return (
+                <Card 
+                  key={plan.id} 
+                  className={`relative cursor-pointer transition-all hover:shadow-lg ${
+                    plan.popular ? 'ring-2 ring-primary border-primary' : 'border-gray-200'
+                  }`}
+                  onClick={() => handlePlanSelect(plan.id)}
+                >
+                  {plan.popular && (
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                      <Badge className="bg-primary text-white">Most Popular</Badge>
                     </div>
                   )}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Logout */}
-            <div className="text-center">
-              <Button variant="outline" onClick={() => {
-                setCustomerData(null);
-                setCustomerPhone("");
-              }}>
-                Sign Out
-              </Button>
-            </div>
+                  
+                  <CardHeader className="text-center pb-4">
+                    <div className={`inline-flex p-3 rounded-full ${plan.color} mb-4`}>
+                      <IconComponent className="h-6 w-6" />
+                    </div>
+                    <CardTitle className="text-xl">{plan.name}</CardTitle>
+                    <div className="text-3xl font-bold text-gray-900">
+                      ${plan.price}
+                      <span className="text-base font-normal text-gray-600">/month</span>
+                    </div>
+                  </CardHeader>
+                  
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {plan.features.map((feature, index) => (
+                        <li key={index} className="flex items-center">
+                          <Check className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
+                          <span className="text-sm text-gray-600">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <Button 
+                      className={`w-full mt-6 ${
+                        plan.popular 
+                          ? 'bg-primary hover:bg-primary/90' 
+                          : 'bg-gray-900 hover:bg-gray-800'
+                      }`}
+                      disabled={createCustomerMutation.isPending}
+                    >
+                      {createCustomerMutation.isPending ? 'Setting up...' : 'Select Plan'}
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
-        )}
-      </main>
 
-      {/* Cleaning Form Modal */}
-      {showCleaningForm && customerData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-96 overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-4">Schedule Bin Cleaning</h3>
-            <CleaningForm
-              appointment={{
-                id: 0,
-                customerId: customerData.id,
-                customerName: customerData.name,
-                address: customerData.address,
-                date: new Date().toISOString().split('T')[0],
-                startTime: "08:00",
-                endTime: "16:00",
-                binCount: 1,
-                price: 2500,
-                status: "scheduled",
-                createdAt: new Date()
-              }}
-              onSuccess={() => {
-                setShowCleaningForm(false);
-                queryClient.invalidateQueries({ queryKey: ["/api/bin-cleaning"] });
-              }}
-            />
+          <div className="text-center mt-8">
             <Button 
-              variant="outline" 
-              onClick={() => setShowCleaningForm(false)}
-              className="mt-4 w-full"
+              variant="ghost" 
+              onClick={() => setStep('signup')}
+              className="text-gray-600"
             >
-              Cancel
+              ← Back to Sign Up
             </Button>
           </div>
         </div>
-      )}
-    </div>
-  );
+      </div>
+    );
+  }
+
+  if (step === 'confirmation') {
+    const selectedPlanData = plans.find(p => p.id === selectedPlan);
+    
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md text-center">
+          <CardHeader>
+            <div className="mx-auto bg-green-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4">
+              <Check className="h-8 w-8 text-green-600" />
+            </div>
+            <CardTitle className="text-2xl text-green-600">Welcome to regal care!</CardTitle>
+            <p className="text-gray-600">Your account has been successfully created</p>
+          </CardHeader>
+          
+          <CardContent className="space-y-4">
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="font-semibold mb-2">Account Details</h3>
+              <p className="text-sm text-gray-600">Name: {signupData.name}</p>
+              <p className="text-sm text-gray-600">Phone: {signupData.phone}</p>
+              <p className="text-sm text-gray-600">Address: {signupData.address}</p>
+              {selectedPlanData && (
+                <p className="text-sm text-gray-600">Plan: {selectedPlanData.name} (${selectedPlanData.price}/month)</p>
+              )}
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-blue-800 mb-2">What's Next?</h3>
+              <p className="text-sm text-blue-700">
+                We'll contact you within 24 hours to schedule your first pickup and provide your service details.
+              </p>
+            </div>
+
+            <Button 
+              className="w-full" 
+              onClick={() => {
+                setStep('signup');
+                setSignupData({ name: "", phone: "", email: "", address: "" });
+                setSelectedPlan("");
+              }}
+            >
+              Sign Up Another Customer
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  return null;
 }
