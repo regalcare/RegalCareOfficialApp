@@ -4,12 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, Map, Calendar, MapPin, Clock, Truck } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import RouteForm from "@/components/route-form";
-import type { Route } from "@shared/schema";
-import { format, startOfWeek, addDays, addWeeks, subWeeks } from "date-fns";
+import RouteMap from "@/components/route-map";
+import type { Route, Customer } from "@shared/schema";
+import { format, startOfWeek, addDays, addWeeks, subWeeks, isSameDay } from "date-fns";
 
 export default function Routes() {
   const [currentWeek, setCurrentWeek] = useState(new Date());
@@ -19,6 +21,10 @@ export default function Routes() {
 
   const { data: routes, isLoading } = useQuery<Route[]>({
     queryKey: ["/api/routes"],
+  });
+
+  const { data: customers } = useQuery<Customer[]>({
+    queryKey: ["/api/customers"],
   });
 
   const updateRouteMutation = useMutation({
@@ -88,6 +94,14 @@ export default function Routes() {
     return date.toDateString() === today.toDateString();
   };
 
+  const handleRouteOptimized = (routeId: number, optimizedCustomers: Customer[]) => {
+    toast({
+      title: "Route Optimized",
+      description: `Route has been optimized with ${optimizedCustomers.length} customers`,
+    });
+    // In a real application, you'd save the optimized order to the database
+  };
+
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">Loading routes...</div>;
   }
@@ -122,6 +136,20 @@ export default function Routes() {
           </DialogContent>
         </Dialog>
       </div>
+
+      <Tabs defaultValue="schedule" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="schedule" className="flex items-center space-x-2">
+            <Calendar size={16} />
+            <span>Schedule</span>
+          </TabsTrigger>
+          <TabsTrigger value="map" className="flex items-center space-x-2">
+            <Map size={16} />
+            <span>Map View</span>
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="schedule" className="space-y-6 mt-6">
 
       {/* Week Navigation */}
       <Card className="mb-6">
@@ -259,6 +287,17 @@ export default function Routes() {
           </Card>
         ))}
       </div>
-    </div>
+  </TabsContent>
+  
+  <TabsContent value="map" className="space-y-6 mt-6">
+    <RouteMap
+      customers={customers || []}
+      routes={routes || []}
+      selectedRoute={selectedRoute}
+      onRouteOptimized={handleRouteOptimized}
+    />
+  </TabsContent>
+</Tabs>
+</div>
   );
 }
