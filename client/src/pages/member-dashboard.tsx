@@ -22,7 +22,6 @@ interface MemberDashboardProps {
 export default function MemberDashboard({ customerId, customerData }: MemberDashboardProps) {
   const [newMessage, setNewMessage] = useState("");
   const [serviceDate, setServiceDate] = useState("");
-  const [serviceTime, setServiceTime] = useState("");
   const [serviceType, setServiceType] = useState("");
   const [binCount, setBinCount] = useState("1");
   const { toast } = useToast();
@@ -63,7 +62,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/bin-cleaning"] });
       setServiceDate("");
-      setServiceTime("");
       setServiceType("");
       setBinCount("1");
       toast({
@@ -94,10 +92,22 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
 
   const handleScheduleService = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!serviceDate || !serviceTime || !serviceType) {
+    if (!serviceDate || !serviceType) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Verify the selected date is a Tuesday
+    const selectedDate = new Date(serviceDate);
+    const dayOfWeek = selectedDate.getDay();
+    if (dayOfWeek !== 2) {
+      toast({
+        title: "Invalid Date",
+        description: "Please select a Tuesday for service scheduling",
         variant: "destructive",
       });
       return;
@@ -111,8 +121,8 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       customerName: customerData.name,
       address: customerData.address,
       date: serviceDate,
-      startTime: serviceTime,
-      endTime: serviceTime === "08:00" ? "09:00" : serviceTime === "10:00" ? "11:00" : serviceTime === "12:00" ? "13:00" : serviceTime === "14:00" ? "15:00" : "16:00",
+      startTime: "09:00", // Default start time for Tuesday services
+      endTime: "17:00", // Default end time for Tuesday services
       binCount: parseInt(binCount),
       price: servicePrice,
       status: "scheduled",
@@ -296,46 +306,40 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                       </div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="serviceDate">Service Date</Label>
-                        <Input
-                          id="serviceDate"
-                          type="date"
-                          value={serviceDate}
-                          onChange={(e) => setServiceDate(e.target.value)}
-                          min={new Date().toISOString().split('T')[0]}
-                          required
-                        />
-                        <p className="text-sm text-gray-600 mt-1">
-                          Services available Monday and Thursday only
-                        </p>
-                      </div>
-                      
-                      <div>
-                        <Label htmlFor="serviceTime">Preferred Time</Label>
-                        <Select value={serviceTime} onValueChange={setServiceTime}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select time" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="08:00">8:00 AM</SelectItem>
-                            <SelectItem value="10:00">10:00 AM</SelectItem>
-                            <SelectItem value="12:00">12:00 PM</SelectItem>
-                            <SelectItem value="14:00">2:00 PM</SelectItem>
-                            <SelectItem value="16:00">4:00 PM</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
+                    <div>
+                      <Label htmlFor="serviceDate">Service Date</Label>
+                      <Input
+                        id="serviceDate"
+                        type="date"
+                        value={serviceDate}
+                        onChange={(e) => {
+                          const selectedDate = new Date(e.target.value);
+                          const dayOfWeek = selectedDate.getDay();
+                          if (dayOfWeek === 2) { // Tuesday is day 2
+                            setServiceDate(e.target.value);
+                          } else {
+                            toast({
+                              title: "Invalid Date",
+                              description: "Please select a Tuesday for service scheduling",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                        min={new Date().toISOString().split('T')[0]}
+                        required
+                      />
+                      <p className="text-sm text-gray-600 mt-1">
+                        Services only available on Tuesdays
+                      </p>
                     </div>
 
                     <div className="bg-blue-50 p-4 rounded-lg">
                       <h3 className="font-semibold text-blue-800 mb-2">Service Information</h3>
                       <ul className="text-sm text-blue-700 space-y-1">
-                        <li>• Bin cleaning services available Monday and Thursday</li>
-                        <li>• Service window: 8:00 AM - 4:00 PM</li>
+                        <li>• Services only available on Tuesdays</li>
                         <li>• Professional cleaning equipment used</li>
                         <li>• Eco-friendly cleaning products</li>
+                        <li>• Service scheduled during regular business hours</li>
                       </ul>
                     </div>
 
