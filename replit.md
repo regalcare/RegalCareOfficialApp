@@ -17,6 +17,7 @@ Preferred communication style: Simple, everyday language.
 ✓ Built business dashboard with full CRUD operations  
 ✓ Added customer portal for client self-service
 ✓ Implemented customer lookup by phone number
+✓ Added customer self-registration feature
 ✓ Added sample data for demonstration purposes
 
 ## System Architecture

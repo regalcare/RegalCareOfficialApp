@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar, MessageSquare, SprayCan, Truck, Phone } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -17,6 +18,13 @@ export default function CustomerPortal() {
   const [customerData, setCustomerData] = useState<Customer | null>(null);
   const [messageText, setMessageText] = useState("");
   const [showCleaningForm, setShowCleaningForm] = useState(false);
+  const [showSignup, setShowSignup] = useState(false);
+  const [signupData, setSignupData] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    route: "Route A"
+  });
   const { toast } = useToast();
 
   const { data: customers } = useQuery<Customer[]>({
@@ -52,6 +60,33 @@ export default function CustomerPortal() {
     },
   });
 
+  const signupMutation = useMutation({
+    mutationFn: async (customerData: { name: string; phone: string; address: string; route: string }) => {
+      const response = await apiRequest("POST", "/api/customers", {
+        ...customerData,
+        status: "active"
+      });
+      return response;
+    },
+    onSuccess: (newCustomer) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/customers"] });
+      setCustomerData(newCustomer);
+      setShowSignup(false);
+      setSignupData({ name: "", phone: "", address: "", route: "Route A" });
+      toast({
+        title: "Welcome to TrashPro!",
+        description: "Your account has been created successfully",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to create account. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleLookup = () => {
     const customer = customers?.find(c => c.phone === customerPhone);
     if (customer) {
@@ -78,6 +113,30 @@ export default function CustomerPortal() {
       message: messageText,
       isFromCustomer: true
     });
+  };
+
+  const handleSignup = () => {
+    if (!signupData.name || !signupData.phone || !signupData.address) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check if phone number already exists
+    const existingCustomer = customers?.find(c => c.phone === signupData.phone);
+    if (existingCustomer) {
+      toast({
+        title: "Account Exists",
+        description: "An account with this phone number already exists",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    signupMutation.mutate(signupData);
   };
 
   const customerMessages = messages?.filter(msg => msg.customerId === customerData?.id)
@@ -125,36 +184,133 @@ export default function CustomerPortal() {
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {!customerData ? (
-          /* Login Section */
+          /* Login/Signup Section */
           <div className="max-w-md mx-auto">
-            <Card>
-              <CardHeader className="text-center">
-                <CardTitle>Access Your Account</CardTitle>
-                <p className="text-gray-600">Enter your phone number to view your service details</p>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <Input
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    value={customerPhone}
-                    onChange={(e) => setCustomerPhone(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleLookup()}
-                  />
-                </div>
-                <Button onClick={handleLookup} className="w-full">
-                  Access My Account
-                </Button>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600">
-                    New customer? <a href="tel:555-0123" className="text-primary hover:underline">Call us to sign up</a>
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+            {!showSignup ? (
+              /* Login Form */
+              <Card>
+                <CardHeader className="text-center">
+                  <CardTitle>Access Your Account</CardTitle>
+                  <p className="text-gray-600">Enter your phone number to view your service details</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number
+                    </label>
+                    <Input
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      value={customerPhone}
+                      onChange={(e) => setCustomerPhone(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleLookup()}
+                    />
+                  </div>
+                  <Button onClick={handleLookup} className="w-full">
+                    Access My Account
+                  </Button>
+                  <div className="text-center">
+                    <p className="text-sm text-gray-600">
+                      New customer? 
+                      <button 
+                        onClick={() => setShowSignup(true)}
+                        className="text-primary hover:underline ml-1"
+                      >
+                        Sign up here
+                      </button>
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            ) : (
+              /* Signup Form */
+              <Card>
+                <CardHeader className="text-center">
+                  <CardTitle>Sign Up for TrashPro Service</CardTitle>
+                  <p className="text-gray-600">Create your account and start your trash can moving service</p>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Full Name *
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={signupData.name}
+                      onChange={(e) => setSignupData(prev => ({ ...prev, name: e.target.value }))}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Phone Number *
+                    </label>
+                    <Input
+                      type="tel"
+                      placeholder="Enter your phone number"
+                      value={signupData.phone}
+                      onChange={(e) => setSignupData(prev => ({ ...prev, phone: e.target.value }))}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Service Address *
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="Enter your complete address"
+                      value={signupData.address}
+                      onChange={(e) => setSignupData(prev => ({ ...prev, address: e.target.value }))}
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Preferred Route
+                    </label>
+                    <Select value={signupData.route} onValueChange={(value) => setSignupData(prev => ({ ...prev, route: value }))}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select your preferred route" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Route A">Route A - North Side</SelectItem>
+                        <SelectItem value="Route B">Route B - South Side</SelectItem>
+                        <SelectItem value="Route C">Route C - Downtown</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="bg-blue-50 p-4 rounded-lg">
+                    <h4 className="font-medium text-blue-900 mb-2">Service Details</h4>
+                    <ul className="text-sm text-blue-800 space-y-1">
+                      <li>• Weekly trash can moving from house to street</li>
+                      <li>• Bins returned to designated area after pickup</li>
+                      <li>• Reliable service on your scheduled day</li>
+                      <li>• Optional bin cleaning service available</li>
+                    </ul>
+                  </div>
+                  
+                  <Button 
+                    onClick={handleSignup} 
+                    className="w-full"
+                    disabled={signupMutation.isPending}
+                  >
+                    {signupMutation.isPending ? "Creating Account..." : "Sign Up for Service"}
+                  </Button>
+                  
+                  <div className="text-center">
+                    <button 
+                      onClick={() => setShowSignup(false)}
+                      className="text-sm text-gray-600 hover:text-gray-800"
+                    >
+                      Already have an account? Sign in here
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </div>
         ) : (
           /* Customer Dashboard */
