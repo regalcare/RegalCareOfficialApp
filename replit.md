@@ -2,11 +2,22 @@
 
 ## Overview
 
-TrashPro is a comprehensive waste management system designed for businesses that handle regular waste collection and bin cleaning services. The application provides a web-based interface for managing customers, weekly routes, messaging, and bin cleaning appointments.
+TrashPro is a comprehensive waste management system designed for businesses that handle regular waste collection and bin cleaning services. The application provides two distinct interfaces:
+
+1. **Business Dashboard** (/) - Full management interface for business owners
+2. **Customer Portal** (/customer) - Self-service interface for clients
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Recent Changes
+
+✓ Created dual-interface architecture (January 11, 2025)
+✓ Built business dashboard with full CRUD operations  
+✓ Added customer portal for client self-service
+✓ Implemented customer lookup by phone number
+✓ Added sample data for demonstration purposes
 
 ## System Architecture
 

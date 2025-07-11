@@ -1,5 +1,6 @@
-import { Bell, User, Truck } from "lucide-react";
+import { Bell, User, Truck, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import type { Message } from "@shared/schema";
 
 export default function Header() {
@@ -17,9 +18,15 @@ export default function Header() {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <Truck className="text-white" size={16} />
             </div>
-            <h1 className="text-xl font-bold text-gray-900">TrashPro</h1>
+            <h1 className="text-xl font-bold text-gray-900">TrashPro Business Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">
+            <Link href="/customer">
+              <button className="flex items-center space-x-2 px-3 py-2 text-sm bg-secondary text-white rounded-lg hover:bg-secondary/90">
+                <Users size={16} />
+                <span>Customer Portal</span>
+              </button>
+            </Link>
             <button className="p-2 text-gray-400 hover:text-gray-600 relative">
               <Bell size={20} />
               {unreadCount > 0 && (

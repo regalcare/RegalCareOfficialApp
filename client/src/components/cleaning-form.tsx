@@ -32,9 +32,9 @@ export default function CleaningForm({ appointment, onSuccess }: CleaningFormPro
       customerId: appointment?.customerId || null,
       customerName: appointment?.customerName || "",
       address: appointment?.address || "",
-      date: appointment?.date || "",
-      startTime: appointment?.startTime || "",
-      endTime: appointment?.endTime || "",
+      date: appointment?.date || new Date().toISOString().split('T')[0],
+      startTime: appointment?.startTime || "09:00",
+      endTime: appointment?.endTime || "10:00",
       binCount: appointment?.binCount || 1,
       price: appointment?.price || 2500, // $25.00 in cents
       status: appointment?.status || "scheduled",

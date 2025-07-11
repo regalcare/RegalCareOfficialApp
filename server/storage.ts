@@ -62,6 +62,77 @@ export class MemStorage implements IStorage {
     this.currentRouteId = 1;
     this.currentMessageId = 1;
     this.currentBinCleaningId = 1;
+    
+    // Add sample data
+    this.addSampleData();
+  }
+
+  private addSampleData() {
+    // Sample customers
+    const sampleCustomers = [
+      { name: "John Smith", phone: "555-0123", address: "123 Oak Street", route: "Route A", status: "active" },
+      { name: "Sarah Johnson", phone: "555-0124", address: "456 Pine Avenue", route: "Route A", status: "active" },
+      { name: "Mike Davis", phone: "555-0125", address: "789 Maple Drive", route: "Route B", status: "active" },
+      { name: "Lisa Wilson", phone: "555-0126", address: "321 Elm Street", route: "Route B", status: "suspended" },
+    ];
+
+    sampleCustomers.forEach(customer => {
+      const id = this.currentCustomerId++;
+      this.customers.set(id, {
+        ...customer,
+        id,
+        createdAt: new Date()
+      });
+    });
+
+    // Sample routes
+    const sampleRoutes = [
+      { name: "Route A - North Side", description: "Northern residential area", day: "monday", startTime: "08:00", status: "pending", totalCustomers: 15, completedCustomers: 0 },
+      { name: "Route B - South Side", description: "Southern residential area", day: "monday", startTime: "10:00", status: "pending", totalCustomers: 12, completedCustomers: 0 },
+      { name: "Route C - Downtown", description: "Downtown commercial area", day: "tuesday", startTime: "07:00", status: "pending", totalCustomers: 8, completedCustomers: 0 },
+    ];
+
+    sampleRoutes.forEach(route => {
+      const id = this.currentRouteId++;
+      this.routes.set(id, {
+        ...route,
+        id,
+        createdAt: new Date()
+      });
+    });
+
+    // Sample messages
+    const sampleMessages = [
+      { customerId: 1, customerName: "John Smith", message: "Can you please move my bins earlier today? I have guests coming over.", isRead: false, isFromCustomer: true },
+      { customerId: 2, customerName: "Sarah Johnson", message: "Thank you for the great service! Very reliable.", isRead: true, isFromCustomer: true },
+    ];
+
+    sampleMessages.forEach(message => {
+      const id = this.currentMessageId++;
+      this.messages.set(id, {
+        ...message,
+        id,
+        createdAt: new Date()
+      });
+    });
+
+    // Sample bin cleaning appointments
+    const today = new Date().toISOString().split('T')[0];
+    const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    
+    const sampleAppointments = [
+      { customerId: 1, customerName: "John Smith", address: "123 Oak Street", date: today, startTime: "14:00", endTime: "15:00", binCount: 2, price: 3500, status: "scheduled" },
+      { customerId: 3, customerName: "Mike Davis", address: "789 Maple Drive", date: tomorrow, startTime: "10:00", endTime: "11:00", binCount: 1, price: 2500, status: "scheduled" },
+    ];
+
+    sampleAppointments.forEach(appointment => {
+      const id = this.currentBinCleaningId++;
+      this.binCleaningAppointments.set(id, {
+        ...appointment,
+        id,
+        createdAt: new Date()
+      });
+    });
   }
 
   // Customer operations
