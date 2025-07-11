@@ -194,6 +194,21 @@ export default function BinCleaning() {
           </div>
         </CardHeader>
         <CardContent>
+          <div className="mb-4">
+            <div className="flex items-center justify-center space-x-6 text-xs mb-2">
+              <div className="flex items-center space-x-1">
+                <div className="w-3 h-3 bg-green-100 border border-green-200 rounded"></div>
+                <span className="text-green-700">Available Days</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <div className="w-3 h-3 bg-blue-100 rounded"></div>
+                <span className="text-blue-700">Has Appointments</span>
+              </div>
+            </div>
+            <p className="text-center text-sm text-gray-600 mb-4">
+              Bin cleaning is available on <strong>Mondays and Thursdays</strong> between <strong>8:00 AM - 4:00 PM</strong>
+            </p>
+          </div>
           <div className="grid grid-cols-7 gap-1 mb-4">
             {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
               <div key={day} className="text-center text-sm font-medium text-gray-700 py-2">
@@ -205,17 +220,28 @@ export default function BinCleaning() {
             {monthDays.map((day) => {
               const dayAppointments = getAppointmentsForDay(day);
               const isToday = isSameDay(day, new Date());
+              const dayOfWeek = day.getDay(); // 0 = Sunday, 1 = Monday, 4 = Thursday
+              const isAvailableDay = dayOfWeek === 1 || dayOfWeek === 4; // Monday or Thursday
               
               return (
                 <div
                   key={day.toISOString()}
                   className={`h-20 p-1 text-center border rounded ${
-                    isToday ? 'bg-primary/10 border-primary' : 'border-gray-200'
+                    isToday ? 'bg-primary/10 border-primary' : 
+                    isAvailableDay ? 'border-green-200 bg-green-50' : 'border-gray-200 bg-gray-50'
                   }`}
                 >
-                  <div className={`text-sm font-medium ${isToday ? 'text-primary' : 'text-gray-900'}`}>
+                  <div className={`text-sm font-medium ${
+                    isToday ? 'text-primary' : 
+                    isAvailableDay ? 'text-green-800' : 'text-gray-400'
+                  }`}>
                     {format(day, 'd')}
                   </div>
+                  {isAvailableDay && (
+                    <div className="text-xs text-green-600 mt-1">
+                      Available
+                    </div>
+                  )}
                   {dayAppointments.length > 0 && (
                     <div className="bg-blue-100 text-blue-800 text-xs rounded px-1 mt-1">
                       {dayAppointments.length} appt{dayAppointments.length > 1 ? 's' : ''}
@@ -253,7 +279,7 @@ export default function BinCleaning() {
                     <div>
                       <p className="font-medium text-gray-900">{appointment.customerName}</p>
                       <p className="text-sm text-gray-600">
-                        {appointment.startTime} - {appointment.endTime} • {appointment.binCount} bin{appointment.binCount > 1 ? 's' : ''} • {formatPrice(appointment.price)}
+                        8:00 AM - 4:00 PM • {appointment.binCount} bin{appointment.binCount > 1 ? 's' : ''} • {formatPrice(appointment.price)}
                       </p>
                     </div>
                   </div>

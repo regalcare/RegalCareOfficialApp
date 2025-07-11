@@ -399,7 +399,7 @@ export default function CustomerPortal() {
                         <div>
                           <p className="font-medium text-gray-900">Bin Cleaning</p>
                           <p className="text-sm text-gray-600">
-                            {format(new Date(appointment.date), 'PPP')} • {appointment.startTime} - {appointment.endTime}
+                            {format(new Date(appointment.date), 'PPP')} • 8:00 AM - 4:00 PM
                           </p>
                           <p className="text-sm text-gray-600">
                             {appointment.binCount} bin{appointment.binCount > 1 ? 's' : ''} • {formatPrice(appointment.price)}
@@ -496,8 +496,8 @@ export default function CustomerPortal() {
                 customerName: customerData.name,
                 address: customerData.address,
                 date: new Date().toISOString().split('T')[0],
-                startTime: "09:00",
-                endTime: "10:00",
+                startTime: "08:00",
+                endTime: "16:00",
                 binCount: 1,
                 price: 2500,
                 status: "scheduled",

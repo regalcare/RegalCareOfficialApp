@@ -18,6 +18,7 @@ Preferred communication style: Simple, everyday language.
 ✓ Added customer portal for client self-service
 ✓ Implemented customer lookup by phone number
 ✓ Added customer self-registration feature
+✓ Restricted bin cleaning to Mondays/Thursdays only with 8am-4pm window
 ✓ Added sample data for demonstration purposes
 
 ## System Architecture

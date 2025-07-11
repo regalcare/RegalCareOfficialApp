@@ -11,8 +11,40 @@ import { useToast } from "@/hooks/use-toast";
 import type { BinCleaningAppointment } from "@shared/schema";
 import { z } from "zod";
 
+// Helper function to get next Monday or Thursday
+const getNextMondayOrThursday = (): string => {
+  const today = new Date();
+  const dayOfWeek = today.getDay();
+  
+  let daysToAdd = 0;
+  
+  if (dayOfWeek === 0) { // Sunday
+    daysToAdd = 1; // Next Monday
+  } else if (dayOfWeek === 1) { // Monday
+    daysToAdd = 0; // Today if it's Monday
+  } else if (dayOfWeek === 2 || dayOfWeek === 3) { // Tuesday or Wednesday
+    daysToAdd = 4 - dayOfWeek; // Next Thursday
+  } else if (dayOfWeek === 4) { // Thursday
+    daysToAdd = 0; // Today if it's Thursday
+  } else { // Friday or Saturday
+    daysToAdd = 8 - dayOfWeek; // Next Monday
+  }
+  
+  const nextAvailableDate = new Date(today);
+  nextAvailableDate.setDate(today.getDate() + daysToAdd);
+  
+  return nextAvailableDate.toISOString().split('T')[0];
+};
+
 const formSchema = insertBinCleaningAppointmentSchema.extend({
   status: z.enum(['scheduled', 'completed', 'cancelled']).default('scheduled'),
+  date: z.string().refine((dateStr) => {
+    const date = new Date(dateStr);
+    const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, 4 = Thursday
+    return dayOfWeek === 1 || dayOfWeek === 4; // Only Monday (1) or Thursday (4)
+  }, {
+    message: "Bin cleaning is only available on Mondays and Thursdays"
+  }),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -32,9 +64,9 @@ export default function CleaningForm({ appointment, onSuccess }: CleaningFormPro
       customerId: appointment?.customerId || null,
       customerName: appointment?.customerName || "",
       address: appointment?.address || "",
-      date: appointment?.date || new Date().toISOString().split('T')[0],
-      startTime: appointment?.startTime || "09:00",
-      endTime: appointment?.endTime || "10:00",
+      date: appointment?.date || getNextMondayOrThursday(),
+      startTime: "08:00", // Fixed start time
+      endTime: "16:00", // Fixed end time
       binCount: appointment?.binCount || 1,
       price: appointment?.price || 2500, // $25.00 in cents
       status: appointment?.status || "scheduled",
@@ -104,7 +136,7 @@ export default function CleaningForm({ appointment, onSuccess }: CleaningFormPro
           name="date"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Date</FormLabel>
+              <FormLabel>Date (Mondays and Thursdays only)</FormLabel>
               <FormControl>
                 <Input type="date" {...field} />
               </FormControl>
@@ -113,34 +145,13 @@ export default function CleaningForm({ appointment, onSuccess }: CleaningFormPro
           )}
         />
 
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="startTime"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Start Time</FormLabel>
-                <FormControl>
-                  <Input type="time" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="endTime"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>End Time</FormLabel>
-                <FormControl>
-                  <Input type="time" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="bg-blue-50 p-4 rounded-lg">
+          <h4 className="font-medium text-blue-900 mb-2">Service Schedule</h4>
+          <div className="text-sm text-blue-800 space-y-1">
+            <p>• Available days: <strong>Mondays and Thursdays only</strong></p>
+            <p>• Service time: <strong>8:00 AM - 4:00 PM</strong></p>
+            <p>• Bins will be cleaned within this window</p>
+          </div>
         </div>
 
         <FormField
