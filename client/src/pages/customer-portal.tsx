@@ -89,6 +89,75 @@ export default function CustomerPortal() {
   const [createdCustomer, setCreatedCustomer] = useState<any>(null);
   const { toast } = useToast();
 
+  // Dummy customer data for demo purposes
+  const dummyCustomer = {
+    id: 1,
+    name: "John Doe",
+    phone: "(555) 123-4567",
+    email: "john@example.com",
+    address: "123 Main Street, Anytown, ST 12345",
+    route: "Route A",
+    status: "active",
+    plan: "premium",
+    monthlyRate: "99.99",
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+
+  const renderNavigation = () => (
+    <div className="bg-gray-100 border-b mb-6">
+      <div className="max-w-4xl mx-auto px-4 py-3">
+        <div className="flex flex-wrap gap-2 text-sm">
+          <Button
+            variant={step === 'signup' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setStep('signup')}
+          >
+            Sign Up
+          </Button>
+          <Button
+            variant={step === 'plans' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setStep('plans')}
+          >
+            Plans
+          </Button>
+          <Button
+            variant={step === 'benefits' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setStep('benefits')}
+          >
+            Benefits
+          </Button>
+          <Button
+            variant={step === 'payment' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setStep('payment')}
+          >
+            Payment
+          </Button>
+          <Button
+            variant={step === 'confirmation' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setStep('confirmation')}
+          >
+            Confirmation
+          </Button>
+          <Button
+            variant={step === 'member' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => {
+              setCreatedCustomer(dummyCustomer);
+              setStep('member');
+            }}
+          >
+            Member Dashboard
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+
   const createCustomerMutation = useMutation({
     mutationFn: async (customerData: any) => {
       const response = await apiRequest("POST", "/api/customers", customerData);
@@ -144,9 +213,11 @@ export default function CustomerPortal() {
 
   if (step === 'signup') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
+      <div className="min-h-screen bg-gray-50">
+        {renderNavigation()}
+        <div className="flex items-center justify-center p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader className="text-center">
             <CardTitle className="text-2xl">Welcome to regal care</CardTitle>
             <p className="text-gray-600">Sign up for professional waste management service</p>
           </CardHeader>
@@ -216,14 +287,16 @@ export default function CustomerPortal() {
             </form>
           </CardContent>
         </Card>
+        </div>
       </div>
     );
   }
 
   if (step === 'plans') {
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-6xl mx-auto">
+      <div className="min-h-screen bg-gray-50">
+        {renderNavigation()}
+        <div className="max-w-6xl mx-auto p-4">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Choose Your Plan</h1>
             <p className="text-gray-600">Select the service level that works best for you</p>
@@ -301,8 +374,9 @@ export default function CustomerPortal() {
     const selectedPlanData = plans.find(p => p.id === selectedPlan);
     
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-4xl mx-auto">
+      <div className="min-h-screen bg-gray-50">
+        {renderNavigation()}
+        <div className="max-w-4xl mx-auto p-4">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Your regal care Benefits</h1>
             <p className="text-gray-600">Review what's included with your {selectedPlanData?.name} plan</p>
@@ -393,8 +467,9 @@ export default function CustomerPortal() {
     const selectedPlanData = plans.find(p => p.id === selectedPlan);
     
     return (
-      <div className="min-h-screen bg-gray-50 p-4">
-        <div className="max-w-2xl mx-auto">
+      <div className="min-h-screen bg-gray-50">
+        {renderNavigation()}
+        <div className="max-w-2xl mx-auto p-4">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Information</h1>
             <p className="text-gray-600">Complete your regal care subscription</p>
@@ -524,8 +599,10 @@ export default function CustomerPortal() {
     const selectedPlanData = plans.find(p => p.id === selectedPlan);
     
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md text-center">
+      <div className="min-h-screen bg-gray-50">
+        {renderNavigation()}
+        <div className="flex items-center justify-center p-4">
+          <Card className="w-full max-w-md text-center">
           <CardHeader>
             <div className="mx-auto bg-green-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4">
               <Check className="h-8 w-8 text-green-600" />
@@ -575,6 +652,7 @@ export default function CustomerPortal() {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     );
   }
