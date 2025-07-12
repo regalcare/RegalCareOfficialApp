@@ -455,7 +455,7 @@ export default function CustomerPortal() {
               </div>
             </div>
             {billingCycle === 'yearly' && (
-              <p className="text-sm text-green-600 font-medium">Save with annual billing</p>
+              <p className="text-sm text-green-600 font-medium">Get 1 month free with annual billing</p>
             )}
           </div>
 
@@ -488,8 +488,10 @@ export default function CustomerPortal() {
                       </span>
                     </div>
                     {billingCycle === 'yearly' && (
-                      <div className="text-sm text-green-600">
-                        Save ${((plan.price * 12) - plan.yearlyPrice).toFixed(0)} per year
+                      <div className="text-sm text-green-600 font-medium">
+                        {plan.id === 'basic' && '1 month free • Save $60'}
+                        {plan.id === 'premium' && '1 month free • Save $110'}
+                        {plan.id === 'ultimate' && '1 month free • Save $211'}
                       </div>
                     )}
                   </CardHeader>
