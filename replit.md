@@ -25,6 +25,8 @@ Preferred communication style: Simple, everyday language.
 ✓ Added comprehensive benefits summary and service agreement page
 ✓ Implemented payment form with order summary and billing details
 ✓ Enhanced customer flow: Sign Up → Choose Plan → Review Benefits → Payment → Confirmation
+✓ Added yearly billing with specific pricing and savings messaging
+✓ Streamlined business dashboard to focused 3-tab interface (January 12, 2025)
 
 ## System Architecture
 
@@ -66,11 +68,9 @@ The application manages four main entities:
 - **Bin Cleaning**: Appointment scheduling and status management
 
 ### User Interface
-- **Dashboard**: Overview of daily operations and key metrics
-- **Customer Management**: List, create, edit, and delete customer records
-- **Route Planning**: Weekly calendar view with route assignments
-- **Messaging**: Real-time message interface with read/unread status
-- **Bin Cleaning**: Calendar-based appointment scheduling system
+- **Services Calendar**: Weekly calendar view showing scheduled bin cleanings and pressure washing appointments
+- **Customer List**: Complete customer directory with contact details and route assignments
+- **Revenue Tracking**: Monthly and total revenue metrics with service completion analytics
 
 ## Data Flow
 

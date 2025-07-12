@@ -6,10 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Header from "@/components/layout/header";
 import TabNavigation from "@/components/layout/tab-navigation";
 import Dashboard from "@/pages/dashboard";
-import Customers from "@/pages/customers";
-import Routes from "@/pages/routes";
-import Messages from "@/pages/messages";
-import BinCleaning from "@/pages/bin-cleaning";
 import CustomerPortal from "@/pages/customer-portal";
 import NotFound from "@/pages/not-found";
 
@@ -33,10 +29,6 @@ function Router() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Switch>
           <Route path="/" component={Dashboard} />
-          <Route path="/customers" component={Customers} />
-          <Route path="/routes" component={Routes} />
-          <Route path="/messages" component={Messages} />
-          <Route path="/bin-cleaning" component={BinCleaning} />
           <Route component={NotFound} />
         </Switch>
       </main>
