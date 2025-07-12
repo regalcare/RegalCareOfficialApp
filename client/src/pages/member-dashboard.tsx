@@ -426,8 +426,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                     <div className="bg-blue-50 p-4 rounded-lg">
                       <h4 className="font-medium text-blue-800 mb-2">Quick Tips:</h4>
                       <ul className="text-sm text-blue-700 space-y-1">
-                        <li>• Include specific details about your service address</li>
-                        <li>• Mention your preferred service dates if applicable</li>
                         <li>• For urgent matters, please call us directly</li>
                         <li>• We typically respond within 24 hours</li>
                       </ul>
