@@ -35,7 +35,8 @@ const plans: Plan[] = [
     icon: Shield,
     color: "bg-blue-50 border-blue-200 text-blue-800",
     features: [
-      "Weekly trash bin valet"
+      "Weekly trash bin valet",
+      "Reliable customer support"
     ]
   },
   {
@@ -46,6 +47,7 @@ const plans: Plan[] = [
     color: "bg-green-50 border-green-200 text-green-800",
     features: [
       "Weekly trash bin valet",
+      "Reliable customer support",
       "2 FREE bin cleanings per month",
       "1 FREE bulky item pick every 2 months",
       "15% discount on all pressure washing services"
@@ -60,6 +62,7 @@ const plans: Plan[] = [
     color: "bg-purple-50 border-purple-200 text-purple-800",
     features: [
       "Weekly trash bin valet",
+      "Reliable customer support",
       "4 FREE bin cleanings per month",
       "1 FREE bulky item pickup per month",
       "50% discount on all pressure washing services",

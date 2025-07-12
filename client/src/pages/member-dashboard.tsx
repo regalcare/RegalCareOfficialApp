@@ -230,6 +230,10 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                             <CheckCircle className="h-4 w-4" />
                             Weekly trash bin valet
                           </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Reliable customer support
+                          </div>
                         </div>
                       )}
                       
@@ -238,6 +242,10 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
                             Weekly trash bin valet
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Reliable customer support
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
@@ -259,6 +267,10 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
                             Weekly trash bin valet
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Reliable customer support
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
@@ -300,6 +312,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
                                 <li>• Weekly trash bin valet</li>
+                                <li>• Reliable customer support</li>
                                 <li>• 2 FREE bin cleanings per month</li>
                                 <li>• 1 FREE bulky item pick every 2 months</li>
                                 <li>• 15% discount on all pressure washing services</li>
@@ -317,6 +330,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
                                 <li>• Weekly trash bin valet</li>
+                                <li>• Reliable customer support</li>
                                 <li>• 4 FREE bin cleanings per month</li>
                                 <li>• 1 FREE bulky item pickup per month</li>
                                 <li>• 50% discount on all pressure washing services</li>
@@ -338,6 +352,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                             </div>
                             <ul className="text-sm text-gray-600 space-y-1 mb-3">
                               <li>• Weekly trash bin valet</li>
+                              <li>• Reliable customer support</li>
                               <li>• 4 FREE bin cleanings per month</li>
                               <li>• 1 FREE bulky item pickup per month</li>
                               <li>• 50% discount on all pressure washing services</li>
