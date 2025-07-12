@@ -261,6 +261,10 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
+                            Customer support via messaging
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
                             Priority customer support
                           </div>
                           <div className="flex items-center gap-2">
@@ -290,7 +294,27 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
+                            Customer support via messaging
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Priority customer support
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
                             VIP customer support with dedicated line
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            <span className="font-semibold">2 FREE bin cleanings per service</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Additional bins: $34 each (normally $40)
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            15% discount on pressure washing services
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
@@ -327,10 +351,13 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                                 <span className="text-lg font-bold text-blue-600">$99.99/month</span>
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
+                                <li>• Weekly trash can moving service</li>
+                                <li>• SMS notifications before pickup</li>
+                                <li>• Customer support via messaging</li>
+                                <li>• Priority customer support</li>
                                 <li>• 2 FREE bin cleanings per service</li>
                                 <li>• $34 per additional bin (save $6)</li>
                                 <li>• 15% discount on pressure washing</li>
-                                <li>• Priority support</li>
                               </ul>
                               <Button onClick={() => handleUpgrade('premium')} className="w-full">Upgrade to Premium</Button>
                             </div>
@@ -344,9 +371,16 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                                 <span className="text-lg font-bold text-purple-600">$199.99/month</span>
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
+                                <li>• Weekly trash can moving service</li>
+                                <li>• SMS notifications before pickup</li>
+                                <li>• Customer support via messaging</li>
+                                <li>• Priority customer support</li>
+                                <li>• VIP support with dedicated line</li>
+                                <li>• 2 FREE bin cleanings per service</li>
+                                <li>• $34 per additional bin (save $6)</li>
+                                <li>• 15% discount on pressure washing</li>
                                 <li>• 4 FREE bin cleanings per month</li>
                                 <li>• Monthly pressure washing included</li>
-                                <li>• VIP support with dedicated line</li>
                                 <li>• Same-day service when available</li>
                               </ul>
                               <Button onClick={() => handleUpgrade('ultimate')} className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
@@ -364,9 +398,16 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                               <span className="text-lg font-bold text-purple-600">$199.99/month</span>
                             </div>
                             <ul className="text-sm text-gray-600 space-y-1 mb-3">
-                              <li>• 4 FREE bin cleanings per month (vs 2 free per service)</li>
+                              <li>• Weekly trash can moving service</li>
+                              <li>• SMS notifications before pickup</li>
+                              <li>• Customer support via messaging</li>
+                              <li>• Priority customer support</li>
+                              <li>• VIP support with dedicated line</li>
+                              <li>• 2 FREE bin cleanings per service</li>
+                              <li>• $34 per additional bin (save $6)</li>
+                              <li>• 15% discount on pressure washing</li>
+                              <li>• 4 FREE bin cleanings per month</li>
                               <li>• Monthly pressure washing included</li>
-                              <li>• VIP support upgrade</li>
                               <li>• Same-day service when available</li>
                             </ul>
                             <Button onClick={() => handleUpgrade('ultimate')} className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
