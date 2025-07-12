@@ -443,10 +443,10 @@ export default function CustomerPortal() {
                     <div className={`inline-flex p-3 rounded-full ${plan.color} mb-4`}>
                       <IconComponent className="h-6 w-6" />
                     </div>
-                    <CardTitle className="text-xl">{plan.name}</CardTitle>
-                    <div className="text-3xl font-bold text-gray-900">
+                    <CardTitle className="text-3xl">{plan.name}</CardTitle>
+                    <div className="text-xl font-bold text-gray-900">
                       ${plan.price}
-                      <span className="text-base font-normal text-gray-600">/month</span>
+                      <span className="text-sm font-normal text-gray-600">/month</span>
                     </div>
                   </CardHeader>
                   
