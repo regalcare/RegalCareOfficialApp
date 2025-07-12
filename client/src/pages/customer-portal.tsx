@@ -71,7 +71,7 @@ const plans: Plan[] = [
 ];
 
 export default function CustomerPortal() {
-  const [step, setStep] = useState<'signup' | 'plans' | 'benefits' | 'payment' | 'confirmation' | 'member'>('signup');
+  const [step, setStep] = useState<'signup' | 'plans' | 'benefits' | 'payment' | 'confirmation' | 'member' | 'login'>('signup');
   const [signupData, setSignupData] = useState<SignupData>({
     name: "",
     phone: "",
@@ -87,6 +87,10 @@ export default function CustomerPortal() {
     billingAddress: ""
   });
   const [createdCustomer, setCreatedCustomer] = useState<any>(null);
+  const [loginData, setLoginData] = useState({
+    phone: "",
+    email: ""
+  });
   const { toast } = useToast();
 
   // Dummy customer data for demo purposes
@@ -180,6 +184,40 @@ export default function CustomerPortal() {
     },
   });
 
+  const loginMutation = useMutation({
+    mutationFn: async (loginInfo: { phone: string; email: string }) => {
+      const response = await apiRequest("GET", "/api/customers");
+      const customers = response;
+      
+      // Find customer by phone number (primary) or email (secondary)
+      const customer = customers.find((c: any) => 
+        c.phone.replace(/\D/g, '') === loginInfo.phone.replace(/\D/g, '') || 
+        (loginInfo.email && c.email === loginInfo.email)
+      );
+      
+      if (!customer) {
+        throw new Error("Customer not found");
+      }
+      
+      return customer;
+    },
+    onSuccess: (customer) => {
+      setCreatedCustomer(customer);
+      setStep('member');
+      toast({
+        title: "Welcome back!",
+        description: `Logged in successfully as ${customer.name}`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Login Failed",
+        description: "Customer not found. Please check your phone number or email.",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!signupData.name || !signupData.phone || !signupData.address) {
@@ -191,6 +229,19 @@ export default function CustomerPortal() {
       return;
     }
     setStep('plans');
+  };
+
+  const handleLoginSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginData.phone && !loginData.email) {
+      toast({
+        title: "Missing Information",
+        description: "Please provide your phone number or email address",
+        variant: "destructive",
+      });
+      return;
+    }
+    loginMutation.mutate(loginData);
   };
 
   const handlePlanSelect = (planId: string) => {
@@ -211,81 +262,152 @@ export default function CustomerPortal() {
     });
   };
 
-  if (step === 'signup') {
+  if (step === 'signup' || step === 'login') {
     return (
       <div className="min-h-screen bg-gray-50">
         {renderNavigation()}
         <div className="flex items-center justify-center p-4">
           <Card className="w-full max-w-md">
             <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Welcome to regal care</CardTitle>
-            <p className="text-gray-600">Sign up for professional waste management service</p>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSignupSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="name">Full Name *</Label>
-                <Input
-                  id="name"
-                  value={signupData.name}
-                  onChange={(e) => setSignupData({...signupData, name: e.target.value})}
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
+              <CardTitle className="text-2xl">
+                {step === 'login' ? 'Welcome back to regal care' : 'Welcome to regal care'}
+              </CardTitle>
+              <p className="text-gray-600">
+                {step === 'login' ? 'Access your member dashboard' : 'Sign up for professional waste management service'}
+              </p>
               
-              <div>
-                <Label htmlFor="phone">Phone Number *</Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={signupData.phone}
-                    onChange={(e) => setSignupData({...signupData, phone: e.target.value})}
-                    placeholder="(555) 123-4567"
-                    className="pl-10"
-                    required
-                  />
-                </div>
+              {/* Toggle between Login and Sign Up */}
+              <div className="flex gap-2 justify-center mt-4">
+                <Button
+                  variant={step === 'signup' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setStep('signup')}
+                  type="button"
+                >
+                  New Customer
+                </Button>
+                <Button
+                  variant={step === 'login' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setStep('login')}
+                  type="button"
+                >
+                  Existing Customer
+                </Button>
               </div>
+            </CardHeader>
+            <CardContent>
+              {step === 'signup' ? (
+                <form onSubmit={handleSignupSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Full Name *</Label>
+                    <Input
+                      id="name"
+                      value={signupData.name}
+                      onChange={(e) => setSignupData({...signupData, name: e.target.value})}
+                      placeholder="Enter your full name"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="phone">Phone Number *</Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={signupData.phone}
+                        onChange={(e) => setSignupData({...signupData, phone: e.target.value})}
+                        placeholder="(555) 123-4567"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
 
-              <div>
-                <Label htmlFor="email">Email Address</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="email"
-                    type="email"
-                    value={signupData.email}
-                    onChange={(e) => setSignupData({...signupData, email: e.target.value})}
-                    placeholder="your@email.com"
-                    className="pl-10"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="address">Service Address *</Label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                  <Input
-                    id="address"
-                    value={signupData.address}
-                    onChange={(e) => setSignupData({...signupData, address: e.target.value})}
-                    placeholder="123 Main Street, City, State"
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
+                  <div>
+                    <Label htmlFor="email">Email Address</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="email"
+                        type="email"
+                        value={signupData.email}
+                        onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                        placeholder="your@email.com"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="address">Service Address *</Label>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="address"
+                        value={signupData.address}
+                        onChange={(e) => setSignupData({...signupData, address: e.target.value})}
+                        placeholder="123 Main Street, City, State"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
 
-              <Button type="submit" className="w-full">
-                Continue to Plans
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </form>
-          </CardContent>
+                  <Button type="submit" className="w-full">
+                    Continue to Plans
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </form>
+              ) : (
+                <form onSubmit={handleLoginSubmit} className="space-y-4">
+                  <div>
+                    <Label htmlFor="loginPhone">Phone Number</Label>
+                    <div className="relative">
+                      <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="loginPhone"
+                        type="tel"
+                        value={loginData.phone}
+                        onChange={(e) => setLoginData({...loginData, phone: e.target.value})}
+                        placeholder="(555) 123-4567"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="text-center text-sm text-gray-500">
+                    OR
+                  </div>
+
+                  <div>
+                    <Label htmlFor="loginEmail">Email Address</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                      <Input
+                        id="loginEmail"
+                        type="email"
+                        value={loginData.email}
+                        onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                        placeholder="your@email.com"
+                        className="pl-10"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+                    <p>Enter either your phone number or email address to access your member dashboard.</p>
+                  </div>
+
+                  <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                    {loginMutation.isPending ? "Logging in..." : "Access Dashboard"}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </form>
+              )}
+            </CardContent>
         </Card>
         </div>
       </div>
