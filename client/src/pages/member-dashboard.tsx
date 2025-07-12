@@ -232,10 +232,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            SMS notifications before pickup
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
                             Customer support via messaging
                           </div>
                           <div className="flex items-center gap-2">
@@ -254,10 +250,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
                             Weekly trash can moving service
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            SMS notifications before pickup
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
@@ -287,10 +279,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
                             Weekly trash can moving service
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            SMS notifications before pickup
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
@@ -352,7 +340,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
                                 <li>• Weekly trash can moving service</li>
-                                <li>• SMS notifications before pickup</li>
                                 <li>• Customer support via messaging</li>
                                 <li>• Priority customer support</li>
                                 <li>• 2 FREE bin cleanings per service</li>
@@ -372,7 +359,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
                                 <li>• Weekly trash can moving service</li>
-                                <li>• SMS notifications before pickup</li>
                                 <li>• Customer support via messaging</li>
                                 <li>• Priority customer support</li>
                                 <li>• VIP support with dedicated line</li>
@@ -399,7 +385,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                             </div>
                             <ul className="text-sm text-gray-600 space-y-1 mb-3">
                               <li>• Weekly trash can moving service</li>
-                              <li>• SMS notifications before pickup</li>
                               <li>• Customer support via messaging</li>
                               <li>• Priority customer support</li>
                               <li>• VIP support with dedicated line</li>
