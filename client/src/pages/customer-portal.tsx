@@ -455,7 +455,7 @@ export default function CustomerPortal() {
               </div>
             </div>
             {billingCycle === 'yearly' && (
-              <p className="text-sm text-green-600 font-medium">Get 1 month free with annual billing</p>
+              <p className="text-sm text-green-600 font-medium">Save on months with yearly plans</p>
             )}
           </div>
 
