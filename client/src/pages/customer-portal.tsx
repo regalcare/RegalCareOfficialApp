@@ -284,7 +284,7 @@ export default function CustomerPortal() {
                   onClick={() => setStep('signup')}
                   type="button"
                 >
-                  New Customer
+                  New Member
                 </Button>
                 <Button
                   variant={step === 'login' ? 'default' : 'outline'}
@@ -292,7 +292,7 @@ export default function CustomerPortal() {
                   onClick={() => setStep('login')}
                   type="button"
                 >
-                  Existing Customer
+                  Existing Member
                 </Button>
               </div>
             </CardHeader>
