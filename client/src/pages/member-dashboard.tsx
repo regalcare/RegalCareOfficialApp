@@ -26,6 +26,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
   const [serviceDate, setServiceDate] = useState("");
   const [serviceType, setServiceType] = useState("");
   const [binCount, setBinCount] = useState("1");
+  const [pressureWashArea, setPressureWashArea] = useState("");
   const [showPlanModal, setShowPlanModal] = useState(false);
   const { toast } = useToast();
   const [, setLocation] = useLocation();
@@ -68,6 +69,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       setServiceDate("");
       setServiceType("");
       setBinCount("1");
+      setPressureWashArea("");
       toast({
         title: "Service scheduled",
         description: "Your service has been scheduled successfully",
@@ -105,6 +107,15 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       return;
     }
 
+    if (serviceType === "pressure-washing" && !pressureWashArea.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please describe the area that needs pressure washing",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Verify the selected date is a Tuesday
     const selectedDate = new Date(serviceDate);
     const dayOfWeek = selectedDate.getDay();
@@ -136,11 +147,11 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
         servicePrice = 0;
       }
     } else if (serviceType === "pressure-washing") {
-      // Pressure washing is $50 regardless of plan
-      servicePrice = 5000; // $50.00 in cents
+      // Pressure washing requires custom quote - price set to 0 for now
+      servicePrice = 0;
     }
 
-    scheduleServiceMutation.mutate({
+    const serviceData: any = {
       customerId: customerId,
       customerName: customerData.name,
       address: customerData.address,
@@ -150,7 +161,14 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       binCount: serviceType === "bin-cleaning" ? parseInt(binCount) : 1, // Default to 1 for pressure washing
       price: servicePrice,
       status: "scheduled",
-    });
+    };
+
+    // Add pressure washing area details if applicable
+    if (serviceType === "pressure-washing") {
+      serviceData.notes = `Pressure washing area: ${pressureWashArea}`;
+    }
+
+    scheduleServiceMutation.mutate(serviceData);
   };
 
   const customerMessages = messages?.filter(msg => msg.customerId === customerId) || [];
@@ -493,7 +511,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                             <SelectItem value="bin-cleaning">
                               Bin Cleaning - {customerData.plan === 'basic' ? '$40 per bin' : customerData.plan === 'premium' ? '2 free, then $34 per bin' : 'Included in plan'}
                             </SelectItem>
-                            <SelectItem value="pressure-washing">Pressure Washing - $50</SelectItem>
+                            <SelectItem value="pressure-washing">Pressure Washing</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -515,6 +533,27 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         </div>
                       )}
                     </div>
+
+                    {serviceType === "pressure-washing" && (
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h4 className="font-medium text-blue-800 mb-3">Pressure Washing Details</h4>
+                        <div>
+                          <Label htmlFor="pressureWashArea">What area of your house needs pressure washing?</Label>
+                          <Textarea
+                            id="pressureWashArea"
+                            value={pressureWashArea}
+                            onChange={(e) => setPressureWashArea(e.target.value)}
+                            placeholder="Please describe the specific area(s) that need pressure washing (e.g., driveway, deck, siding, walkway, patio, etc.)"
+                            className="mt-2"
+                            rows={3}
+                            required
+                          />
+                        </div>
+                        <p className="text-sm text-blue-700 mt-2">
+                          Our team will contact you to provide a custom quote based on the area and scope of work.
+                        </p>
+                      </div>
+                    )}
 
                     <div>
                       <Label htmlFor="serviceDate">Service Date</Label>
@@ -570,7 +609,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           </div>
                         ) : (
                           <div className="text-sm text-green-700">
-                            <p>• Pressure washing: $50.00</p>
+                            <p>• Pressure washing: Custom quote based on area and scope</p>
                           </div>
                         )}
                       </div>
