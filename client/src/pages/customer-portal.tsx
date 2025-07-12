@@ -35,10 +35,7 @@ const plans: Plan[] = [
     icon: Shield,
     color: "bg-blue-50 border-blue-200 text-blue-800",
     features: [
-      "Weekly trash bin valet service",
-      "Up to 3 cans included",
-      "Reliable weekly pickup",
-      "Email notifications"
+      "Weekly trash bin valet"
     ]
   },
   {
@@ -48,10 +45,10 @@ const plans: Plan[] = [
     icon: Zap,
     color: "bg-green-50 border-green-200 text-green-800",
     features: [
-      "Weekly trash bin valet service",
-      "2 free bin cleanings per month",
-      "15% off all pressure washing services",
-      "Priority customer support"
+      "Weekly trash bin valet",
+      "2 FREE bin cleanings per month",
+      "1 FREE bulky item pick every 2 months",
+      "15% discount on all pressure washing services"
     ],
     popular: true
   },
@@ -62,10 +59,11 @@ const plans: Plan[] = [
     icon: Crown,
     color: "bg-purple-50 border-purple-200 text-purple-800",
     features: [
-      "Weekly trash bin valet service",
-      "4 free bin cleanings per month",
-      "50% off all pressure washing services",
-      "Premium support & priority scheduling"
+      "Weekly trash bin valet",
+      "4 FREE bin cleanings per month",
+      "1 FREE bulky item pickup per month",
+      "50% discount on all pressure washing services",
+      "Priority scheduling"
     ]
   }
 ];
