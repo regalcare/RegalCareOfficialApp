@@ -228,19 +228,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         <div className="space-y-2 text-sm text-green-700">
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            Weekly trash can moving service
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            Customer support via messaging
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <X className="h-4 w-4 text-red-500" />
-                            <span className="text-gray-600">Bin cleaning: $40 per bin</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <X className="h-4 w-4 text-red-500" />
-                            <span className="text-gray-600">No pressure washing discount</span>
+                            Weekly trash bin valet
                           </div>
                         </div>
                       )}
@@ -249,27 +237,19 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         <div className="space-y-2 text-sm text-green-700">
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            Weekly trash can moving service
+                            Weekly trash bin valet
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            Customer support via messaging
+                            <span className="font-semibold">2 FREE bin cleanings per month</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            Priority customer support
+                            1 FREE bulky item pick every 2 months
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            <span className="font-semibold">2 FREE bin cleanings per service</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            Additional bins: $34 each (normally $40)
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            15% discount on pressure washing services
+                            15% discount on all pressure washing services
                           </div>
                         </div>
                       )}
@@ -278,31 +258,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         <div className="space-y-2 text-sm text-green-700">
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            Weekly trash can moving service
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            Customer support via messaging
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            Priority customer support
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            VIP customer support with dedicated line
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            <span className="font-semibold">2 FREE bin cleanings per service</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            Additional bins: $34 each (normally $40)
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4" />
-                            15% discount on pressure washing services
+                            Weekly trash bin valet
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
@@ -310,11 +266,15 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            <span className="font-semibold">Monthly pressure washing included</span>
+                            1 FREE bulky item pickup per month
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            Same-day service requests when available
+                            50% discount on all pressure washing services
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            <span className="font-semibold">Priority scheduling</span>
                           </div>
                         </div>
                       )}
@@ -339,12 +299,10 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                                 <span className="text-lg font-bold text-blue-600">$99.99/month</span>
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
-                                <li>• Weekly trash can moving service</li>
-                                <li>• Customer support via messaging</li>
-                                <li>• Priority customer support</li>
-                                <li>• 2 FREE bin cleanings per service</li>
-                                <li>• $34 per additional bin (save $6)</li>
-                                <li>• 15% discount on pressure washing</li>
+                                <li>• Weekly trash bin valet</li>
+                                <li>• 2 FREE bin cleanings per month</li>
+                                <li>• 1 FREE bulky item pick every 2 months</li>
+                                <li>• 15% discount on all pressure washing services</li>
                               </ul>
                               <Button onClick={() => handleUpgrade('premium')} className="w-full">Upgrade to Premium</Button>
                             </div>
@@ -358,16 +316,11 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                                 <span className="text-lg font-bold text-purple-600">$199.99/month</span>
                               </div>
                               <ul className="text-sm text-gray-600 space-y-1 mb-3">
-                                <li>• Weekly trash can moving service</li>
-                                <li>• Customer support via messaging</li>
-                                <li>• Priority customer support</li>
-                                <li>• VIP support with dedicated line</li>
-                                <li>• 2 FREE bin cleanings per service</li>
-                                <li>• $34 per additional bin (save $6)</li>
-                                <li>• 15% discount on pressure washing</li>
+                                <li>• Weekly trash bin valet</li>
                                 <li>• 4 FREE bin cleanings per month</li>
-                                <li>• Monthly pressure washing included</li>
-                                <li>• Same-day service when available</li>
+                                <li>• 1 FREE bulky item pickup per month</li>
+                                <li>• 50% discount on all pressure washing services</li>
+                                <li>• Priority scheduling</li>
                               </ul>
                               <Button onClick={() => handleUpgrade('ultimate')} className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
                             </div>
@@ -384,16 +337,11 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                               <span className="text-lg font-bold text-purple-600">$199.99/month</span>
                             </div>
                             <ul className="text-sm text-gray-600 space-y-1 mb-3">
-                              <li>• Weekly trash can moving service</li>
-                              <li>• Customer support via messaging</li>
-                              <li>• Priority customer support</li>
-                              <li>• VIP support with dedicated line</li>
-                              <li>• 2 FREE bin cleanings per service</li>
-                              <li>• $34 per additional bin (save $6)</li>
-                              <li>• 15% discount on pressure washing</li>
+                              <li>• Weekly trash bin valet</li>
                               <li>• 4 FREE bin cleanings per month</li>
-                              <li>• Monthly pressure washing included</li>
-                              <li>• Same-day service when available</li>
+                              <li>• 1 FREE bulky item pickup per month</li>
+                              <li>• 50% discount on all pressure washing services</li>
+                              <li>• Priority scheduling</li>
                             </ul>
                             <Button onClick={() => handleUpgrade('ultimate')} className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
                           </div>
