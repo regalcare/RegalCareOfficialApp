@@ -61,7 +61,7 @@ const plans: Plan[] = [
     id: "ultimate",
     name: "Ultimate",
     price: 199.99,
-    yearlyPrice: 2189,
+    yearlyPrice: 1990,
     icon: Crown,
     color: "bg-purple-50 border-purple-200 text-purple-800",
     features: [
@@ -491,7 +491,7 @@ export default function CustomerPortal() {
                       <div className="text-sm text-green-600 font-medium">
                         {plan.id === 'basic' && '1 month free • Save $60'}
                         {plan.id === 'premium' && '1 month free • Save $110'}
-                        {plan.id === 'ultimate' && '1 month free • Save $211'}
+                        {plan.id === 'ultimate' && '2 months free • Save $398'}
                       </div>
                     )}
                   </CardHeader>
