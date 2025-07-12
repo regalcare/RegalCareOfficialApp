@@ -609,7 +609,11 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                           </div>
                         ) : (
                           <div className="text-sm text-green-700">
-                            <p>• Pressure washing: Custom quote based on area and scope</p>
+                            {customerData.plan === 'premium' ? (
+                              <p>• Pressure washing: $0.70/sqft, discounted by 15% with plan</p>
+                            ) : (
+                              <p>• Pressure washing: Custom quote based on area and scope</p>
+                            )}
                           </div>
                         )}
                       </div>
