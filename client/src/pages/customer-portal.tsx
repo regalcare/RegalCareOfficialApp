@@ -21,6 +21,7 @@ interface Plan {
   id: string;
   name: string;
   price: number;
+  yearlyPrice: number;
   icon: any;
   color: string;
   features: string[];
@@ -32,6 +33,7 @@ const plans: Plan[] = [
     id: "basic",
     name: "Basic",
     price: 59.99,
+    yearlyPrice: 660,
     icon: Shield,
     color: "bg-blue-50 border-blue-200 text-blue-800",
     features: [
@@ -43,6 +45,7 @@ const plans: Plan[] = [
     id: "premium",
     name: "Premium",
     price: 99.99,
+    yearlyPrice: 1089,
     icon: Zap,
     color: "bg-green-50 border-green-200 text-green-800",
     features: [
@@ -58,6 +61,7 @@ const plans: Plan[] = [
     id: "ultimate",
     name: "Ultimate",
     price: 199.99,
+    yearlyPrice: 2189,
     icon: Crown,
     color: "bg-purple-50 border-purple-200 text-purple-800",
     features: [
@@ -80,6 +84,7 @@ export default function CustomerPortal() {
     address: ""
   });
   const [selectedPlan, setSelectedPlan] = useState<string>("");
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
   const [paymentData, setPaymentData] = useState({
     cardNumber: "",
     expiryDate: "",
@@ -423,6 +428,35 @@ export default function CustomerPortal() {
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Choose Your Plan</h1>
             <p className="text-gray-600">Select the service level that works best for you</p>
+            
+            {/* Billing Cycle Toggle */}
+            <div className="flex items-center justify-center mt-6 mb-2">
+              <div className="bg-gray-100 p-1 rounded-lg flex">
+                <button
+                  onClick={() => setBillingCycle('monthly')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    billingCycle === 'monthly'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Monthly
+                </button>
+                <button
+                  onClick={() => setBillingCycle('yearly')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    billingCycle === 'yearly'
+                      ? 'bg-white text-gray-900 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  Yearly
+                </button>
+              </div>
+            </div>
+            {billingCycle === 'yearly' && (
+              <p className="text-sm text-green-600 font-medium">Save with annual billing</p>
+            )}
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -448,9 +482,16 @@ export default function CustomerPortal() {
                     </div>
                     <CardTitle className="text-3xl">{plan.name}</CardTitle>
                     <div className="text-xl font-bold text-gray-900">
-                      ${plan.price}
-                      <span className="text-sm font-normal text-gray-600">/month</span>
+                      ${billingCycle === 'monthly' ? plan.price : plan.yearlyPrice}
+                      <span className="text-sm font-normal text-gray-600">
+                        {billingCycle === 'monthly' ? '/month' : '/year'}
+                      </span>
                     </div>
+                    {billingCycle === 'yearly' && (
+                      <div className="text-sm text-green-600">
+                        Save ${((plan.price * 12) - plan.yearlyPrice).toFixed(0)} per year
+                      </div>
+                    )}
                   </CardHeader>
                   
                   <CardContent>
