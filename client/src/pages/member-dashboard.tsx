@@ -386,8 +386,8 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
         <Tabs defaultValue="messages" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="messages" className="flex items-center gap-2">
-              <MessageCircle className="h-4 w-4" />
-              Messages
+              <Send className="h-4 w-4" />
+              Leave a Message
             </TabsTrigger>
             <TabsTrigger value="schedule" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
@@ -404,63 +404,70 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <MessageCircle className="h-5 w-5" />
-                    Messages
+                    <Send className="h-5 w-5" />
+                    Leave a Message
                   </CardTitle>
+                  <p className="text-sm text-gray-600">Send a message to regal care support team</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {messagesLoading ? (
-                      <div className="text-center py-8">
-                        <div className="animate-pulse">Loading messages...</div>
-                      </div>
-                    ) : customerMessages.length === 0 ? (
-                      <div className="text-center py-8 text-gray-500">
-                        No messages yet. Start a conversation below!
-                      </div>
-                    ) : (
-                      <div className="space-y-4 max-h-96 overflow-y-auto">
-                        {customerMessages.map((message) => (
-                          <div
-                            key={message.id}
-                            className={`flex ${message.isFromCustomer ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div
-                              className={`max-w-sm p-3 rounded-lg ${
-                                message.isFromCustomer
-                                  ? 'bg-blue-600 text-white'
-                                  : 'bg-gray-100 text-gray-900'
-                              }`}
-                            >
-                              <p className="text-sm">{message.message}</p>
-                              <p className={`text-xs mt-1 ${message.isFromCustomer ? 'text-blue-200' : 'text-gray-500'}`}>
-                                {format(new Date(message.createdAt), 'MMM d, h:mm a')}
-                              </p>
-                            </div>
+                  <form onSubmit={handleSendMessage} className="space-y-4">
+                    <div>
+                      <Label htmlFor="message">Your Message</Label>
+                      <Textarea
+                        id="message"
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        placeholder="How can we help you today? Please describe your question, concern, or feedback..."
+                        className="min-h-32"
+                        rows={6}
+                      />
+                    </div>
+                    
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-medium text-blue-800 mb-2">Quick Tips:</h4>
+                      <ul className="text-sm text-blue-700 space-y-1">
+                        <li>• Include specific details about your service address</li>
+                        <li>• Mention your preferred service dates if applicable</li>
+                        <li>• For urgent matters, please call us directly</li>
+                        <li>• We typically respond within 24 hours</li>
+                      </ul>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      disabled={sendMessageMutation.isPending || !newMessage.trim()}
+                      className="w-full"
+                    >
+                      {sendMessageMutation.isPending ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Send className="h-4 w-4 mr-2" />
+                          Send Message
+                        </>
+                      )}
+                    </Button>
+                  </form>
+
+                  {/* Recent Messages Summary */}
+                  {!messagesLoading && customerMessages.length > 0 && (
+                    <div className="mt-6 pt-6 border-t">
+                      <h4 className="font-medium text-gray-900 mb-3">Recent Messages</h4>
+                      <div className="space-y-2">
+                        {customerMessages.slice(-3).map((message) => (
+                          <div key={message.id} className="p-3 bg-gray-50 rounded-lg">
+                            <p className="text-sm text-gray-800">{message.message}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {message.isFromCustomer ? 'You' : 'regal care'} • {format(new Date(message.createdAt), 'MMM d, h:mm a')}
+                            </p>
                           </div>
                         ))}
                       </div>
-                    )}
-                  </div>
-
-                  <form onSubmit={handleSendMessage} className="mt-6">
-                    <div className="flex gap-2">
-                      <Textarea
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Type your message..."
-                        className="flex-1"
-                        rows={3}
-                      />
-                      <Button
-                        type="submit"
-                        disabled={sendMessageMutation.isPending || !newMessage.trim()}
-                        className="h-fit"
-                      >
-                        <Send className="h-4 w-4" />
-                      </Button>
                     </div>
-                  </form>
+                  )}
                 </CardContent>
               </Card>
             </div>
