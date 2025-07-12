@@ -628,7 +628,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         <li>• Professional cleaning equipment used</li>
                         <li>• Eco-friendly cleaning products</li>
                         <li>• Service scheduled during regular business hours</li>
-                        <li>• Not blocked by vehicles or locked gates</li>
                       </ul>
                     </div>
 
@@ -777,6 +776,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         <li>• Holiday schedules announced in advance</li>
                         <li>• Contact us if your bins are not serviced by 7 PM</li>
                         <li>• Bins should be accessible and not blocked by vehicles</li>
+                        <li>• Not blocked by vehicles or locked gates</li>
                       </ul>
                     </div>
                   </div>
