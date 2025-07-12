@@ -401,12 +401,8 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       </div>
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <Tabs defaultValue="messages" className="w-full">
+        <Tabs defaultValue="schedule" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="messages" className="flex items-center gap-2">
-              <Send className="h-4 w-4" />
-              Leave a Message
-            </TabsTrigger>
             <TabsTrigger value="schedule" className="flex items-center gap-2">
               <Settings className="h-4 w-4" />
               Schedule a Service
@@ -414,6 +410,10 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
             <TabsTrigger value="calendar" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Calendar
+            </TabsTrigger>
+            <TabsTrigger value="messages" className="flex items-center gap-2">
+              <Send className="h-4 w-4" />
+              Leave a Message
             </TabsTrigger>
           </TabsList>
 
