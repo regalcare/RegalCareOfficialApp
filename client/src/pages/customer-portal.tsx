@@ -587,7 +587,7 @@ export default function CustomerPortal() {
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-blue-800 mb-2">Service Details</h3>
                   <ul className="text-sm text-blue-700 space-y-1">
-                    <li>• All services begin August 1st</li>
+                    <li>• All services begin August 1st 2025</li>
                     <li>• Weekly pickup every {signupData.name ? 'Monday' : 'scheduled day'}</li>
                     <li>• Bins moved to curb by 7 AM, returned by 6 PM</li>
                     <li>• Holiday schedules may vary with advance notice</li>
