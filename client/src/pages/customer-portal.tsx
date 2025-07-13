@@ -67,8 +67,8 @@ const plans: Plan[] = [
     features: [
       "Weekly trash bin valet",
       "4 FREE bin cleanings per month",
-      "1 FREE bulky item pickup <span style='color: #059669; font-weight: 800; text-decoration: underline; text-decoration-color: #059669; text-decoration-thickness: 2px;'>per month</span>",
-      "<span style='color: #dc2626; font-weight: 800; text-decoration: underline; text-decoration-color: #dc2626; text-decoration-thickness: 2px; font-size: 1.1em;'>50%</span> discount on all pressure washing services",
+      "1 FREE bulky item pickup <span style='background-color: #dcfce7; color: #166534; font-weight: 800; text-decoration: underline; text-decoration-color: #059669; text-decoration-thickness: 2px; padding: 2px 4px; border-radius: 4px;'>per month</span>",
+      "<span style='background-color: #fee2e2; color: #991b1b; font-weight: 800; text-decoration: underline; text-decoration-color: #dc2626; text-decoration-thickness: 2px; font-size: 1.1em; padding: 2px 4px; border-radius: 4px;'>50%</span> discount on all pressure washing services",
       "Priority scheduling",
       "Reliable customer support"
     ]
