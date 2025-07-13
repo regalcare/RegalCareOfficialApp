@@ -476,7 +476,7 @@ export default function CustomerPortal() {
                 >
                   {plan.popular && (
                     <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                      <Badge className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-1 text-sm font-semibold shadow-lg">✨ Most Popular</Badge>
+                      <Badge className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-1 text-sm font-semibold shadow-lg whitespace-nowrap">✨ Most Popular</Badge>
                     </div>
                   )}
                   
