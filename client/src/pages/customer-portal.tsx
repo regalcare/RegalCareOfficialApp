@@ -37,7 +37,7 @@ const plans: Plan[] = [
     icon: Shield,
     color: "bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 text-blue-800",
     features: [
-      "Weekly trash bin valet",
+      "Weekly trash bin valet <span style='font-size: 0.75em; color: #64748b; font-style: italic;'>(up to 2 cans)</span>",
       "Reliable customer support"
     ]
   },
