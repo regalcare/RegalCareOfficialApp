@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Users, DollarSign, SprayCan, Droplets } from "lucide-react";
-import type { Customer, BinCleaningAppointment } from "@shared/schema";
+import { Calendar, Users, DollarSign, SprayCan, Droplets, MessageSquare, Clock, CheckCircle, Circle } from "lucide-react";
+import type { Customer, BinCleaningAppointment, Message } from "@shared/schema";
 import { format, addDays, startOfWeek, isSameDay } from "date-fns";
 
 export default function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data: customers } = useQuery<Customer[]>({
     queryKey: ["/api/customers"],
@@ -17,6 +21,10 @@ export default function Dashboard() {
 
   const { data: binCleaningAppointments } = useQuery<BinCleaningAppointment[]>({
     queryKey: ["/api/bin-cleaning"],
+  });
+
+  const { data: messages } = useQuery<Message[]>({
+    queryKey: ["/api/messages"],
   });
 
   // Generate week view for calendar
@@ -45,6 +53,26 @@ export default function Dashboard() {
     return binCleaningAppointments?.filter(a => a.date === dayStr) || [];
   };
 
+  const markMessageAsReadMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      return await apiRequest("PATCH", `/api/messages/${messageId}`, { status: 'read' });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/messages"] });
+      toast({
+        title: "Message marked as read",
+        description: "The message has been updated successfully.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to update message status.",
+        variant: "destructive",
+      });
+    },
+  });
+
   return (
     <div>
       <div className="mb-6">
@@ -53,7 +81,7 @@ export default function Dashboard() {
       </div>
 
       <Tabs defaultValue="calendar" className="space-y-6">
-        <TabsList className="grid w-full max-w-md grid-cols-3">
+        <TabsList className="grid w-full max-w-2xl grid-cols-4">
           <TabsTrigger value="calendar" className="flex items-center gap-2">
             <Calendar size={16} />
             Services Calendar
@@ -61,6 +89,15 @@ export default function Dashboard() {
           <TabsTrigger value="customers" className="flex items-center gap-2">
             <Users size={16} />
             Customer List
+          </TabsTrigger>
+          <TabsTrigger value="messages" className="flex items-center gap-2">
+            <MessageSquare size={16} />
+            Messages
+            {messages && messages.filter(m => m.status === 'pending').length > 0 && (
+              <Badge variant="destructive" className="ml-1 px-1.5 py-0.5 text-xs">
+                {messages.filter(m => m.status === 'pending').length}
+              </Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="revenue" className="flex items-center gap-2">
             <DollarSign size={16} />
@@ -182,6 +219,84 @@ export default function Dashboard() {
                       </div>
                     </div>
                   ))
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="messages" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare size={20} />
+                Client Messages
+              </CardTitle>
+              <p className="text-sm text-gray-600">
+                Messages from your customers through the customer portal
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {messages && messages.length > 0 ? (
+                  messages
+                    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                    .map((message) => (
+                      <div 
+                        key={message.id} 
+                        className={`p-4 rounded-lg border ${
+                          message.status === 'pending' 
+                            ? 'border-blue-200 bg-blue-50' 
+                            : 'border-gray-200 bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <p className="font-semibold text-gray-900">{message.customerName}</p>
+                              <Badge 
+                                variant={message.status === 'pending' ? 'destructive' : 'default'}
+                                className="text-xs"
+                              >
+                                {message.status === 'pending' ? 'New' : 'Read'}
+                              </Badge>
+                              <Badge variant="outline" className="text-xs">
+                                {message.subject}
+                              </Badge>
+                            </div>
+                            <p className="text-gray-700 mb-3">{message.content}</p>
+                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                              <div className="flex items-center gap-1">
+                                <Clock size={14} />
+                                {format(new Date(message.createdAt), 'MMM d, yyyy h:mm a')}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="flex gap-2 ml-4">
+                            {message.status === 'pending' && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => markMessageAsReadMutation.mutate(message.id)}
+                                disabled={markMessageAsReadMutation.isPending}
+                                className="flex items-center gap-1"
+                              >
+                                <CheckCircle size={14} />
+                                {markMessageAsReadMutation.isPending ? 'Updating...' : 'Mark Read'}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                ) : (
+                  <div className="text-center py-12">
+                    <MessageSquare className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No messages yet</h3>
+                    <p className="text-gray-500">
+                      Customer messages from the portal will appear here
+                    </p>
+                  </div>
                 )}
               </div>
             </CardContent>
