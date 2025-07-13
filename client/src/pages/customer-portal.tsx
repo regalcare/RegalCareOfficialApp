@@ -66,7 +66,7 @@ const plans: Plan[] = [
     color: "bg-gradient-to-br from-purple-50 to-indigo-100 border-purple-200 text-purple-800",
     features: [
       "Weekly trash bin valet",
-      "4 FREE bin cleanings <strong><u>per month</u></strong>",
+      "4 FREE bin cleanings per month",
       "1 FREE bulky item pickup <strong><u>per month</u></strong>",
       "<strong><u>50%</u></strong> discount on all pressure washing services",
       "Priority scheduling",
