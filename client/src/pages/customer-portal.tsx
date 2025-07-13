@@ -571,7 +571,7 @@ export default function CustomerPortal() {
                   {selectedPlanData?.features.map((feature, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{feature}</span>
+                      <span className="text-gray-700" dangerouslySetInnerHTML={{ __html: feature }}></span>
                     </li>
                   ))}
                 </ul>
