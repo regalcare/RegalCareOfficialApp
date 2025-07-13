@@ -50,8 +50,7 @@ const plans: Plan[] = [
     color: "bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-200 text-emerald-800",
     features: [
       "Weekly trash bin valet",
-      "2 FREE bin cleanings per month",
-      "1 FREE bulky item pick every 2 months",
+      "2 FREE bin cleanings quarterly",
       "15% discount on all pressure washing services",
       "Reliable customer support"
     ],
@@ -66,8 +65,7 @@ const plans: Plan[] = [
     color: "bg-gradient-to-br from-purple-50 to-indigo-100 border-purple-200 text-purple-800",
     features: [
       "Weekly trash bin valet",
-      "4 FREE bin cleanings per month",
-      "1 FREE bulky item pickup <span style='background-color: #dcfce7; color: #166534; font-weight: 800; text-decoration: underline; text-decoration-color: #059669; text-decoration-thickness: 2px; padding: 2px 4px; border-radius: 4px;'>per month</span>",
+      "4 FREE bin cleanings quarterly",
       "<span style='background-color: #fee2e2; color: #991b1b; font-weight: 800; text-decoration: underline; text-decoration-color: #dc2626; text-decoration-thickness: 2px; font-size: 1.1em; padding: 2px 4px; border-radius: 4px;'>50%</span> discount on all pressure washing services",
       "Priority scheduling",
       "Reliable customer support"
