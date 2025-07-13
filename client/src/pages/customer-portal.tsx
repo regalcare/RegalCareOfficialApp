@@ -35,7 +35,7 @@ const plans: Plan[] = [
     price: 59.99,
     yearlyPrice: 660,
     icon: Shield,
-    color: "bg-blue-50 border-blue-200 text-blue-800",
+    color: "bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 text-blue-800",
     features: [
       "Weekly trash bin valet",
       "Reliable customer support"
@@ -47,7 +47,7 @@ const plans: Plan[] = [
     price: 99.99,
     yearlyPrice: 1089,
     icon: Zap,
-    color: "bg-green-50 border-green-200 text-green-800",
+    color: "bg-gradient-to-br from-emerald-50 to-green-100 border-emerald-200 text-emerald-800",
     features: [
       "Weekly trash bin valet",
       "2 FREE bin cleanings per month",
@@ -63,7 +63,7 @@ const plans: Plan[] = [
     price: 199.99,
     yearlyPrice: 1990,
     icon: Crown,
-    color: "bg-purple-50 border-purple-200 text-purple-800",
+    color: "bg-gradient-to-br from-purple-50 to-indigo-100 border-purple-200 text-purple-800",
     features: [
       "Weekly trash bin valet",
       "4 FREE bin cleanings per month",
@@ -270,25 +270,26 @@ export default function CustomerPortal() {
 
   if (step === 'signup' || step === 'login') {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         {renderNavigation()}
         <div className="flex items-center justify-center p-4">
-          <Card className="w-full max-w-md">
-            <CardHeader className="text-center">
-              <CardTitle className="text-2xl">
+          <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="text-center pb-6">
+              <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 {step === 'login' ? 'Welcome back to regal care' : 'Welcome to regal care'}
               </CardTitle>
-              <p className="text-gray-600">
+              <p className="text-slate-600 text-lg">
                 {step === 'login' ? 'Access your member dashboard' : 'Sign up for professional waste management service'}
               </p>
               
               {/* Toggle between Login and Sign Up */}
-              <div className="flex gap-2 justify-center mt-4">
+              <div className="flex gap-2 justify-center mt-6">
                 <Button
                   variant={step === 'signup' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setStep('signup')}
                   type="button"
+                  className={step === 'signup' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}
                 >
                   New Member
                 </Button>
@@ -297,6 +298,7 @@ export default function CustomerPortal() {
                   size="sm"
                   onClick={() => setStep('login')}
                   type="button"
+                  className={step === 'login' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}
                 >
                   Existing Member
                 </Button>
@@ -304,110 +306,114 @@ export default function CustomerPortal() {
             </CardHeader>
             <CardContent>
               {step === 'signup' ? (
-                <form onSubmit={handleSignupSubmit} className="space-y-4">
+                <form onSubmit={handleSignupSubmit} className="space-y-6">
                   <div>
-                    <Label htmlFor="name">Full Name *</Label>
+                    <Label htmlFor="name" className="text-slate-700 font-medium">Full Name *</Label>
                     <Input
                       id="name"
                       value={signupData.name}
                       onChange={(e) => setSignupData({...signupData, name: e.target.value})}
                       placeholder="Enter your full name"
+                      className="mt-2 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                       required
                     />
                   </div>
                   
                   <div>
-                    <Label htmlFor="phone">Phone Number *</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Label htmlFor="phone" className="text-slate-700 font-medium">Phone Number *</Label>
+                    <div className="relative mt-2">
+                      <Phone className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
                       <Input
                         id="phone"
                         type="tel"
                         value={signupData.phone}
                         onChange={(e) => setSignupData({...signupData, phone: e.target.value})}
                         placeholder="(555) 123-4567"
-                        className="pl-10"
+                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                         required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="email">Email Address</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Label htmlFor="email" className="text-slate-700 font-medium">Email Address</Label>
+                    <div className="relative mt-2">
+                      <Mail className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
                       <Input
                         id="email"
                         type="email"
                         value={signupData.email}
                         onChange={(e) => setSignupData({...signupData, email: e.target.value})}
                         placeholder="your@email.com"
-                        className="pl-10"
+                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
                   
                   <div>
-                    <Label htmlFor="address">Service Address *</Label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Label htmlFor="address" className="text-slate-700 font-medium">Service Address *</Label>
+                    <div className="relative mt-2">
+                      <MapPin className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
                       <Input
                         id="address"
                         value={signupData.address}
                         onChange={(e) => setSignupData({...signupData, address: e.target.value})}
                         placeholder="123 Main Street, City, State"
-                        className="pl-10"
+                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                         required
                       />
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
                     Continue to Plans
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
               ) : (
-                <form onSubmit={handleLoginSubmit} className="space-y-4">
+                <form onSubmit={handleLoginSubmit} className="space-y-6">
                   <div>
-                    <Label htmlFor="loginPhone">Phone Number</Label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Label htmlFor="loginPhone" className="text-slate-700 font-medium">Phone Number</Label>
+                    <div className="relative mt-2">
+                      <Phone className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
                       <Input
                         id="loginPhone"
                         type="tel"
                         value={loginData.phone}
                         onChange={(e) => setLoginData({...loginData, phone: e.target.value})}
                         placeholder="(555) 123-4567"
-                        className="pl-10"
+                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
 
-                  <div className="text-center text-sm text-gray-500">
-                    OR
+                  <div className="text-center text-sm text-slate-500 relative">
+                    <span className="bg-white px-3 text-slate-400">OR</span>
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-200"></div>
+                    </div>
                   </div>
 
                   <div>
-                    <Label htmlFor="loginEmail">Email Address</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Label htmlFor="loginEmail" className="text-slate-700 font-medium">Email Address</Label>
+                    <div className="relative mt-2">
+                      <Mail className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
                       <Input
                         id="loginEmail"
                         type="email"
                         value={loginData.email}
                         onChange={(e) => setLoginData({...loginData, email: e.target.value})}
                         placeholder="your@email.com"
-                        className="pl-10"
+                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                       />
                     </div>
                   </div>
 
-                  <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-lg">
+                  <div className="text-sm text-blue-700 bg-blue-50 p-4 rounded-xl border border-blue-100">
                     <p>Enter either your phone number or email address to access your member dashboard.</p>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={loginMutation.isPending}>
+                  <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200" disabled={loginMutation.isPending}>
                     {loginMutation.isPending ? "Logging in..." : "Access Dashboard"}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -422,32 +428,32 @@ export default function CustomerPortal() {
 
   if (step === 'plans') {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         {renderNavigation()}
-        <div className="max-w-6xl mx-auto p-4">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Choose Your Plan</h1>
-            <p className="text-gray-600">Select the service level that works best for you</p>
+        <div className="max-w-7xl mx-auto p-6">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">Choose Your Plan</h1>
+            <p className="text-slate-600 text-xl">Select the service level that works best for you</p>
             
             {/* Billing Cycle Toggle */}
-            <div className="flex items-center justify-center mt-6 mb-2">
-              <div className="bg-gray-100 p-1 rounded-lg flex">
+            <div className="flex items-center justify-center mt-8 mb-4">
+              <div className="bg-white/80 backdrop-blur-sm p-1.5 rounded-xl flex shadow-lg border border-slate-200">
                 <button
                   onClick={() => setBillingCycle('monthly')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     billingCycle === 'monthly'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   Monthly
                 </button>
                 <button
                   onClick={() => setBillingCycle('yearly')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-6 py-3 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     billingCycle === 'yearly'
-                      ? 'bg-white text-gray-900 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   Yearly
@@ -455,66 +461,69 @@ export default function CustomerPortal() {
               </div>
             </div>
             {billingCycle === 'yearly' && (
-              <p className="text-sm text-green-600 font-medium">Save each month with yearly plans</p>
+              <p className="text-sm text-emerald-600 font-semibold bg-emerald-50 px-4 py-2 rounded-full inline-block">💰 Save each month with yearly plans</p>
             )}
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {plans.map((plan) => {
               const IconComponent = plan.icon;
               return (
                 <Card 
                   key={plan.id} 
-                  className={`relative cursor-pointer transition-all hover:shadow-lg ${
-                    plan.popular ? 'ring-2 ring-primary border-primary' : 'border-gray-200'
+                  className={`relative cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-2xl bg-white/80 backdrop-blur-sm border-0 ${
+                    plan.popular ? 'ring-2 ring-gradient-to-r from-emerald-400 to-blue-500 shadow-xl scale-105' : 'shadow-lg'
                   }`}
                   onClick={() => handlePlanSelect(plan.id)}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-primary text-white">Most Popular</Badge>
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                      <Badge className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-1 text-sm font-semibold shadow-lg">✨ Most Popular</Badge>
                     </div>
                   )}
                   
-                  <CardHeader className="text-center pb-4">
-                    <div className={`inline-flex p-3 rounded-full ${plan.color} mb-4`}>
-                      <IconComponent className="h-6 w-6" />
+                  <CardHeader className="text-center pb-6">
+                    <div className={`inline-flex p-4 rounded-2xl ${plan.color} mb-6 shadow-lg`}>
+                      <IconComponent className="h-8 w-8" />
                     </div>
-                    <CardTitle className="text-3xl">{plan.name}</CardTitle>
-                    <div className="text-xl font-bold text-gray-900">
+                    <CardTitle className="text-2xl font-bold text-slate-800 mb-3">{plan.name}</CardTitle>
+                    <div className="text-3xl font-bold text-slate-900 mb-2">
                       ${billingCycle === 'monthly' ? plan.price : plan.yearlyPrice}
-                      <span className="text-sm font-normal text-gray-600">
+                      <span className="text-lg font-normal text-slate-500">
                         {billingCycle === 'monthly' ? '/month' : '/year'}
                       </span>
                     </div>
                     {billingCycle === 'yearly' && (
-                      <div className="text-sm text-green-600 font-medium">
-                        {plan.id === 'basic' && '1 month free • Save $60'}
-                        {plan.id === 'premium' && '1 month free • Save $110'}
-                        {plan.id === 'ultimate' && '2 months free • Save $398'}
+                      <div className="text-sm text-emerald-600 font-semibold bg-emerald-50 px-3 py-1 rounded-full inline-block">
+                        {plan.id === 'basic' && '💰 1 month free • Save $60'}
+                        {plan.id === 'premium' && '💰 1 month free • Save $110'}
+                        {plan.id === 'ultimate' && '💰 2 months free • Save $398'}
                       </div>
                     )}
                   </CardHeader>
                   
-                  <CardContent>
-                    <ul className="space-y-3">
+                  <CardContent className="px-6 pb-8">
+                    <ul className="space-y-4 mb-8">
                       {plan.features.map((feature, index) => (
-                        <li key={index} className="flex items-center">
-                          <Check className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
-                          <span className="text-sm text-gray-600">{feature}</span>
+                        <li key={index} className="flex items-start">
+                          <div className="flex-shrink-0 w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center mt-0.5 mr-3">
+                            <Check className="h-3 w-3 text-emerald-600" />
+                          </div>
+                          <span className="text-slate-700 leading-relaxed">{feature}</span>
                         </li>
                       ))}
                     </ul>
                     
                     <Button 
-                      className={`w-full mt-6 ${
+                      className={`w-full py-3 text-base font-semibold transition-all duration-200 shadow-lg hover:shadow-xl ${
                         plan.popular 
-                          ? 'bg-primary hover:bg-primary/90' 
-                          : 'bg-gray-900 hover:bg-gray-800'
+                          ? 'bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white' 
+                          : 'bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-800 hover:to-slate-900 text-white'
                       }`}
                       disabled={createCustomerMutation.isPending}
                     >
                       {createCustomerMutation.isPending ? 'Setting up...' : 'Select Plan'}
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </CardContent>
                 </Card>
