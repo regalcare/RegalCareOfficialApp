@@ -274,7 +274,7 @@ export default function CustomerPortal() {
           <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
               <CardTitle className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                {step === 'login' ? 'Welcome back to regal care' : 'Welcome to regal care'}
+                {step === 'login' ? 'Welcome back to ' : 'Welcome to '}<span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span>
               </CardTitle>
               <p className="text-slate-600 text-lg">
                 {step === 'login' ? 'Access your member dashboard' : 'Sign up for professional waste management service'}
@@ -551,7 +551,7 @@ export default function CustomerPortal() {
         {renderNavigation()}
         <div className="max-w-4xl mx-auto p-4">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your regal care Benefits</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> Benefits</h1>
             <p className="text-gray-600">Review what's included with your {selectedPlanData?.name} plan</p>
           </div>
 
@@ -645,7 +645,7 @@ export default function CustomerPortal() {
         <div className="max-w-2xl mx-auto p-4">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Information</h1>
-            <p className="text-gray-600">Complete your regal care subscription</p>
+            <p className="text-gray-600">Complete your <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> subscription</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -780,7 +780,7 @@ export default function CustomerPortal() {
             <div className="mx-auto bg-green-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4">
               <Check className="h-8 w-8 text-green-600" />
             </div>
-            <CardTitle className="text-2xl text-green-600">Welcome to regal care!</CardTitle>
+            <CardTitle className="text-2xl text-green-600">Welcome to <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span>!</CardTitle>
             <p className="text-gray-600">Your subscription is now active</p>
           </CardHeader>
           

@@ -217,7 +217,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
-              <p className="text-gray-600">regal care member dashboard</p>
+              <p className="text-gray-600"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> member dashboard</p>
             </div>
             <div className="flex items-center gap-2">
               <Dialog open={showPlanModal} onOpenChange={setShowPlanModal}>
@@ -425,7 +425,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                     <Send className="h-5 w-5" />
                     Leave a Message
                   </CardTitle>
-                  <p className="text-sm text-gray-600">Send a message to regal care support team</p>
+                  <p className="text-sm text-gray-600">Send a message to <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> support team</p>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSendMessage} className="space-y-4">
