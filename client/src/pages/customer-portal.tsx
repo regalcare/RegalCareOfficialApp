@@ -485,7 +485,7 @@ export default function CustomerPortal() {
                   <CardHeader className="text-center pb-6">
                     <div className={`inline-flex flex-col items-center gap-2 p-4 rounded-2xl ${plan.color} mb-6 shadow-lg`}>
                       <IconComponent className="h-8 w-8" />
-                      <span className="text-sm font-semibold">{plan.name}</span>
+                      <span className="text-lg font-bold">{plan.name}</span>
                     </div>
                     <div className="text-3xl font-bold text-slate-900 mb-2">
                       ${billingCycle === 'monthly' ? plan.price : plan.yearlyPrice}
