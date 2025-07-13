@@ -66,9 +66,9 @@ const plans: Plan[] = [
     color: "bg-gradient-to-br from-purple-50 to-indigo-100 border-purple-200 text-purple-800",
     features: [
       "Weekly trash bin valet",
-      "4 FREE bin cleanings per month",
-      "1 FREE bulky item pickup per month",
-      "50% discount on all pressure washing services",
+      "4 FREE bin cleanings <strong><u>per month</u></strong>",
+      "1 FREE bulky item pickup <strong><u>per month</u></strong>",
+      "<strong><u>50%</u></strong> discount on all pressure washing services",
       "Priority scheduling",
       "Reliable customer support"
     ]
@@ -509,7 +509,7 @@ export default function CustomerPortal() {
                           <div className="flex-shrink-0 w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center mt-0.5 mr-3">
                             <Check className="h-3 w-3 text-emerald-600" />
                           </div>
-                          <span className="text-slate-700 leading-relaxed">{feature}</span>
+                          <span className="text-slate-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: feature }}></span>
                         </li>
                       ))}
                     </ul>
