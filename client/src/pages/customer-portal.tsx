@@ -483,10 +483,14 @@ export default function CustomerPortal() {
                   )}
                   
                   <CardHeader className="text-center pb-6">
-                    <div className={`inline-flex p-4 rounded-2xl ${plan.color} mb-6 shadow-lg`}>
-                      <IconComponent className="h-8 w-8" />
+                    <div className="relative inline-block mb-6">
+                      <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-white border border-slate-200 px-3 py-1 rounded-full shadow-md z-10">
+                        <span className="text-sm font-semibold text-slate-700">{plan.name}</span>
+                      </div>
+                      <div className={`inline-flex p-4 rounded-2xl ${plan.color} shadow-lg`}>
+                        <IconComponent className="h-8 w-8" />
+                      </div>
                     </div>
-                    <CardTitle className="text-2xl font-bold text-slate-800 mb-3">{plan.name}</CardTitle>
                     <div className="text-3xl font-bold text-slate-900 mb-2">
                       ${billingCycle === 'monthly' ? plan.price : plan.yearlyPrice}
                       <span className="text-lg font-normal text-slate-500">
