@@ -234,7 +234,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                 <img 
                   src={logoImage} 
                   alt="Regalcare Logo" 
-                  className="w-48 h-36 object-cover object-center absolute -top-4 -left-8"
+                  className="w-48 h-36 object-cover object-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
                 />
               </div>
               <div>
