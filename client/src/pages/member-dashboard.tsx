@@ -623,7 +623,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                     <div className="bg-blue-50 p-4 rounded-lg">
                       <h3 className="font-semibold text-blue-800 mb-2">Service Information</h3>
                       <ul className="text-sm text-blue-700 space-y-1">
-                        <li>• Services only available on Tuesdays</li>
                         <li>• Bin cleanings only available on your scheduled trash day</li>
                         <li>• Professional cleaning equipment used</li>
                         <li>• Eco-friendly cleaning products</li>
