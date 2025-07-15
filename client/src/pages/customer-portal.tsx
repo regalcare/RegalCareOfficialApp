@@ -303,7 +303,7 @@ export default function CustomerPortal() {
               </div>
               
               {/* Toggle between Login and Sign Up */}
-              <div className="flex gap-2 justify-center mt-2">
+              <div className="flex gap-2 justify-center mt-1">
                 <Button
                   variant={step === 'signup' ? 'default' : 'outline'}
                   size="sm"
