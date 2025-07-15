@@ -297,13 +297,12 @@ export default function CustomerPortal() {
                 <CardTitle className="absolute top-8 left-1/2 transform -translate-x-1/2 tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] text-center z-10 whitespace-nowrap">
                   {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
                 </CardTitle>
-                <p className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-slate-600 text-lg text-center z-10 italic whitespace-nowrap">
+                <p className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-slate-600 text-lg text-center z-10 italic whitespace-nowrap">
                   At your service, for your convenience!
                 </p>
-              </div>
-              
-              {/* Toggle between Login and Sign Up */}
-              <div className="flex gap-2 justify-center mt-1">
+                
+                {/* Toggle between Login and Sign Up */}
+                <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-2 justify-center z-10">
                 <Button
                   variant={step === 'signup' ? 'default' : 'outline'}
                   size="sm"
@@ -313,15 +312,16 @@ export default function CustomerPortal() {
                 >
                   New Member
                 </Button>
-                <Button
-                  variant={step === 'login' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setStep('login')}
-                  type="button"
-                  className={step === 'login' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}
-                >
-                  Existing Member
-                </Button>
+                  <Button
+                    variant={step === 'login' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setStep('login')}
+                    type="button"
+                    className={step === 'login' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}
+                  >
+                    Existing Member
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
