@@ -114,7 +114,7 @@ export default function UpgradePage() {
               alt="Regalcare Logo" 
               className="w-14 h-14 object-cover"
             />
-            <span className="text-lg font-semibold"><span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '0.02em'}}>regalcare</span> upgrade</span>
+            <span className="text-lg font-semibold"><span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.01em'}}>regalcare</span> upgrade</span>
           </div>
         </div>
 
