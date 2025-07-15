@@ -367,7 +367,7 @@ export default function CustomerPortal() {
                   </div>
 
                   <div>
-                    <Label htmlFor="serviceDay" className="text-slate-700 font-medium">Preferred Service Day *</Label>
+                    <Label htmlFor="serviceDay" className="text-slate-700 font-medium">Trash Service Day *</Label>
                     <div className="relative mt-2">
                       <Calendar className="absolute left-4 top-4 h-4 w-4 text-slate-400 z-10" />
                       <Select 
