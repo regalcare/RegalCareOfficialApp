@@ -16,6 +16,7 @@ export default function UpgradePage() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [billingCycle, setBillingCycle] = useState('monthly');
   
   // Fetch customer data
   const { data: customers, isLoading } = useQuery<Customer[]>({
@@ -23,27 +24,6 @@ export default function UpgradePage() {
   });
   
   const customerData = customers?.find(c => c.id === customerId);
-  
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-4 border-purple-600 border-t-transparent"></div>
-      </div>
-    );
-  }
-  
-  if (!customerData) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Customer not found</h2>
-          <Button onClick={() => setLocation('/customer')}>
-            Return to Portal
-          </Button>
-        </div>
-      </div>
-    );
-  }
   
   // Form state for payment
   const [paymentData, setPaymentData] = useState({
@@ -79,11 +59,32 @@ export default function UpgradePage() {
     }, 3000);
   };
 
+  // Loading states
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-4 border-purple-600 border-t-transparent"></div>
+      </div>
+    );
+  }
+  
+  if (!customerData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Customer not found</h2>
+          <Button onClick={() => setLocation('/customer')}>
+            Return to Portal
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   const currentPlan = customerData.plan || 'basic';
   const isUpgradingFromPremium = currentPlan === 'premium';
   const monthlyPrice = isUpgradingFromPremium ? 99.99 : 139.99; // Difference from premium or from basic
   const yearlyPrice = isUpgradingFromPremium ? 1099.89 : 1499.89;
-  const [billingCycle, setBillingCycle] = useState('monthly');
 
   return (
     <div className="min-h-screen bg-gray-50">
