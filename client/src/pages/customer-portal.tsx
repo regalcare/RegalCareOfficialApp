@@ -289,7 +289,7 @@ export default function CustomerPortal() {
           <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
               <CardTitle className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] mb-6">
-                {step === 'login' ? 'Welcome back' : 'Welcome'}
+                {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
               </CardTitle>
               <div className="flex justify-center mb-4">
                 <img 
