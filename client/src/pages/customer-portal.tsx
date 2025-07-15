@@ -289,7 +289,7 @@ export default function CustomerPortal() {
           <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
               <CardTitle className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] mb-4">
-                {step === 'login' ? 'Welcome back to ' : 'Welcome to '}<span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span>
+                {step === 'login' ? 'Welcome back' : 'Welcome'}
               </CardTitle>
               <p className="text-slate-600 text-lg mb-6">
                 At your service, for your convenience!
