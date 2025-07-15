@@ -595,13 +595,13 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                                 <p>• 15% discount</p>
                                 {serviceType === "bin-cleaning" && binCount && parseInt(binCount) > 2 && (
                                   <>
-                                    <p className="font-semibold mt-2">Original pricing: ${(parseInt(binCount) * 40).toFixed(2)} (Basic plan pricing)</p>
+                                    <p className="font-semibold mt-2">Original pricing: ${(parseInt(binCount) * 40).toFixed(2)}</p>
                                     <p className="font-semibold text-green-600">Your price: ${((parseInt(binCount) - 2) * 40 * 0.85).toFixed(2)} (15% discount)</p>
                                   </>
                                 )}
                                 {serviceType === "bin-cleaning" && binCount && parseInt(binCount) <= 2 && (
                                   <>
-                                    <p className="font-semibold mt-2">Original pricing: ${(parseInt(binCount) * 40).toFixed(2)} (Basic plan pricing)</p>
+                                    <p className="font-semibold mt-2">Original pricing: ${(parseInt(binCount) * 40).toFixed(2)}</p>
                                     <p className="font-semibold text-green-600">Your price: FREE</p>
                                   </>
                                 )}
