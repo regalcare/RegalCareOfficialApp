@@ -11,7 +11,7 @@ import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight, Calendar } 
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import MemberDashboard from "./member-dashboard";
-import logoImage from "@assets/regalcare-logo.png";
+import logoImage from "@assets/IMG_2047_1752571535875.png";
 
 interface SignupData {
   name: string;

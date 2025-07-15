@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Customer, Message, BinCleaningAppointment } from "@shared/schema";
 import { format, addDays, startOfWeek, isSameDay, isAfter } from "date-fns";
 import { useLocation } from "wouter";
-import logoImage from "@assets/regalcare-logo.png";
+import logoImage from "@assets/IMG_2047_1752571535875.png";
 
 interface MemberDashboardProps {
   customerId: number;

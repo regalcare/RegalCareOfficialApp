@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Crown, CheckCircle, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import logoImage from "@assets/regalcare-logo.png";
+import logoImage from "@assets/IMG_2047_1752571535875.png";
 
 export default function UpgradePage() {
   const params = useParams();

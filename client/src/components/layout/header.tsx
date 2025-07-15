@@ -2,7 +2,7 @@ import { Bell, User, Truck, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import type { Message } from "@shared/schema";
-import logoImage from "@assets/regalcare-logo.png";
+import logoImage from "@assets/IMG_2047_1752571535875.png";
 
 export default function Header() {
   const { data: messages } = useQuery<Message[]>({
