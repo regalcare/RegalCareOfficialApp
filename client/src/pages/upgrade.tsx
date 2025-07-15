@@ -181,9 +181,6 @@ export default function UpgradePage() {
 
                 <div className="bg-white/80 p-4 rounded-lg mt-6">
                   <h4 className="font-semibold text-purple-800 mb-2">Current Plan: {currentPlan.charAt(0).toUpperCase() + currentPlan.slice(1)}</h4>
-                  <p className="text-sm text-gray-600">
-                    Upgrading to Ultimate will give you access to all premium features with unlimited usage.
-                  </p>
                 </div>
               </div>
             </CardContent>
