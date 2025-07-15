@@ -15,9 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Customer, Message, BinCleaningAppointment } from "@shared/schema";
 import { format, addDays, startOfWeek, isSameDay, isAfter } from "date-fns";
 import { useLocation } from "wouter";
-import logoImage from "@assets/IMG_2047_1752571535875.png";
-
-import IMG_2051 from "@assets/IMG_2051.jpeg";
+import logoImage from "@assets/IMG_2051.jpeg";
 
 interface MemberDashboardProps {
   customerId: number;
@@ -233,7 +231,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img 
-                src={IMG_2051} 
+                src={logoImage} 
                 alt="Regalcare Logo" 
                 className="w-16 h-16 object-contain"
               />

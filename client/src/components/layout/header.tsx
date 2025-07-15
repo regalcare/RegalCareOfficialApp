@@ -2,7 +2,7 @@ import { Bell, User, Truck, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import type { Message } from "@shared/schema";
-import logoImage from "@assets/IMG_2047_1752571535875.png";
+import logoImage from "@assets/IMG_2051.jpeg";
 
 export default function Header() {
   const { data: messages } = useQuery<Message[]>({
@@ -19,7 +19,7 @@ export default function Header() {
             <img 
               src={logoImage} 
               alt="Regalcare Logo" 
-              className="w-14 h-14 object-cover"
+              className="w-14 h-14 object-contain"
             />
             <h1 className="text-xl font-bold text-gray-900"><span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.08em'}}>regalcare</span> Business Dashboard</h1>
           </div>

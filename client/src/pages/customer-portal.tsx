@@ -11,7 +11,7 @@ import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight, Calendar } 
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import MemberDashboard from "./member-dashboard";
-import logoImage from "@assets/IMG_2047_1752571535875.png";
+import logoImage from "@assets/IMG_2051.jpeg";
 
 interface SignupData {
   name: string;
@@ -292,7 +292,7 @@ export default function CustomerPortal() {
                 <img 
                   src={logoImage} 
                   alt="Regalcare Logo" 
-                  className="w-80 h-80 object-cover"
+                  className="w-80 h-80 object-contain"
                 />
                 <CardTitle className="absolute top-8 left-1/2 transform -translate-x-1/2 tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] text-center z-10 whitespace-nowrap">
                   {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
