@@ -227,7 +227,7 @@ export default function CustomerPortal() {
 
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!signupData.name || !signupData.phone || !signupData.address) {
+    if (!signupData.name || !signupData.phone || !signupData.address || !signupData.serviceDay) {
       toast({
         title: "Missing Information",
         description: "Please fill in all required fields",
@@ -440,7 +440,7 @@ export default function CustomerPortal() {
                   </div>
 
                   <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200" disabled={loginMutation.isPending}>
-                    {loginMutation.isPending ? "Logging in..." : "Access Dashboard"}
+                    {loginMutation.isPending ? "Logging in..." : "Access Member Dashboard"}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
@@ -616,7 +616,7 @@ export default function CustomerPortal() {
                   <h3 className="font-semibold text-blue-800 mb-2">Service Details</h3>
                   <ul className="text-sm text-blue-700 space-y-1">
                     <li>• All services begin August 1st 2025</li>
-                    <li>• Weekly bin valet every {signupData.name ? 'Monday' : 'scheduled day'}</li>
+                    <li>• Weekly bin valet every {signupData.serviceDay ? signupData.serviceDay.charAt(0).toUpperCase() + signupData.serviceDay.slice(1) : 'scheduled day'}</li>
                     <li>• Bins moved to curb by 7 AM, returned by 6 PM</li>
                     <li>• Holiday schedules may vary with advance notice</li>
                   </ul>
@@ -818,6 +818,7 @@ export default function CustomerPortal() {
               <p className="text-sm text-gray-600">Name: {signupData.name}</p>
               <p className="text-sm text-gray-600">Phone: {signupData.phone}</p>
               <p className="text-sm text-gray-600">Address: {signupData.address}</p>
+              <p className="text-sm text-gray-600">Service Day: {signupData.serviceDay ? signupData.serviceDay.charAt(0).toUpperCase() + signupData.serviceDay.slice(1) : 'Not specified'}</p>
               {selectedPlanData && (
                 <p className="text-sm text-gray-600">Plan: {selectedPlanData.name} (${selectedPlanData.price}/month)</p>
               )}
@@ -842,7 +843,7 @@ export default function CustomerPortal() {
                 className="w-full" 
                 onClick={() => {
                   setStep('signup');
-                  setSignupData({ name: "", phone: "", email: "", address: "" });
+                  setSignupData({ name: "", phone: "", email: "", address: "", serviceDay: "" });
                   setSelectedPlan("");
                   setPaymentData({ cardNumber: "", expiryDate: "", cvv: "", nameOnCard: "", billingAddress: "" });
                   setCreatedCustomer(null);
