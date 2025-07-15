@@ -507,9 +507,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                             <SelectValue placeholder="Select service type" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="bin-cleaning">
-                              Bin Cleaning - {customerData.plan === 'basic' ? '$40 per bin' : customerData.plan === 'premium' ? '2 free, then $34 per bin' : 'Included in plan'}
-                            </SelectItem>
+                            <SelectItem value="bin-cleaning">Bin Cleaning</SelectItem>
                             <SelectItem value="pressure-washing">Pressure Washing</SelectItem>
                           </SelectContent>
                         </Select>
