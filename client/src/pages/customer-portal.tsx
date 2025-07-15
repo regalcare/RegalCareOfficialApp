@@ -292,7 +292,7 @@ export default function CustomerPortal() {
                 <img 
                   src={logoImage} 
                   alt="Regalcare Logo" 
-                  className="w-96 h-96 object-cover"
+                  className="w-64 h-64 object-cover"
                 />
               </div>
               <CardTitle className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000]">
