@@ -230,11 +230,13 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <img 
-                src={logoImage} 
-                alt="Regalcare Logo" 
-                className="w-16 h-12 object-cover object-center"
-              />
+              <div className="w-16 h-12 overflow-hidden relative">
+                <img 
+                  src={logoImage} 
+                  alt="Regalcare Logo" 
+                  className="w-24 h-18 object-cover object-center absolute -top-1 -left-2"
+                />
+              </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
                 <p className="text-gray-600"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> member dashboard</p>
