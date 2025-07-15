@@ -292,7 +292,7 @@ export default function CustomerPortal() {
                 <img 
                   src={logoImage} 
                   alt="Regalcare Logo" 
-                  className="w-80 h-80 object-contain"
+                  className="w-40 h-40 object-contain"
                 />
                 <CardTitle className="absolute top-8 left-1/2 transform -translate-x-1/2 tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] text-center z-10 whitespace-nowrap">
                   {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
