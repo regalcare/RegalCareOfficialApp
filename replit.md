@@ -30,6 +30,7 @@ Preferred communication style: Simple, everyday language.
 ✓ Updated customer portal login button text to "Access Your Dashboard" (January 15, 2025)
 ✓ Added service details bullet point about bin limits and additional fees (January 15, 2025)
 ✓ Made service agreement bin limits dynamic per plan: Basic (2), Premium (3), Ultimate (4+) (January 15, 2025)
+✓ Updated service commitment terms to be dynamic based on billing cycle: monthly vs yearly (January 15, 2025)
 
 ## System Architecture
 

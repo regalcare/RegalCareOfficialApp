@@ -626,7 +626,7 @@ export default function CustomerPortal() {
                 <div className="bg-yellow-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-yellow-800 mb-2">Important Terms</h3>
                   <ul className="text-sm text-yellow-700 space-y-1">
-                    <li>• Month-to-month service commitment</li>
+                    <li>• {billingCycle === 'yearly' ? 'Year-to-year' : 'Month-to-month'} service commitment</li>
                     <li>• Cancel anytime with 30-day notice</li>
                     <li>• Rates subject to change with 30-day notice</li>
                     <li>• Additional fees may apply for special requests</li>
