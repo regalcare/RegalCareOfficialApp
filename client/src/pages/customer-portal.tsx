@@ -596,7 +596,7 @@ export default function CustomerPortal() {
         {renderNavigation()}
         <div className="max-w-4xl mx-auto p-4">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your <span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.05em'}}>regalcare</span> Benefits</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Your <span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.08em'}}>regalcare</span> Benefits</h1>
             <p className="text-gray-600">Review what's included with your {selectedPlanData?.name} plan</p>
           </div>
 
@@ -691,7 +691,7 @@ export default function CustomerPortal() {
         <div className="max-w-2xl mx-auto p-4">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Information</h1>
-            <p className="text-gray-600">Complete your <span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.05em'}}>regalcare</span> subscription</p>
+            <p className="text-gray-600">Complete your <span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.08em'}}>regalcare</span> subscription</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -827,7 +827,7 @@ export default function CustomerPortal() {
             <div className="mx-auto bg-green-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4">
               <Check className="h-8 w-8 text-green-600" />
             </div>
-            <CardTitle className="text-2xl text-green-600">Welcome to <span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.05em'}}>regalcare</span>!</CardTitle>
+            <CardTitle className="text-2xl text-green-600">Welcome to <span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.08em'}}>regalcare</span>!</CardTitle>
             <p className="text-gray-600">Your subscription is now active</p>
           </CardHeader>
           
