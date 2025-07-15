@@ -279,7 +279,7 @@ export default function BinCleaning() {
                     <div>
                       <p className="font-medium text-gray-900">{appointment.customerName}</p>
                       <p className="text-sm text-gray-600">
-                        8:00 AM - 4:00 PM • {appointment.binCount} bin{appointment.binCount > 1 ? 's' : ''} • {formatPrice(appointment.price)}
+                        8:00 AM - 4:00 PM • {appointment.binCount} bin{appointment.binCount > 1 ? 's' : ''} • Bin Cleaning
                       </p>
                     </div>
                   </div>
