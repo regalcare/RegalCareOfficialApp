@@ -233,7 +233,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               <img 
                 src={logoImage} 
                 alt="Regalcare Logo" 
-                className="w-16 h-16 object-cover"
+                className="w-16 h-16 object-cover object-center"
               />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
