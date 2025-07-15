@@ -825,13 +825,7 @@ export default function CustomerPortal() {
         <div className="flex items-center justify-center p-4">
           <Card className="w-full max-w-md text-center">
           <CardHeader>
-            <div className="flex justify-center mb-4">
-              <img 
-                src={logoImage} 
-                alt="Regalcare Logo" 
-                className="w-20 h-20 rounded-xl object-cover shadow-lg"
-              />
-            </div>
+            
             <div className="mx-auto bg-green-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4">
               <Check className="h-8 w-8 text-green-600" />
             </div>
