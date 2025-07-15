@@ -399,7 +399,6 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
           </div>
         </div>
       </div>
-
       <div className="max-w-6xl mx-auto px-4 py-8">
         <Tabs defaultValue="schedule" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
@@ -625,7 +624,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                       <h3 className="font-semibold text-blue-800 mb-2">Service Information</h3>
                       <ul className="text-sm text-blue-700 space-y-1">
                         <li>• Services only available on Tuesdays</li>
-                        <li>• Bin cleaning services are only available on your scheduled trash day</li>
+                        <li>• Bin cleanings only available on your scheduled trash day</li>
                         <li>• Professional cleaning equipment used</li>
                         <li>• Eco-friendly cleaning products</li>
                         <li>• Service scheduled during regular business hours</li>
