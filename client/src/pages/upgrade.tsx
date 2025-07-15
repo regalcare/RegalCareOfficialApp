@@ -83,8 +83,17 @@ export default function UpgradePage() {
 
   const currentPlan = customerData.plan || 'basic';
   const isUpgradingFromPremium = currentPlan === 'premium';
-  const monthlyPrice = isUpgradingFromPremium ? 99.99 : 139.99; // Difference from premium or from basic
-  const yearlyPrice = isUpgradingFromPremium ? 1099.89 : 1499.89;
+  
+  // Ultimate plan actual pricing
+  const ultimateMonthlyPrice = 199.99;
+  const ultimateYearlyPrice = 1990;
+  
+  // Calculate upgrade pricing (difference from current plan)
+  const currentMonthlyPrice = isUpgradingFromPremium ? 99.99 : 59.99;
+  const currentYearlyPrice = isUpgradingFromPremium ? 1089 : 660;
+  
+  const monthlyUpgradePrice = ultimateMonthlyPrice - currentMonthlyPrice;
+  const yearlyUpgradePrice = ultimateYearlyPrice - currentYearlyPrice;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -110,14 +119,14 @@ export default function UpgradePage() {
               <CardTitle className="text-2xl text-purple-800">Ultimate Plan</CardTitle>
               <div className="text-center">
                 <div className="text-3xl font-bold text-purple-600">
-                  ${billingCycle === 'monthly' ? monthlyPrice : yearlyPrice}
+                  ${billingCycle === 'monthly' ? ultimateMonthlyPrice : ultimateYearlyPrice}
                 </div>
                 <div className="text-sm text-purple-600">
                   {billingCycle === 'monthly' ? 'per month' : 'per year'}
                 </div>
                 {billingCycle === 'yearly' && (
                   <Badge variant="secondary" className="mt-2">
-                    Save ${((monthlyPrice * 12) - yearlyPrice).toFixed(2)}
+                    Save ${((ultimateMonthlyPrice * 12) - ultimateYearlyPrice).toFixed(2)}
                   </Badge>
                 )}
               </div>
@@ -149,15 +158,15 @@ export default function UpgradePage() {
                   <div className="space-y-2">
                     <div className="flex items-start gap-2">
                       <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">Unlimited bin cleaning (FREE)</span>
+                      <span className="text-sm">Weekly trash bin valet (4+ cans)</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">1 FREE bulky item pickup per month</span>
+                      <span className="text-sm">4 FREE bin cleanings quarterly</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">50% discount on all pressure washing services</span>
+                      <span className="text-sm font-semibold">50% discount on all pressure washing services</span>
                     </div>
                     <div className="flex items-start gap-2">
                       <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
@@ -165,7 +174,7 @@ export default function UpgradePage() {
                     </div>
                     <div className="flex items-start gap-2">
                       <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">Dedicated customer support</span>
+                      <span className="text-sm">Reliable customer support</span>
                     </div>
                   </div>
                 </div>
@@ -293,7 +302,7 @@ export default function UpgradePage() {
                   <div className="flex justify-between items-center mb-2">
                     <span className="font-medium">Total:</span>
                     <span className="font-bold text-lg">
-                      ${billingCycle === 'monthly' ? monthlyPrice : yearlyPrice}
+                      ${billingCycle === 'monthly' ? ultimateMonthlyPrice : ultimateYearlyPrice}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">
@@ -312,7 +321,7 @@ export default function UpgradePage() {
                       Processing...
                     </>
                   ) : (
-                    `Upgrade to Ultimate - $${billingCycle === 'monthly' ? monthlyPrice : yearlyPrice}`
+                    `Upgrade to Ultimate - $${billingCycle === 'monthly' ? ultimateMonthlyPrice : ultimateYearlyPrice}`
                   )}
                 </Button>
 
