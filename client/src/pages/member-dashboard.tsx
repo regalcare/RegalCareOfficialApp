@@ -237,7 +237,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
-                <p className="text-gray-600">Member dashboard</p>
+                <p className="text-gray-600">Member Dashboard</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
