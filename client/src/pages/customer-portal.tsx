@@ -526,11 +526,10 @@ export default function CustomerPortal() {
                       <Badge className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white px-4 py-1 text-sm font-semibold shadow-lg whitespace-nowrap">✨ Most Popular</Badge>
                     </div>
                   )}
-                  
                   <CardHeader className="text-center pb-6">
                     <div className={`inline-flex flex-col items-center gap-2 p-4 rounded-2xl ${plan.color} mb-6 shadow-lg`}>
                       <IconComponent className="h-8 w-8" />
-                      <span className="text-xl font-bold">{plan.name}</span>
+                      <span className="font-bold text-[28px]">{plan.name}</span>
                     </div>
                     <div className="text-3xl font-bold text-slate-900 mb-2">
                       ${billingCycle === 'monthly' ? plan.price : plan.yearlyPrice}
@@ -546,7 +545,6 @@ export default function CustomerPortal() {
                       </div>
                     )}
                   </CardHeader>
-                  
                   <CardContent className="px-6 pb-8">
                     <ul className="space-y-4 mb-8">
                       {plan.features.map((feature, index) => (
