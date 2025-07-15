@@ -440,7 +440,7 @@ export default function CustomerPortal() {
                   </div>
 
                   <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200" disabled={loginMutation.isPending}>
-                    {loginMutation.isPending ? "Logging in..." : "Access Member Dashboard"}
+                    {loginMutation.isPending ? "Logging in..." : "Access Your Dashboard"}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
