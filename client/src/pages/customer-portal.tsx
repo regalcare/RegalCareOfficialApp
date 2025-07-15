@@ -288,21 +288,23 @@ export default function CustomerPortal() {
         <div className="flex items-center justify-center p-4">
           <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
-              <div className="flex justify-center relative mb-6">
+              <div className="flex flex-col items-center mb-6">
+                <CardTitle className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] text-center mb-4 whitespace-nowrap">
+                  {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
+                </CardTitle>
+                
                 <img 
                   src={logoImage} 
                   alt="Regalcare Logo" 
-                  className="w-40 h-40 object-contain"
+                  className="w-40 h-40 object-contain mb-4"
                 />
-                <CardTitle className="absolute top-8 left-1/2 transform -translate-x-1/2 tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] text-center z-10 whitespace-nowrap">
-                  {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
-                </CardTitle>
-                <p className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-slate-600 text-lg text-center z-10 italic whitespace-nowrap">
+                
+                <p className="text-slate-600 text-lg text-center italic whitespace-nowrap mb-6">
                   At your service, for your convenience!
                 </p>
                 
                 {/* Toggle between Login and Sign Up */}
-                <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex gap-2 justify-center z-10">
+                <div className="flex gap-2 justify-center">
                 <Button
                   variant={step === 'signup' ? 'default' : 'outline'}
                   size="sm"
