@@ -17,6 +17,8 @@ import { format, addDays, startOfWeek, isSameDay, isAfter } from "date-fns";
 import { useLocation } from "wouter";
 import logoImage from "@assets/IMG_2047_1752571535875.png";
 
+import IMG_2051 from "@assets/IMG_2051.jpeg";
+
 interface MemberDashboardProps {
   customerId: number;
   customerData: Customer;
@@ -231,9 +233,9 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <img 
-                src={logoImage} 
+                src={IMG_2051} 
                 alt="Regalcare Logo" 
-                className="w-16 h-16 object-cover object-center"
+                className="w-16 h-16 object-cover object-center ml-[0px] mr-[0px] pl-[0px] pr-[0px] pt-[0px] pb-[0px]"
               />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
