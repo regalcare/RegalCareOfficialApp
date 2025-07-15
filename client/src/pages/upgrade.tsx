@@ -112,7 +112,7 @@ export default function UpgradePage() {
             <img 
               src={logoImage} 
               alt="Regalcare Logo" 
-              className="w-14 h-14 rounded-lg object-cover shadow-sm"
+              className="w-14 h-14 object-cover"
             />
             <span className="text-lg font-semibold"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> upgrade</span>
           </div>

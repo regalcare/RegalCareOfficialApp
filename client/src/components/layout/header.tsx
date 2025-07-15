@@ -19,7 +19,7 @@ export default function Header() {
             <img 
               src={logoImage} 
               alt="Regalcare Logo" 
-              className="w-14 h-14 rounded-lg object-cover"
+              className="w-14 h-14 object-cover"
             />
             <h1 className="text-xl font-bold text-gray-900"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> Business Dashboard</h1>
           </div>
