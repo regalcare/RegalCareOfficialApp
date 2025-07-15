@@ -288,15 +288,15 @@ export default function CustomerPortal() {
         <div className="flex items-center justify-center p-4">
           <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
-              <CardTitle className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] -mb-6">
-                {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
-              </CardTitle>
-              <div className="flex justify-center -mb-6">
+              <div className="flex justify-center relative -mb-6">
                 <img 
                   src={logoImage} 
                   alt="Regalcare Logo" 
                   className="w-64 h-64 object-cover"
                 />
+                <CardTitle className="absolute top-0 left-1/2 transform -translate-x-1/2 tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] text-center z-10">
+                  {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
+                </CardTitle>
               </div>
               <p className="text-slate-600 text-lg mb-6">
                 At your service, for your convenience!
