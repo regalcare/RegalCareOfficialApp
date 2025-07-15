@@ -31,6 +31,10 @@ Preferred communication style: Simple, everyday language.
 ✓ Added service details bullet point about bin limits and additional fees (January 15, 2025)
 ✓ Made service agreement bin limits dynamic per plan: Basic (2), Premium (3), Ultimate (4+) (January 15, 2025)
 ✓ Updated service commitment terms to be dynamic based on billing cycle: monthly vs yearly (January 15, 2025)
+✓ Fixed member dashboard routing for direct URL access (/customer/member/1) (January 15, 2025)
+✓ Simplified service dropdown to show only "Bin Cleaning" and "Pressure Washing" without pricing (January 15, 2025)
+✓ Moved bin cleaning scheduling restrictions to service scheduling context (January 15, 2025)
+✓ Removed redundant service availability information from general service details (January 15, 2025)
 
 ## System Architecture
 
