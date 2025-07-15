@@ -477,13 +477,6 @@ export default function CustomerPortal() {
         {renderNavigation()}
         <div className="max-w-7xl mx-auto p-6">
           <div className="text-center mb-12">
-            <div className="flex justify-center mb-6">
-              <img 
-                src={logoImage} 
-                alt="Regalcare Logo" 
-                className="w-28 h-28 rounded-2xl object-cover shadow-lg"
-              />
-            </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">Choose Your Plan</h1>
             <p className="text-slate-600 text-xl">Select the service level that works best for you</p>
             
