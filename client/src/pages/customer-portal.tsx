@@ -297,7 +297,7 @@ export default function CustomerPortal() {
                 <CardTitle className="absolute top-8 left-1/2 transform -translate-x-1/2 tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] text-center z-10 whitespace-nowrap">
                   {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
                 </CardTitle>
-                <p className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-slate-600 text-lg text-center z-10 italic whitespace-nowrap">
+                <p className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-slate-600 text-lg text-center z-10 italic whitespace-nowrap">
                   At your service, for your convenience!
                 </p>
                 
