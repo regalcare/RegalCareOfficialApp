@@ -699,13 +699,6 @@ export default function CustomerPortal() {
         {renderNavigation()}
         <div className="max-w-2xl mx-auto p-4">
           <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <img 
-                src={logoImage} 
-                alt="Regalcare Logo" 
-                className="w-20 h-20 object-cover"
-              />
-            </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Information</h1>
             <p className="text-gray-600">Complete your <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> subscription</p>
           </div>
@@ -867,8 +860,7 @@ export default function CustomerPortal() {
             
             <div className="bg-blue-50 p-4 rounded-lg">
               <h3 className="font-semibold text-blue-800 mb-2">What's Next?</h3>
-              <p className="text-sm text-blue-700">Don't worry about remembering trash day anymore, 
-              we got it!</p>
+              <p className="text-sm text-blue-700">Don't worry about remembering trash day anymore, we got it!</p>
             </div>
 
             <div className="space-y-3">
