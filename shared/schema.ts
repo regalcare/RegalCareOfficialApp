@@ -9,6 +9,7 @@ export const customers = pgTable("customers", {
   email: text("email"),
   address: text("address").notNull(),
   route: text("route").notNull(),
+  serviceDay: text("service_day").notNull().default("Tuesday"), // monday, tuesday, wednesday, thursday, friday
   status: text("status").notNull().default("active"), // active, suspended, cancelled
   plan: text("plan").default("basic"), // basic, premium, ultimate
   monthlyRate: decimal("monthly_rate", { precision: 10, scale: 2 }).default("59.99"), // in dollars

@@ -116,13 +116,19 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       return;
     }
 
-    // Verify the selected date is a Tuesday
+    // Verify the selected date matches customer's service day
     const selectedDate = new Date(serviceDate);
     const dayOfWeek = selectedDate.getDay();
-    if (dayOfWeek !== 2) {
+    const dayMap = {
+      'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 
+      'Thursday': 4, 'Friday': 5, 'Saturday': 6
+    };
+    const expectedDayOfWeek = dayMap[customerData.serviceDay as keyof typeof dayMap] || 2;
+    
+    if (dayOfWeek !== expectedDayOfWeek) {
       toast({
         title: "Invalid Date",
-        description: "Please select a Tuesday for service scheduling",
+        description: `Please select a ${customerData.serviceDay} for service scheduling`,
         variant: "destructive",
       });
       return;
@@ -156,8 +162,8 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       customerName: customerData.name,
       address: customerData.address,
       date: serviceDate,
-      startTime: "09:00", // Default start time for Tuesday services
-      endTime: "17:00", // Default end time for Tuesday services
+      startTime: "09:00", // Default start time for service day
+      endTime: "17:00", // Default end time for service day
       binCount: serviceType === "bin-cleaning" ? parseInt(binCount) : 1, // Default to 1 for pressure washing
       price: servicePrice,
       status: "scheduled",
@@ -174,35 +180,42 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
   const customerMessages = messages?.filter(msg => msg.customerId === customerId) || [];
   const customerAppointments = appointments?.filter(apt => apt.customerId === customerId) || [];
 
-  // Generate calendar data for Tuesdays
-  const generateTuesdayCalendar = () => {
+  // Generate calendar data for customer's service day
+  const generateServiceDayCalendar = () => {
     const calendar = [];
     const today = new Date();
     const startDate = new Date(today.getFullYear(), today.getMonth() - 2, 1); // Start 2 months ago
     
-    for (let i = 0; i < 16; i++) { // Show 16 weeks of Tuesdays
-      const tuesday = addDays(startDate, i * 7);
-      // Find the Tuesday of this week
-      const weekStart = startOfWeek(tuesday, { weekStartsOn: 1 }); // Monday = 1
-      const tuesdayOfWeek = addDays(weekStart, 1); // Tuesday is day 1 after Monday
+    // Convert service day to day number (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+    const dayMap = {
+      'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3, 
+      'Thursday': 4, 'Friday': 5, 'Saturday': 6
+    };
+    const serviceDayNumber = dayMap[customerData.serviceDay as keyof typeof dayMap] || 2; // Default to Tuesday
+    
+    for (let i = 0; i < 16; i++) { // Show 16 weeks of service days
+      const serviceDay = addDays(startDate, i * 7);
+      // Find the service day of this week
+      const weekStart = startOfWeek(serviceDay, { weekStartsOn: 1 }); // Monday = 1
+      const serviceDayOfWeek = addDays(weekStart, serviceDayNumber - 1); // Adjust for service day
       
-      // Check if this Tuesday has a completed pickup
+      // Check if this service day has a completed pickup
       const hasPickup = Math.random() > 0.3; // Simulate pickup completion
-      const isCompleted = isAfter(today, tuesdayOfWeek) ? hasPickup : false;
-      const isFuture = isAfter(tuesdayOfWeek, today);
+      const isCompleted = isAfter(today, serviceDayOfWeek) ? hasPickup : false;
+      const isFuture = isAfter(serviceDayOfWeek, today);
       
       calendar.push({
-        date: tuesdayOfWeek,
+        date: serviceDayOfWeek,
         isCompleted,
         isFuture,
-        isToday: isSameDay(tuesdayOfWeek, today),
+        isToday: isSameDay(serviceDayOfWeek, today),
       });
     }
     
     return calendar;
   };
 
-  const tuesdayCalendar = generateTuesdayCalendar();
+  const serviceDayCalendar = generateServiceDayCalendar();
 
   const handleUpgrade = (planType: string) => {
     // Navigate to payment page for the selected plan
@@ -706,7 +719,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Calendar className="h-5 w-5" />
-                    Tuesday Pickup Calendar
+                    {customerData.serviceDay} Pickup Calendar
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -715,7 +728,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                       <h3 className="font-semibold text-blue-800 mb-2">Your Weekly Schedule</h3>
                       <div className="flex items-center gap-2 text-blue-700">
                         <Clock className="h-4 w-4" />
-                        <span>Every Tuesday - Trash Bin Valet Service</span>
+                        <span>Every {customerData.serviceDay} - Trash Bin Valet Service</span>
                       </div>
                       <p className="text-sm text-blue-600 mt-2">
                         Bins moved to curb by 7:00 AM, returned by 6:00 PM
@@ -739,7 +752,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                       </div>
 
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {tuesdayCalendar.map((day, index) => (
+                        {serviceDayCalendar.map((day, index) => (
                           <div
                             key={index}
                             className={`p-3 rounded-lg border text-center ${

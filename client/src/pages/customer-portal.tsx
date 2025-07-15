@@ -390,13 +390,13 @@ export default function CustomerPortal() {
                           <SelectValue placeholder="Select the day your trash is picked up" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="monday">Monday</SelectItem>
-                          <SelectItem value="tuesday">Tuesday</SelectItem>
-                          <SelectItem value="wednesday">Wednesday</SelectItem>
-                          <SelectItem value="thursday">Thursday</SelectItem>
-                          <SelectItem value="friday">Friday</SelectItem>
-                          <SelectItem value="saturday">Saturday</SelectItem>
-                          <SelectItem value="sunday">Sunday</SelectItem>
+                          <SelectItem value="Monday">Monday</SelectItem>
+                          <SelectItem value="Tuesday">Tuesday</SelectItem>
+                          <SelectItem value="Wednesday">Wednesday</SelectItem>
+                          <SelectItem value="Thursday">Thursday</SelectItem>
+                          <SelectItem value="Friday">Friday</SelectItem>
+                          <SelectItem value="Saturday">Saturday</SelectItem>
+                          <SelectItem value="Sunday">Sunday</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

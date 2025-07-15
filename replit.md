@@ -37,6 +37,10 @@ Preferred communication style: Simple, everyday language.
 ✓ Removed redundant service availability information from general service details (January 15, 2025)
 ✓ Added Ultimate plan upgrade payment flow with dedicated upgrade page (January 15, 2025)
 ✓ Implemented pricing comparison showing original vs Premium plan pricing (January 15, 2025)
+✓ Made service day dynamic throughout the application - customers can choose any day during signup (January 15, 2025)
+✓ Updated customer schema to include serviceDay field with proper capitalization (January 15, 2025)
+✓ Enhanced member dashboard to display customer's actual scheduled service day instead of hardcoded Tuesday (January 15, 2025)
+✓ Updated calendar generation to work with any day of the week based on customer's service day preference (January 15, 2025)
 
 ## System Architecture
 

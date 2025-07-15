@@ -70,10 +70,10 @@ export class MemStorage implements IStorage {
   private addSampleData() {
     // Sample customers
     const sampleCustomers = [
-      { name: "John Smith", phone: "555-0123", email: "john@example.com", address: "123 Oak Street", route: "Route A", status: "active", plan: "premium", monthlyRate: 99.99 },
-      { name: "Sarah Johnson", phone: "555-0124", email: "sarah@example.com", address: "456 Pine Avenue", route: "Route A", status: "active", plan: "basic", monthlyRate: 59.99 },
-      { name: "Mike Davis", phone: "555-0125", email: "mike@example.com", address: "789 Maple Drive", route: "Route B", status: "active", plan: "ultimate", monthlyRate: 199.99 },
-      { name: "Lisa Wilson", phone: "555-0126", email: "lisa@example.com", address: "321 Elm Street", route: "Route B", status: "suspended", plan: "basic", monthlyRate: 59.99 },
+      { name: "John Smith", phone: "555-0123", email: "john@example.com", address: "123 Oak Street", route: "Route A", serviceDay: "Tuesday", status: "active", plan: "premium", monthlyRate: 99.99 },
+      { name: "Sarah Johnson", phone: "555-0124", email: "sarah@example.com", address: "456 Pine Avenue", route: "Route A", serviceDay: "Wednesday", status: "active", plan: "basic", monthlyRate: 59.99 },
+      { name: "Mike Davis", phone: "555-0125", email: "mike@example.com", address: "789 Maple Drive", route: "Route B", serviceDay: "Thursday", status: "active", plan: "ultimate", monthlyRate: 199.99 },
+      { name: "Lisa Wilson", phone: "555-0126", email: "lisa@example.com", address: "321 Elm Street", route: "Route B", serviceDay: "Monday", status: "suspended", plan: "basic", monthlyRate: 59.99 },
     ];
 
     sampleCustomers.forEach(customer => {
