@@ -582,7 +582,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                     {/* Pricing Display */}
                     {serviceType && (
                       <div className="bg-green-50 p-4 rounded-lg">
-                        <h3 className="font-semibold text-green-800 mb-2">Pricing for Your {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan</h3>
+                        <h3 className="font-semibold text-green-800 mb-2">With Your {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan:</h3>
                         {serviceType === "bin-cleaning" ? (
                           <div className="text-sm text-green-700">
                             {customerData.plan === 'basic' && (
