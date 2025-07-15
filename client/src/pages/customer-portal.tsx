@@ -296,7 +296,7 @@ export default function CustomerPortal() {
                 <img 
                   src={logoImage} 
                   alt="Regalcare Logo" 
-                  className="w-40 h-40 object-contain mb-4"
+                  className="w-48 h-48 object-contain mb-4"
                 />
                 
                 <p className="text-slate-600 text-lg text-center italic whitespace-nowrap mb-6">
