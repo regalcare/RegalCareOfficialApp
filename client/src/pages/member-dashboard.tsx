@@ -237,7 +237,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
-                <p className="text-gray-600"><span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.01em'}}>regalcare</span> member dashboard</p>
+                <p className="text-gray-600"><span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.05em'}}>regalcare</span> member dashboard</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -445,7 +445,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                     <Send className="h-5 w-5" />
                     Leave a Message
                   </CardTitle>
-                  <p className="text-sm text-gray-600">Send a message to <span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.01em'}}>regalcare</span> support team</p>
+                  <p className="text-sm text-gray-600">Send a message to <span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.05em'}}>regalcare</span> support team</p>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSendMessage} className="space-y-4">
