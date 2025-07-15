@@ -7,6 +7,7 @@ import Header from "@/components/layout/header";
 import TabNavigation from "@/components/layout/tab-navigation";
 import Dashboard from "@/pages/dashboard";
 import CustomerPortal from "@/pages/customer-portal";
+import UpgradePage from "@/pages/upgrade";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -18,6 +19,7 @@ function Router() {
       <Switch>
         <Route path="/customer" component={CustomerPortal} />
         <Route path="/customer/member/:id" component={CustomerPortal} />
+        <Route path="/customer/upgrade/:id" component={UpgradePage} />
         <Route component={NotFound} />
       </Switch>
     );

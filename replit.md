@@ -35,6 +35,8 @@ Preferred communication style: Simple, everyday language.
 ✓ Simplified service dropdown to show only "Bin Cleaning" and "Pressure Washing" without pricing (January 15, 2025)
 ✓ Moved bin cleaning scheduling restrictions to service scheduling context (January 15, 2025)
 ✓ Removed redundant service availability information from general service details (January 15, 2025)
+✓ Added Ultimate plan upgrade payment flow with dedicated upgrade page (January 15, 2025)
+✓ Implemented pricing comparison showing original vs Premium plan pricing (January 15, 2025)
 
 ## System Architecture
 

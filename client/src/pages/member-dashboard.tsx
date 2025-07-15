@@ -205,8 +205,8 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
   const tuesdayCalendar = generateTuesdayCalendar();
 
   const handleUpgrade = (planType: string) => {
-    // Navigate to payment page with the selected plan
-    setLocation(`/customer?upgrade=${planType}`);
+    // Navigate to payment page for the selected plan
+    setLocation(`/customer/upgrade/${customerId}`);
     setShowPlanModal(false);
   };
 
