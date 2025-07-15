@@ -17,6 +17,7 @@ function Router() {
     return (
       <Switch>
         <Route path="/customer" component={CustomerPortal} />
+        <Route path="/customer/member/:id" component={CustomerPortal} />
         <Route component={NotFound} />
       </Switch>
     );

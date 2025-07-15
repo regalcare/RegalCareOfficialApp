@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useLocation, useParams } from "wouter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -76,6 +77,8 @@ const plans: Plan[] = [
 ];
 
 export default function CustomerPortal() {
+  const [location] = useLocation();
+  const { id: memberId } = useParams();
   const [step, setStep] = useState<'signup' | 'plans' | 'benefits' | 'payment' | 'confirmation' | 'member' | 'login'>('signup');
   const [signupData, setSignupData] = useState<SignupData>({
     name: "",
@@ -114,6 +117,14 @@ export default function CustomerPortal() {
     createdAt: new Date(),
     updatedAt: new Date()
   };
+
+  // Check if we're on the member route and set appropriate state
+  useEffect(() => {
+    if (location.includes('/customer/member/') && memberId) {
+      setStep('member');
+      setCreatedCustomer(dummyCustomer);
+    }
+  }, [location, memberId, dummyCustomer]);
 
   const renderNavigation = () => (
     <div className="bg-gray-100 border-b mb-6">
