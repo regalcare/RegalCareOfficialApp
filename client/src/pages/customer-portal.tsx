@@ -627,7 +627,7 @@ export default function CustomerPortal() {
                   <h3 className="font-semibold text-yellow-800 mb-2">Important Terms</h3>
                   <ul className="text-sm text-yellow-700 space-y-1">
                     <li>• Month-to-month service commitment</li>
-                    <li>• 30-day notice required for cancellation</li>
+                    <li>• Cancel anytime with 30-day notice</li>
                     <li>• Rates subject to change with 30-day notice</li>
                     <li>• Additional fees may apply for special requests</li>
                   </ul>
