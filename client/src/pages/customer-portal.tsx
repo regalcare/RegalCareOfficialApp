@@ -376,7 +376,7 @@ export default function CustomerPortal() {
                         required
                       >
                         <SelectTrigger className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20">
-                          <SelectValue placeholder="Select your preferred service day" />
+                          <SelectValue placeholder="Select the day your trash is picked up" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="monday">Monday</SelectItem>
