@@ -277,7 +277,7 @@ export default function CustomerPortal() {
                 {step === 'login' ? 'Welcome back to ' : 'Welcome to '}<span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span>
               </CardTitle>
               <p className="text-slate-600 text-lg">
-                {step === 'login' ? 'Access your member dashboard' : 'Sign up for professional waste management service'}
+                At your service, for your convenience!
               </p>
               
               {/* Toggle between Login and Sign Up */}
