@@ -237,7 +237,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
-                <p className="text-gray-600"><span style={{color: '#87CEEB', fontWeight: 700, fontFamily: 'Futura, -apple-system, BlinkMacSystemFont, sans-serif', letterSpacing: '-0.08em'}}>regalcare</span> member dashboard</p>
+                <p className="text-gray-600">regalcare member dashboard</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
