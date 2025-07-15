@@ -2,6 +2,7 @@ import { Bell, User, Truck, Users } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import type { Message } from "@shared/schema";
+import logoImage from "@assets/IMG_2047_1752570931015.jpeg";
 
 export default function Header() {
   const { data: messages } = useQuery<Message[]>({
@@ -15,9 +16,11 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <Truck className="text-white" size={16} />
-            </div>
+            <img 
+              src={logoImage} 
+              alt="Regalcare Logo" 
+              className="w-10 h-10 rounded-lg object-cover"
+            />
             <h1 className="text-xl font-bold text-gray-900"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> Business Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">

@@ -11,6 +11,7 @@ import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight, Calendar } 
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import MemberDashboard from "./member-dashboard";
+import logoImage from "@assets/IMG_2047_1752570931015.jpeg";
 
 interface SignupData {
   name: string;
@@ -287,6 +288,13 @@ export default function CustomerPortal() {
         <div className="flex items-center justify-center p-4">
           <Card className="w-full max-w-md shadow-xl border-0 bg-white/80 backdrop-blur-sm">
             <CardHeader className="text-center pb-6">
+              <div className="flex justify-center mb-4">
+                <img 
+                  src={logoImage} 
+                  alt="Regalcare Logo" 
+                  className="w-16 h-16 rounded-xl object-cover shadow-lg"
+                />
+              </div>
               <CardTitle className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000]">
                 {step === 'login' ? 'Welcome back to ' : 'Welcome to '}<span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span>
               </CardTitle>
@@ -469,6 +477,13 @@ export default function CustomerPortal() {
         {renderNavigation()}
         <div className="max-w-7xl mx-auto p-6">
           <div className="text-center mb-12">
+            <div className="flex justify-center mb-6">
+              <img 
+                src={logoImage} 
+                alt="Regalcare Logo" 
+                className="w-20 h-20 rounded-2xl object-cover shadow-lg"
+              />
+            </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">Choose Your Plan</h1>
             <p className="text-slate-600 text-xl">Select the service level that works best for you</p>
             
@@ -590,6 +605,13 @@ export default function CustomerPortal() {
         {renderNavigation()}
         <div className="max-w-4xl mx-auto p-4">
           <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <img 
+                src={logoImage} 
+                alt="Regalcare Logo" 
+                className="w-16 h-16 rounded-xl object-cover shadow-lg"
+              />
+            </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Your <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> Benefits</h1>
             <p className="text-gray-600">Review what's included with your {selectedPlanData?.name} plan</p>
           </div>
@@ -684,6 +706,13 @@ export default function CustomerPortal() {
         {renderNavigation()}
         <div className="max-w-2xl mx-auto p-4">
           <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <img 
+                src={logoImage} 
+                alt="Regalcare Logo" 
+                className="w-16 h-16 rounded-xl object-cover shadow-lg"
+              />
+            </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Information</h1>
             <p className="text-gray-600">Complete your <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> subscription</p>
           </div>
@@ -817,6 +846,13 @@ export default function CustomerPortal() {
         <div className="flex items-center justify-center p-4">
           <Card className="w-full max-w-md text-center">
           <CardHeader>
+            <div className="flex justify-center mb-4">
+              <img 
+                src={logoImage} 
+                alt="Regalcare Logo" 
+                className="w-16 h-16 rounded-xl object-cover shadow-lg"
+              />
+            </div>
             <div className="mx-auto bg-green-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4">
               <Check className="h-8 w-8 text-green-600" />
             </div>

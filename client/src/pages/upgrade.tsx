@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Crown, CheckCircle, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import logoImage from "@assets/IMG_2047_1752570931015.jpeg";
 
 export default function UpgradePage() {
   const params = useParams();
@@ -98,7 +99,7 @@ export default function UpgradePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center justify-between mb-6">
           <Button
             variant="ghost"
             onClick={() => setLocation(`/customer/member/${customerId}`)}
@@ -107,6 +108,14 @@ export default function UpgradePage() {
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard
           </Button>
+          <div className="flex items-center gap-3">
+            <img 
+              src={logoImage} 
+              alt="Regalcare Logo" 
+              className="w-10 h-10 rounded-lg object-cover shadow-sm"
+            />
+            <span className="text-lg font-semibold"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> upgrade</span>
+          </div>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">

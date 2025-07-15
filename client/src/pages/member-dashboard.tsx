@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Customer, Message, BinCleaningAppointment } from "@shared/schema";
 import { format, addDays, startOfWeek, isSameDay, isAfter } from "date-fns";
 import { useLocation } from "wouter";
+import logoImage from "@assets/IMG_2047_1752570931015.jpeg";
 
 interface MemberDashboardProps {
   customerId: number;
@@ -228,9 +229,16 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
       <div className="bg-white border-b">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
-              <p className="text-gray-600"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> member dashboard</p>
+            <div className="flex items-center gap-4">
+              <img 
+                src={logoImage} 
+                alt="Regalcare Logo" 
+                className="w-12 h-12 rounded-lg object-cover shadow-md"
+              />
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
+                <p className="text-gray-600"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> member dashboard</p>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               <Dialog open={showPlanModal} onOpenChange={setShowPlanModal}>
