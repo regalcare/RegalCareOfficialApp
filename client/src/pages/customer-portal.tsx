@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight, Calendar } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import MemberDashboard from "./member-dashboard";
@@ -15,6 +16,7 @@ interface SignupData {
   phone: string;
   email: string;
   address: string;
+  serviceDay: string;
 }
 
 interface Plan {
@@ -79,7 +81,8 @@ export default function CustomerPortal() {
     name: "",
     phone: "",
     email: "",
-    address: ""
+    address: "",
+    serviceDay: ""
   });
   const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
@@ -360,6 +363,31 @@ export default function CustomerPortal() {
                         className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                         required
                       />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="serviceDay" className="text-slate-700 font-medium">Preferred Service Day *</Label>
+                    <div className="relative mt-2">
+                      <Calendar className="absolute left-4 top-4 h-4 w-4 text-slate-400 z-10" />
+                      <Select 
+                        value={signupData.serviceDay} 
+                        onValueChange={(value) => setSignupData({...signupData, serviceDay: value})}
+                        required
+                      >
+                        <SelectTrigger className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20">
+                          <SelectValue placeholder="Select your preferred service day" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="monday">Monday</SelectItem>
+                          <SelectItem value="tuesday">Tuesday</SelectItem>
+                          <SelectItem value="wednesday">Wednesday</SelectItem>
+                          <SelectItem value="thursday">Thursday</SelectItem>
+                          <SelectItem value="friday">Friday</SelectItem>
+                          <SelectItem value="saturday">Saturday</SelectItem>
+                          <SelectItem value="sunday">Sunday</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
 
