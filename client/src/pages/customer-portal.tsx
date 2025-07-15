@@ -324,7 +324,7 @@ export default function CustomerPortal() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-2">
               {step === 'signup' ? (
                 <form onSubmit={handleSignupSubmit} className="space-y-6">
                   <div>
