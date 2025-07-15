@@ -591,7 +591,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                             {customerData.plan === 'premium' && (
                               <>
                                 <p>• First 2 bins: FREE</p>
-                                <p>• Additional bins: $34.00 each</p>
+                                <p>• Additional bins: $40.00 each</p>
                                 {serviceType === "bin-cleaning" && binCount && parseInt(binCount) > 2 && (
                                   <p className="font-semibold mt-2">Total cost: ${((parseInt(binCount) - 2) * 34).toFixed(2)}</p>
                                 )}
