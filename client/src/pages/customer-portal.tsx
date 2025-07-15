@@ -598,13 +598,6 @@ export default function CustomerPortal() {
         {renderNavigation()}
         <div className="max-w-4xl mx-auto p-4">
           <div className="text-center mb-8">
-            <div className="flex justify-center mb-4">
-              <img 
-                src={logoImage} 
-                alt="Regalcare Logo" 
-                className="w-20 h-20 rounded-xl object-cover shadow-lg"
-              />
-            </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Your <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> Benefits</h1>
             <p className="text-gray-600">Review what's included with your {selectedPlanData?.name} plan</p>
           </div>
