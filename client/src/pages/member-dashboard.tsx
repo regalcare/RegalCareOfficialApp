@@ -730,9 +730,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         <Clock className="h-4 w-4" />
                         <span>Every {customerData.serviceDay} - Trash Bin Valet Service</span>
                       </div>
-                      <p className="text-sm text-blue-600 mt-2">
-                        Bins moved to curb by 7:00 AM, returned by 6:00 PM
-                      </p>
+                      <p className="text-sm text-blue-600 mt-2">Bins will be moved to curb by 10pm the night before, and returned by 5pm on your scheduled trash day</p>
                     </div>
 
                     <div className="grid gap-3">
