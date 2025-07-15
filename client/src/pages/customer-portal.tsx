@@ -618,6 +618,7 @@ export default function CustomerPortal() {
                     <li>• All services begin August 1st 2025</li>
                     <li>• Weekly bin valet every {signupData.serviceDay ? signupData.serviceDay.charAt(0).toUpperCase() + signupData.serviceDay.slice(1) : 'scheduled day'}</li>
                     <li>• Bins will be moved to curb by 10pm the night before, and returned by 5pm on your scheduled trash day</li>
+                    <li>• Service includes up to 2 standard residential bins (additional bins may incur extra fees)</li>
                     <li>• Holiday schedules may vary with advance notice</li>
                   </ul>
                 </div>

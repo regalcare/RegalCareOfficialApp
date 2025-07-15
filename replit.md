@@ -27,6 +27,8 @@ Preferred communication style: Simple, everyday language.
 ✓ Enhanced customer flow: Sign Up → Choose Plan → Review Benefits → Payment → Confirmation
 ✓ Added yearly billing with specific pricing and savings messaging
 ✓ Streamlined business dashboard to focused 3-tab interface (January 12, 2025)
+✓ Updated customer portal login button text to "Access Your Dashboard" (January 15, 2025)
+✓ Added service details bullet point about bin limits and additional fees (January 15, 2025)
 
 ## System Architecture
 
