@@ -703,7 +703,7 @@ export default function CustomerPortal() {
               <img 
                 src={logoImage} 
                 alt="Regalcare Logo" 
-                className="w-20 h-20 rounded-xl object-cover shadow-lg"
+                className="w-20 h-20 object-cover"
               />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Information</h1>
