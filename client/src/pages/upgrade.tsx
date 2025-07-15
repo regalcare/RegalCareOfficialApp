@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Crown, CheckCircle, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import logoImage from "@assets/IMG_2047_1752570931015.jpeg";
+import logoImage from "@assets/regalcare-logo.png";
 
 export default function UpgradePage() {
   const params = useParams();
@@ -112,7 +112,7 @@ export default function UpgradePage() {
             <img 
               src={logoImage} 
               alt="Regalcare Logo" 
-              className="w-10 h-10 rounded-lg object-cover shadow-sm"
+              className="w-14 h-14 rounded-lg object-cover shadow-sm"
             />
             <span className="text-lg font-semibold"><span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> upgrade</span>
           </div>

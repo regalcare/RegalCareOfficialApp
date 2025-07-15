@@ -11,7 +11,7 @@ import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight, Calendar } 
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import MemberDashboard from "./member-dashboard";
-import logoImage from "@assets/IMG_2047_1752570931015.jpeg";
+import logoImage from "@assets/regalcare-logo.png";
 
 interface SignupData {
   name: string;
@@ -292,7 +292,7 @@ export default function CustomerPortal() {
                 <img 
                   src={logoImage} 
                   alt="Regalcare Logo" 
-                  className="w-24 h-24 object-cover"
+                  className="w-32 h-32 object-cover"
                 />
               </div>
               <CardTitle className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000]">
@@ -481,7 +481,7 @@ export default function CustomerPortal() {
               <img 
                 src={logoImage} 
                 alt="Regalcare Logo" 
-                className="w-20 h-20 rounded-2xl object-cover shadow-lg"
+                className="w-28 h-28 rounded-2xl object-cover shadow-lg"
               />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">Choose Your Plan</h1>
@@ -609,7 +609,7 @@ export default function CustomerPortal() {
               <img 
                 src={logoImage} 
                 alt="Regalcare Logo" 
-                className="w-16 h-16 rounded-xl object-cover shadow-lg"
+                className="w-20 h-20 rounded-xl object-cover shadow-lg"
               />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Your <span style={{color: '#87CEEB', fontWeight: 700}}>regalcare</span> Benefits</h1>
@@ -710,7 +710,7 @@ export default function CustomerPortal() {
               <img 
                 src={logoImage} 
                 alt="Regalcare Logo" 
-                className="w-16 h-16 rounded-xl object-cover shadow-lg"
+                className="w-20 h-20 rounded-xl object-cover shadow-lg"
               />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Payment Information</h1>
@@ -850,7 +850,7 @@ export default function CustomerPortal() {
               <img 
                 src={logoImage} 
                 alt="Regalcare Logo" 
-                className="w-16 h-16 rounded-xl object-cover shadow-lg"
+                className="w-20 h-20 rounded-xl object-cover shadow-lg"
               />
             </div>
             <div className="mx-auto bg-green-100 rounded-full p-3 w-16 h-16 flex items-center justify-center mb-4">

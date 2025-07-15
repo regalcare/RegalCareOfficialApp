@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Customer, Message, BinCleaningAppointment } from "@shared/schema";
 import { format, addDays, startOfWeek, isSameDay, isAfter } from "date-fns";
 import { useLocation } from "wouter";
-import logoImage from "@assets/IMG_2047_1752570931015.jpeg";
+import logoImage from "@assets/regalcare-logo.png";
 
 interface MemberDashboardProps {
   customerId: number;
@@ -233,7 +233,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
               <img 
                 src={logoImage} 
                 alt="Regalcare Logo" 
-                className="w-12 h-12 rounded-lg object-cover shadow-md"
+                className="w-16 h-16 rounded-lg object-cover shadow-md"
               />
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Welcome, {customerData.name}</h1>
