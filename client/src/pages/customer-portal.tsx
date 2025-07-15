@@ -827,7 +827,8 @@ export default function CustomerPortal() {
             
             <div className="bg-blue-50 p-4 rounded-lg">
               <h3 className="font-semibold text-blue-800 mb-2">What's Next?</h3>
-              <p className="text-sm text-blue-700">Beginning August 1st, don't worry about remembering trash day anymore, we got it!</p>
+              <p className="text-sm text-blue-700">Don't worry about remembering trash day anymore, 
+              we got it!</p>
             </div>
 
             <div className="space-y-3">
