@@ -21,7 +21,7 @@ export default function Header() {
               alt="Regalcare Logo" 
               className="w-14 h-14 object-contain"
             />
-            <h1 className="text-xl font-bold text-gray-900">regalcare Business Dashboard</h1>
+            <h1 className="text-xl font-bold text-gray-900">Business Dashboard</h1>
           </div>
           <div className="flex items-center space-x-4">
             <Link href="/customer">
