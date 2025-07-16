@@ -11,13 +11,16 @@ import { Check, Shield, Zap, Crown, Phone, Mail, MapPin, ArrowRight, Calendar } 
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import MemberDashboard from "./member-dashboard";
+import { useAuth } from "@/lib/auth";
 import logoImage from "@assets/IMG_2051.jpeg";
+
 
 interface SignupData {
   name: string;
   phone: string;
   email: string;
   address: string;
+  password: string;
   serviceDay: string;
 }
 
@@ -86,6 +89,7 @@ export default function CustomerPortal() {
     phone: "",
     email: "",
     address: "",
+    password: "",
     serviceDay: ""
   });
   const [selectedPlan, setSelectedPlan] = useState<string>("");
@@ -97,10 +101,11 @@ export default function CustomerPortal() {
     nameOnCard: "",
     billingAddress: ""
   });
-  const [createdCustomer, setCreatedCustomer] = useState<any>(null);
+  const { user, login } = useAuth();
   const [loginData, setLoginData] = useState({
     phone: "",
-    email: ""
+    email: "",
+    password: "",
   });
   const { toast } = useToast();
 
@@ -126,7 +131,11 @@ export default function CustomerPortal() {
       setCreatedCustomer(dummyCustomer);
     }
   }, [location, memberId, dummyCustomer]);
-
+  useEffect(() => {
+  if (user?.role === "customer") {
+    setStep("member");
+  }
+  }, [user]);
   const renderNavigation = () => (
     <div className="bg-gray-100 border-b mb-6">
       <div className="max-w-4xl mx-auto px-4 py-3">
@@ -187,7 +196,7 @@ export default function CustomerPortal() {
       return response;
     },
     onSuccess: (data) => {
-      setCreatedCustomer(data);
+      login({ ...data, role: "customer" });
       setStep('confirmation');
       toast({
         title: "Welcome to regal care!",
@@ -204,38 +213,20 @@ export default function CustomerPortal() {
   });
 
   const loginMutation = useMutation({
-    mutationFn: async (loginInfo: { phone: string; email: string }) => {
-      const response = await apiRequest("GET", "/api/customers");
-      const customers = response;
-      
-      // Find customer by phone number (primary) or email (secondary)
-      const customer = customers.find((c: any) => 
-        c.phone.replace(/\D/g, '') === loginInfo.phone.replace(/\D/g, '') || 
-        (loginInfo.email && c.email === loginInfo.email)
-      );
-      
-      if (!customer) {
-        throw new Error("Customer not found");
-      }
-      
-      return customer;
-    },
-    onSuccess: (customer) => {
-      setCreatedCustomer(customer);
-      setStep('member');
-      toast({
-        title: "Welcome back!",
-        description: `Logged in successfully as ${customer.name}`,
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Login Failed",
-        description: "Customer not found. Please check your phone number or email.",
-        variant: "destructive",
-      });
-    },
-  });
+  mutationFn: async (loginInfo: { phone: string; email: string; password: string }) => {
+    const response = await apiRequest("POST", "/api/login", loginInfo);
+    if (!response.user) throw new Error("Login failed");
+    return response.user;
+  },
+  onSuccess: (user) => {
+    login(user);
+    if (user.role === "admin") {
+      setLocation("/"); // admin dashboard
+    } else {
+      setStep("member");
+    }
+  },
+});
 
   const handleSignupSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -250,18 +241,39 @@ export default function CustomerPortal() {
     setStep('plans');
   };
 
-  const handleLoginSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!loginData.phone && !loginData.email) {
-      toast({
-        title: "Missing Information",
-        description: "Please provide your phone number or email address",
-        variant: "destructive",
-      });
-      return;
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  try {
+    const response = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(loginData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.message || "Login failed");
+
+    // If you're the admin, role will be "admin"
+    if (data.role === "admin") {
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      setStep("business"); // or navigate to your business dashboard
+    } else {
+      setUser(data);
+      localStorage.setItem("user", JSON.stringify(data));
+      setStep("member");
     }
-    loginMutation.mutate(loginData);
-  };
+  } catch (error) {
+    console.error("Login failed:", error);
+    toast({
+      title: "Login Error",
+      description: (error as any)?.message || "Something went wrong",
+      variant: "destructive",
+    });
+  }
+};
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId);
@@ -292,19 +304,18 @@ export default function CustomerPortal() {
                 <CardTitle className="tracking-tight text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-[#050000] text-center whitespace-nowrap">
                   {step === 'login' ? 'Welcome back to,' : 'Welcome to,'}
                 </CardTitle>
-                
-                <img 
-                  src={logoImage} 
-                  alt="Regalcare Logo" 
-                  className="w-48 h-48 object-contain mb-4"
-                />
-                
-                <p className="text-slate-600 text-lg text-center italic whitespace-nowrap mb-6">
-                  At your service, for your convenience!
-                </p>
-                
-                {/* Toggle between Login and Sign Up */}
-                <div className="flex gap-2 justify-center">
+
+              <img 
+                src={logoImage} 
+                alt="Regalcare Logo" 
+                className="w-48 h-48 object-contain mb-4"
+              />
+
+              <p className="text-slate-600 text-lg text-center italic whitespace-nowrap mb-6">
+                At your service, for your convenience!
+              </p>
+
+              <div className="flex gap-2 justify-center">
                 <Button
                   variant={step === 'signup' ? 'default' : 'outline'}
                   size="sm"
@@ -314,150 +325,98 @@ export default function CustomerPortal() {
                 >
                   New Member
                 </Button>
-                  <Button
-                    variant={step === 'login' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setStep('login')}
-                    type="button"
-                    className={step === 'login' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}
-                  >
-                    Existing Member
-                  </Button>
-                </div>
+                <Button
+                  variant={step === 'login' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setStep('login')}
+                  type="button"
+                  className={step === 'login' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : 'border-slate-300 text-slate-600 hover:bg-slate-50'}
+                >
+                  Existing Member
+                </Button>
               </div>
-            </CardHeader>
-            <CardContent className="pt-0 -mt-4">
-              {step === 'signup' ? (
-                <form onSubmit={handleSignupSubmit} className="space-y-6">
-                  <div>
-                    <Label htmlFor="name" className="text-slate-700 font-medium">Full Name *</Label>
+            </div>
+          </CardHeader>
+
+          <CardContent className="pt-0 -mt-4">
+            {step === 'signup' ? (
+              <form onSubmit={handleSignupSubmit} className="space-y-6">
+                {/* name, phone, email, address, serviceDay... */}
+                {/* ADD password field */}
+                <div>
+                  <Label htmlFor="signupPassword" className="text-slate-700 font-medium">Password *</Label>
+                  <Input
+                    id="signupPassword"
+                    type="password"
+                    value={signupData.password}
+                    onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
+                    placeholder="Enter a secure password"
+                    className="h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    required
+                  />
+                </div>
+
+                <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                  Continue to Plans
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleLoginSubmit} className="space-y-6">
+                <div>
+                  <Label htmlFor="loginPhone" className="text-slate-700 font-medium">Phone Number</Label>
+                  <div className="relative mt-2">
+                    <Phone className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
                     <Input
-                      id="name"
-                      value={signupData.name}
-                      onChange={(e) => setSignupData({...signupData, name: e.target.value})}
-                      placeholder="Enter your full name"
-                      className="mt-2 h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
-                      required
+                      id="loginPhone"
+                      type="tel"
+                      value={loginData.phone}
+                      onChange={(e) => setLoginData({...loginData, phone: e.target.value})}
+                      placeholder="(555) 123-4567"
+                      className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
                     />
                   </div>
+                </div>
+
+                <div className="text-center text-sm text-slate-500 relative">
+                  <span className="bg-white px-3 text-slate-400">OR</span>
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-200"></div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="loginEmail" className="text-slate-700 font-medium">Email Address</Label>
+                  <div className="relative mt-2">
+                    <Mail className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
+                    <Input
+                      id="loginEmail"
+                      type="email"
+                      value={loginData.email}
+                      onChange={(e) => setLoginData({...loginData, email: e.target.value})}
+                      placeholder="your@email.com"
+                      className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    />
+                  </div>
+                </div>
+
+                {/* 🔐 Password input */}
+                <div>
+                  <Label htmlFor="loginPassword" className="text-slate-700 font-medium">Password *</Label>
+                  <Input
+                    id="loginPassword"
+                    type="password"
+                    value={loginData.password}
+                    onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                    placeholder="Password"
+                    className="h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    required
+                  />
+                </div>
                   
-                  <div>
-                    <Label htmlFor="phone" className="text-slate-700 font-medium">Phone Number *</Label>
-                    <div className="relative mt-2">
-                      <Phone className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
-                      <Input
-                        id="phone"
-                        type="tel"
-                        value={signupData.phone}
-                        onChange={(e) => setSignupData({...signupData, phone: e.target.value})}
-                        placeholder="(555) 123-4567"
-                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="email" className="text-slate-700 font-medium">Email Address</Label>
-                    <div className="relative mt-2">
-                      <Mail className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
-                      <Input
-                        id="email"
-                        type="email"
-                        value={signupData.email}
-                        onChange={(e) => setSignupData({...signupData, email: e.target.value})}
-                        placeholder="your@email.com"
-                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="address" className="text-slate-700 font-medium">Service Address *</Label>
-                    <div className="relative mt-2">
-                      <MapPin className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
-                      <Input
-                        id="address"
-                        value={signupData.address}
-                        onChange={(e) => setSignupData({...signupData, address: e.target.value})}
-                        placeholder="123 Main Street, City, State"
-                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="serviceDay" className="text-slate-700 font-medium">Trash Service Day *</Label>
-                    <div className="relative mt-2">
-                      <Calendar className="absolute left-4 top-4 h-4 w-4 text-slate-400 z-10" />
-                      <Select 
-                        value={signupData.serviceDay} 
-                        onValueChange={(value) => setSignupData({...signupData, serviceDay: value})}
-                        required
-                      >
-                        <SelectTrigger className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20">
-                          <SelectValue placeholder="Select the day your trash is picked up" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Monday">Monday</SelectItem>
-                          <SelectItem value="Tuesday">Tuesday</SelectItem>
-                          <SelectItem value="Wednesday">Wednesday</SelectItem>
-                          <SelectItem value="Thursday">Thursday</SelectItem>
-                          <SelectItem value="Friday">Friday</SelectItem>
-                          <SelectItem value="Saturday">Saturday</SelectItem>
-                          <SelectItem value="Sunday">Sunday</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
-                    Continue to Plans
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </form>
-              ) : (
-                <form onSubmit={handleLoginSubmit} className="space-y-6">
-                  <div>
-                    <Label htmlFor="loginPhone" className="text-slate-700 font-medium">Phone Number</Label>
-                    <div className="relative mt-2">
-                      <Phone className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
-                      <Input
-                        id="loginPhone"
-                        type="tel"
-                        value={loginData.phone}
-                        onChange={(e) => setLoginData({...loginData, phone: e.target.value})}
-                        placeholder="(555) 123-4567"
-                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="text-center text-sm text-slate-500 relative">
-                    <span className="bg-white px-3 text-slate-400">OR</span>
-                    <div className="absolute inset-0 flex items-center">
-                      <div className="w-full border-t border-slate-200"></div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="loginEmail" className="text-slate-700 font-medium">Email Address</Label>
-                    <div className="relative mt-2">
-                      <Mail className="absolute left-4 top-4 h-4 w-4 text-slate-400" />
-                      <Input
-                        id="loginEmail"
-                        type="email"
-                        value={loginData.email}
-                        onChange={(e) => setLoginData({...loginData, email: e.target.value})}
-                        placeholder="your@email.com"
-                        className="h-12 pl-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
-                      />
-                    </div>
-                  </div>
 
                   <div className="text-sm text-blue-700 bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <p>Enter either your phone number or email address to access your member dashboard.</p>
+                    <p>Enter either your phone number or email address and password to access your member dashboard.</p>
                   </div>
 
                   <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200" disabled={loginMutation.isPending}>
@@ -862,7 +821,7 @@ export default function CustomerPortal() {
                 className="w-full" 
                 onClick={() => {
                   setStep('signup');
-                  setSignupData({ name: "", phone: "", email: "", address: "", serviceDay: "" });
+                  setSignupData({ name: "", phone: "", email: "", address: "", password: "", serviceDay: "" });
                   setSelectedPlan("");
                   setPaymentData({ cardNumber: "", expiryDate: "", cvv: "", nameOnCard: "", billingAddress: "" });
                   setCreatedCustomer(null);
@@ -878,11 +837,11 @@ export default function CustomerPortal() {
     );
   }
 
-  if (step === 'member' && createdCustomer) {
+  if (step === 'member' && user?.role === 'customer') {
     return (
       <MemberDashboard 
-        customerId={createdCustomer.id} 
-        customerData={createdCustomer}
+          customerId={user.id} 
+         customerData={user}
       />
     );
   }

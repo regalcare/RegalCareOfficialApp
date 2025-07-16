@@ -16,13 +16,20 @@ import type { Customer, Message, BinCleaningAppointment } from "./schema";
 import { format, addDays, startOfWeek, isSameDay, isAfter } from "date-fns";
 import { useLocation } from "wouter";
 import logoImage from "@assets/IMG_2051.jpeg";
+import { useAuth } from "@/lib/auth";
 
-interface MemberDashboardProps {
-  customerId: number;
-  customerData: Customer;
-}
 
-export default function MemberDashboard({ customerId, customerData }: MemberDashboardProps) {
+
+export default function MemberDashboard() {
+  const { user } = useAuth();
+
+  if (!user || user.role !== "customer") {
+    return <div>Loading your dashboard...</div>;
+  }
+
+  const customerData = user;
+  const customerId = user.id;
+
   const [newMessage, setNewMessage] = useState("");
   const [serviceDate, setServiceDate] = useState("");
   const [serviceType, setServiceType] = useState("");

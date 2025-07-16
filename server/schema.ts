@@ -22,7 +22,7 @@ export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   username: text('username').notNull().unique(),
   password: text('password').notNull(), // This should be hashed
-  role: text('role').notNull().default('admin'),
+  role: text("role").notNull().default("customer"),
   createdAt: timestamp('created_at').notNull().defaultNow()
 });
 
