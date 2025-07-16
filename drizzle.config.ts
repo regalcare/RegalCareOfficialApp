@@ -6,8 +6,8 @@ dotenv.config();
 export default {
   schema: "./server/schema.ts",
   out: "./drizzle",
-  dialect: "postgresql", // ✅ This is what Drizzle wants
+  dialect: "postgresql",
   dbCredentials: {
-    connectionString: process.env.DATABASE_URL!,
+    url: process.env.DATABASE_URL!, // ✅ use 'url' instead of 'connectionString'
   },
 } satisfies Config;
