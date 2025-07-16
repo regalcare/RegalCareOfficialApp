@@ -6,12 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Users, DollarSign, SprayCan, Droplets, MessageSquare, Clock, CheckCircle, Circle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Calendar, Users, DollarSign, SprayCan, Droplets, MessageSquare, Clock, CheckCircle, Circle, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Customer, BinCleaningAppointment, Message } from "@shared/schema";
-import { format, addDays, startOfWeek, isSameDay } from "date-fns";
+import { format, addDays, startOfWeek, isSameDay, startOfMonth, endOfMonth, getDaysInMonth, getDay } from "date-fns";
 
 export default function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const [showDayModal, setShowDayModal] = useState(false);
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -27,9 +30,30 @@ export default function Dashboard() {
     queryKey: ["/api/messages"],
   });
 
-  // Generate week view for calendar
-  const weekStart = startOfWeek(selectedDate);
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  // Generate monthly calendar view
+  const monthStart = startOfMonth(selectedDate);
+  const monthEnd = endOfMonth(selectedDate);
+  const daysInMonth = getDaysInMonth(selectedDate);
+  const startDayOfWeek = getDay(monthStart); // 0 = Sunday
+  
+  // Create array of all calendar days (including prev/next month days for full grid)
+  const calendarDays = [];
+  
+  // Add empty cells for days before month starts
+  for (let i = 0; i < startDayOfWeek; i++) {
+    calendarDays.push(addDays(monthStart, i - startDayOfWeek));
+  }
+  
+  // Add all days of current month
+  for (let day = 1; day <= daysInMonth; day++) {
+    calendarDays.push(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), day));
+  }
+  
+  // Add days from next month to complete the grid (6 weeks = 42 days)
+  const remainingDays = 42 - calendarDays.length;
+  for (let i = 1; i <= remainingDays; i++) {
+    calendarDays.push(addDays(monthEnd, i));
+  }
 
   // Calculate revenue
   const currentMonth = new Date().getMonth();
@@ -51,6 +75,27 @@ export default function Dashboard() {
   const getAppointmentsForDay = (day: Date) => {
     const dayStr = day.toISOString().split('T')[0];
     return binCleaningAppointments?.filter(a => a.date === dayStr) || [];
+  };
+
+  const handleDayClick = (day: Date) => {
+    setSelectedDay(day);
+    setShowDayModal(true);
+  };
+
+  const isCurrentMonth = (day: Date) => {
+    return day.getMonth() === selectedDate.getMonth();
+  };
+
+  const isToday = (day: Date) => {
+    return isSameDay(day, new Date());
+  };
+
+  const goToPreviousMonth = () => {
+    setSelectedDate(addDays(selectedDate, -30));
+  };
+
+  const goToNextMonth = () => {
+    setSelectedDate(addDays(selectedDate, 30));
   };
 
   const markMessageAsReadMutation = useMutation({
@@ -116,82 +161,175 @@ export default function Dashboard() {
         <TabsContent value="calendar" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Scheduled Services</CardTitle>
-              <div className="flex items-center gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setSelectedDate(addDays(selectedDate, -7))}
-                >
-                  Previous Week
-                </Button>
-                <span className="font-medium">
-                  {format(weekStart, 'MMM d')} - {format(addDays(weekStart, 6), 'MMM d, yyyy')}
-                </span>
-                <Button
-                  variant="outline"
-                  onClick={() => setSelectedDate(addDays(selectedDate, 7))}
-                >
-                  Next Week
-                </Button>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-3">
+                  <Calendar size={24} />
+                  {format(selectedDate, 'MMMM yyyy')}
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={goToPreviousMonth}
+                  >
+                    <ChevronLeft size={16} />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => setSelectedDate(new Date())}
+                  >
+                    Today
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={goToNextMonth}
+                  >
+                    <ChevronRight size={16} />
+                  </Button>
+                </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-7 gap-4">
-                {weekDays.map((day) => {
-                  const appointments = getAppointmentsForDay(day);
-                  const isToday = isSameDay(day, new Date());
-                  
-                  return (
-                    <div
-                      key={day.toISOString()}
-                      className={`p-4 border rounded-lg ${
-                        isToday ? 'bg-blue-50 border-blue-200' : 'bg-gray-50'
-                      }`}
-                    >
-                      <div className="font-medium text-gray-900 mb-2">
-                        {format(day, 'EEE d')}
-                      </div>
-                      <div className="space-y-2">
-                        {appointments.length === 0 ? (
-                          <p className="text-xs text-gray-500">No services</p>
-                        ) : (
-                          appointments.map((appointment) => (
-                            <div
-                              key={appointment.id}
-                              className="p-2 rounded text-xs bg-white border"
-                            >
-                              <div className="flex items-center gap-1 mb-1">
-                                {appointment.serviceType === 'bin_cleaning' ? (
-                                  <SprayCan size={12} className="text-blue-600" />
-                                ) : (
-                                  <Droplets size={12} className="text-purple-600" />
-                                )}
-                                <span className="font-medium">
-                                  {appointment.serviceType === 'bin_cleaning' ? 'Bin Clean' : 'Pressure Wash'}
-                                </span>
-                              </div>
-                              <p className="text-gray-600">{appointment.customerName}</p>
-                              <p className="text-gray-600">${appointment.price}</p>
-                              <Badge
-                                variant={
-                                  appointment.status === 'completed' ? 'default' :
-                                  appointment.status === 'in_progress' ? 'secondary' :
-                                  'outline'
-                                }
-                                className="mt-1"
-                              >
-                                {appointment.status}
-                              </Badge>
-                            </div>
-                          ))
-                        )}
-                      </div>
+              {/* Calendar Grid */}
+              <div className="w-full">
+                {/* Day Headers */}
+                <div className="grid grid-cols-7 mb-2">
+                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+                    <div key={day} className="p-3 text-center font-semibold text-gray-700 bg-gray-100 border">
+                      {day}
                     </div>
-                  );
-                })}
+                  ))}
+                </div>
+                
+                {/* Calendar Days */}
+                <div className="grid grid-cols-7">
+                  {calendarDays.map((day, index) => {
+                    const appointments = getAppointmentsForDay(day);
+                    const dayIsToday = isToday(day);
+                    const dayIsCurrentMonth = isCurrentMonth(day);
+                    
+                    return (
+                      <div
+                        key={index}
+                        onClick={() => handleDayClick(day)}
+                        className={`
+                          min-h-[120px] p-2 border border-gray-200 cursor-pointer transition-colors hover:bg-blue-50
+                          ${dayIsToday ? 'bg-blue-100 border-blue-400' : 'bg-white'}
+                          ${!dayIsCurrentMonth ? 'text-gray-400 bg-gray-50' : ''}
+                        `}
+                      >
+                        <div className={`
+                          text-sm font-medium mb-1 flex items-center justify-between
+                          ${dayIsToday ? 'text-blue-700' : dayIsCurrentMonth ? 'text-gray-900' : 'text-gray-400'}
+                        `}>
+                          <span>{format(day, 'd')}</span>
+                          {appointments.length > 0 && (
+                            <Badge variant="secondary" className="text-xs px-1 py-0">
+                              {appointments.length}
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        {/* Show first 2 appointments with dots for more */}
+                        <div className="space-y-1">
+                          {appointments.slice(0, 2).map((appointment, i) => (
+                            <div
+                              key={i}
+                              className={`
+                                text-xs p-1 rounded truncate
+                                ${appointment.serviceType === 'bin_cleaning' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}
+                              `}
+                            >
+                              {appointment.customerName}
+                            </div>
+                          ))}
+                          {appointments.length > 2 && (
+                            <div className="text-xs text-gray-500 text-center">
+                              +{appointments.length - 2} more
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </CardContent>
           </Card>
+
+          {/* Day Detail Modal */}
+          <Dialog open={showDayModal} onOpenChange={setShowDayModal}>
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-3">
+                  <Calendar size={20} />
+                  {selectedDay && format(selectedDay, 'EEEE, MMMM d, yyyy')}
+                </DialogTitle>
+              </DialogHeader>
+              
+              {selectedDay && (
+                <div className="space-y-4">
+                  {(() => {
+                    const dayAppointments = getAppointmentsForDay(selectedDay);
+                    return dayAppointments.length === 0 ? (
+                      <div className="text-center py-8">
+                        <Calendar className="mx-auto h-12 w-12 text-gray-300 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">No services scheduled</h3>
+                        <p className="text-gray-500">
+                          This day is available for new appointments.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <h3 className="font-semibold text-gray-900 mb-3">
+                          Scheduled Services ({dayAppointments.length})
+                        </h3>
+                        {dayAppointments.map((appointment) => (
+                          <div key={appointment.id} className="border rounded-lg p-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <div className={`p-2 rounded-full ${
+                                  appointment.serviceType === 'bin_cleaning' ? 'bg-blue-100' : 'bg-purple-100'
+                                }`}>
+                                  {appointment.serviceType === 'bin_cleaning' ? (
+                                    <SprayCan className="h-4 w-4 text-blue-600" />
+                                  ) : (
+                                    <Droplets className="h-4 w-4 text-purple-600" />
+                                  )}
+                                </div>
+                                <div>
+                                  <p className="font-medium text-gray-900">{appointment.customerName}</p>
+                                  <p className="text-sm text-gray-600">
+                                    {appointment.serviceType === 'bin_cleaning' ? 'Bin Cleaning' : 'Pressure Washing'}
+                                  </p>
+                                  <p className="text-sm text-gray-500">
+                                    {appointment.startTime} - {appointment.endTime}
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium text-gray-900">${appointment.price}</p>
+                                <Badge
+                                  variant={
+                                    appointment.status === 'completed' ? 'default' :
+                                    appointment.status === 'in_progress' ? 'secondary' :
+                                    'outline'
+                                  }
+                                >
+                                  {appointment.status}
+                                </Badge>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
         </TabsContent>
 
         <TabsContent value="customers" className="space-y-6">

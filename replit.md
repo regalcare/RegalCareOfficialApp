@@ -47,6 +47,10 @@ Preferred communication style: Simple, everyday language.
 ✓ Removed all borders, shadows, and bubble styling from logos across entire application for clean flat appearance (January 15, 2025)
 ✓ Standardized logo styling: no rounded corners, shadows, or decorative effects throughout all pages (January 15, 2025)
 ✓ Applied whitespace-nowrap to customer portal welcome text to ensure single-line display (January 15, 2025)
+✓ Replaced notification bell with tab-specific red badges for Calendar (today's appointments) and Messages (pending messages) (January 15, 2025)
+✓ Transformed business dashboard calendar into traditional monthly grid layout with clickable day boxes (January 15, 2025)
+✓ Added interactive day detail modal showing complete appointment information when clicking calendar days (January 15, 2025)
+✓ Enhanced calendar with month navigation, color-coded service previews, and appointment counters per day (January 15, 2025)
 
 ## System Architecture
 
