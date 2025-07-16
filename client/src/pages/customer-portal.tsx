@@ -341,22 +341,79 @@ export default function CustomerPortal() {
           <CardContent className="pt-0 -mt-4">
             {step === 'signup' ? (
               <form onSubmit={handleSignupSubmit} className="space-y-6">
-                {/* name, phone, email, address, serviceDay... */}
-                {/* ADD password field */}
                 <div>
-                  <Label htmlFor="signupPassword" className="text-slate-700 font-medium">Password *</Label>
+                  <Label htmlFor="name">Full Name *</Label>
                   <Input
-                    id="signupPassword"
-                    type="password"
-                    value={signupData.password}
-                    onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                    placeholder="Enter a secure password"
-                    className="h-12 border-slate-200 focus:border-blue-500 focus:ring-blue-500/20"
+                    id="name"
+                    value={signupData.name}
+                    onChange={(e) => setSignupData({...signupData, name: e.target.value})}
                     required
                   />
                 </div>
 
-                <Button type="submit" className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
+                <div>
+                  <Label htmlFor="phone">Phone Number *</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={signupData.phone}
+                    onChange={(e) => setSignupData({...signupData, phone: e.target.value})}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={signupData.email}
+                    onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="password">Password *</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={signupData.password}
+                    onChange={(e) => setSignupData({...signupData, password: e.target.value})}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="address">Service Address *</Label>
+                  <Input
+                    id="address"
+                    value={signupData.address}
+                    onChange={(e) => setSignupData({...signupData, address: e.target.value})}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="serviceDay">Trash Service Day *</Label>
+                  <Select
+                    value={signupData.serviceDay}
+                    onValueChange={(value) => setSignupData({...signupData, serviceDay: value})}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose your pickup day" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Monday">Monday</SelectItem>
+                      <SelectItem value="Tuesday">Tuesday</SelectItem>
+                      <SelectItem value="Wednesday">Wednesday</SelectItem>
+                      <SelectItem value="Thursday">Thursday</SelectItem>
+                      <SelectItem value="Friday">Friday</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <Button type="submit" className="w-full">
                   Continue to Plans
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

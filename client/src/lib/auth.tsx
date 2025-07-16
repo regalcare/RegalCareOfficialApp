@@ -1,9 +1,12 @@
+
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 type User = {
   id: string;
   role: "admin" | "customer";
   name: string;
+  phone: string;
+  email: string;
 };
 
 type AuthContextType = {
@@ -20,25 +23,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-  const stored = localStorage.getItem("user");
-
-  if (stored) {
-    setUser(JSON.parse(stored));
-  } else {
-    // TEMP: Create a manual admin user
-    const adminUser = {
-      id: 999,
-      name: "Admin",
-      phone: "555-0000",
-      email: "admin@regalcare.com",
-      role: "admin",
-    };
-    localStorage.setItem("user", JSON.stringify(adminUser));
-    setUser(adminUser);
-  }
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      setUser(JSON.parse(stored));
+    }
     setIsLoading(false);
   }, []);
-  
 
   const login = (user: User) => {
     localStorage.setItem("user", JSON.stringify(user));

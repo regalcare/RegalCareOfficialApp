@@ -1,3 +1,4 @@
+// App.tsx
 import { Switch, Route, useLocation } from "wouter";
 import { useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
@@ -10,36 +11,25 @@ import Dashboard from "@/pages/dashboard";
 import CustomerPortal from "@/pages/customer-portal";
 import UpgradePage from "@/pages/upgrade";
 import NotFound from "@/pages/not-found";
+import LoginPage from "@/pages/customer-portal"; // 👈 your actual login/signup lives here
 import { useAuth } from "./lib/auth";
 
-// Simulated auth check (replace with real one)
-// ← set this dynamically from your auth state
-
-function RedirectToCustomer() {
-  const [, setLocation] = useLocation();
-  useEffect(() => {
-    setLocation("/customer");
-  }, []);
-  return null;
-}
-
 function Router() {
-  const [location] = useLocation();
-  const isCustomerPortal = location.startsWith("/customer");
+  const [location, setLocation] = useLocation();
   const { user, isLoading } = useAuth();
 
-  if (isLoading) return <div>Loading...</div>;
+  useEffect(() => {
+  if (isLoading) return; 
+    if (!user) {
+      setLocation("/login"); // 👈 go to your real login/signup page
+    } else if (user.role === "admin") {
+      setLocation("/dashboard");
+    } else if (user.role === "customer") {
+      setLocation("/customer");
+    }
+  }, [user, isLoading]);
 
-  if (isCustomerPortal) {
-    return (
-      <Switch>
-        <Route path="/customer" component={CustomerPortal} />
-        <Route path="/customer/member/:id" component={CustomerPortal} />
-        <Route path="/customer/upgrade/:id" component={UpgradePage} />
-        <Route component={NotFound} />
-      </Switch>
-    );
-  }
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -47,12 +37,11 @@ function Router() {
       <TabNavigation />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Switch>
-          <Route
-            path="/"
-            component={() =>
-              user?.role === "admin" ? <Dashboard /> : <RedirectToCustomer />
-            }
-          />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/customer" component={CustomerPortal} />
+          <Route path="/customer/member/:id" component={CustomerPortal} />
+          <Route path="/customer/upgrade/:id" component={UpgradePage} />
+          <Route path="/login" component={LoginPage} /> {/* 👈 fixed */}
           <Route component={NotFound} />
         </Switch>
       </main>
