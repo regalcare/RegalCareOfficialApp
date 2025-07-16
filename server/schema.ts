@@ -71,3 +71,10 @@ export const payments = pgTable('payments', {
   metadata: jsonb('metadata'),
   createdAt: timestamp('created_at').notNull().defaultNow()
 });
+import { z } from "zod";
+
+export const insertBinCleaningAppointmentSchema = z.object({
+  customerId: z.string().uuid(),
+  appointmentDate: z.string().datetime(),
+  notes: z.string().optional(),
+});
