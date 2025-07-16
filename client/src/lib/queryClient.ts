@@ -20,3 +20,6 @@ export async function apiRequest(
 
   return response.json();
 }
+import { QueryClient } from '@tanstack/react-query';
+
+export const queryClient = new QueryClient();
