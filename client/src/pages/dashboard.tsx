@@ -82,6 +82,17 @@ export default function Dashboard() {
           <TabsTrigger value="calendar" className="flex items-center gap-2">
             <Calendar size={16} />
             Calendar
+            {binCleaningAppointments && binCleaningAppointments.filter(a => {
+              const today = new Date().toISOString().split('T')[0];
+              return a.date === today && a.status === 'scheduled';
+            }).length > 0 && (
+              <Badge variant="destructive" className="ml-1 px-1.5 py-0.5 text-xs">
+                {binCleaningAppointments.filter(a => {
+                  const today = new Date().toISOString().split('T')[0];
+                  return a.date === today && a.status === 'scheduled';
+                }).length}
+              </Badge>
+            )}
           </TabsTrigger>
           <TabsTrigger value="customers" className="flex items-center gap-2">
             <Users size={16} />
