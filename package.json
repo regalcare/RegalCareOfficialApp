@@ -8,7 +8,8 @@
     "build": "vite build",
     "start": "tsx server/index.ts",
     "check": "tsc",
-    "db:push": "cross-env DRIZZLE_CONFIG_PATH=drizzle.config.ts && drizzle-kit push"
+    "db:push": "cross-env DRIZZLE_CONFIG_PATH=drizzle.config.ts && drizzle-kit push",
+    "postinstall": "cd client && npm install && npm run build && cp -r dist ../server/public"
   },
   "dependencies": {
     "@capacitor/cli": "^7.4.2",
