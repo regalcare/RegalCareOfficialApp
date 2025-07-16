@@ -9,7 +9,9 @@
     "start": "tsx server/index.ts",
     "check": "tsc",
     "db:push": "cross-env DRIZZLE_CONFIG_PATH=drizzle.config.ts && drizzle-kit push",
-    "postinstall": "echo '📦 Installing frontend' && cd client && npm install && echo '🛠 Building frontend' && npm run build && echo '📁 Copying build' && mkdir -p ../server/public && cp -r dist/* ../server/public && echo '✅ Frontend copied!'"
+    "postinstall": "cd client && npm install --ignore-scripts && npm run build && cd .. && if not exist server\\public mkdir server\\public && xcopy /E /I /Y client\\dist\\* server\\public"
+
+
   },
   "dependencies": {
     "@capacitor/cli": "^7.4.2",
