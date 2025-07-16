@@ -27,7 +27,7 @@ export default function Header() {
             <Link href="/customer">
               <button className="flex items-center space-x-2 px-3 py-2 text-sm bg-secondary text-white rounded-lg hover:bg-secondary/90">
                 <Users size={16} />
-                <span>Customer Portal</span>
+                <span className="text-[12px]">Customer Portal</span>
               </button>
             </Link>
             <button className="p-2 text-gray-400 hover:text-gray-600 relative">
