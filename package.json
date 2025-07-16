@@ -8,8 +8,8 @@
     "build": "vite build",
     "start": "tsx server/index.ts",
     "check": "tsc",
-    "db:push": "cross-env DRIZZLE_CONFIG_PATH=drizzle.config.ts && drizzle-kit push"
-    
+    "db:push": "cross-env DRIZZLE_CONFIG_PATH=drizzle.config.ts && drizzle-kit push",
+    "postinstall": "vite build"
 
 
   },
