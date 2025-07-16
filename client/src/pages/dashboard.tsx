@@ -81,7 +81,7 @@ export default function Dashboard() {
         <TabsList className="grid w-full max-w-2xl grid-cols-4">
           <TabsTrigger value="calendar" className="flex items-center gap-2">
             <Calendar size={16} />
-            Services Calendar
+            Calendar
           </TabsTrigger>
           <TabsTrigger value="customers" className="flex items-center gap-2">
             <Users size={16} />
