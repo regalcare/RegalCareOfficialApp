@@ -3,26 +3,23 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import bcrypt from "bcrypt";
+import { db } from './db'; // ✅ Ensure this is imported correctly
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// ✅ Required to parse JSON requests
+app.use(express.json());
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Serve static files from Vite output
+// ✅ Static files (JS/CSS)
 app.use(express.static(path.join(__dirname, '../dist/public')));
 
-// Handle React routes by sending index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/public/index.html'));
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+// ✅ API routes FIRST
 app.post("/api/signup", async (req, res) => {
   const { name, email, password, role = "customer" } = req.body;
 
@@ -47,6 +44,7 @@ app.post("/api/signup", async (req, res) => {
     role: newUser.role,
   });
 });
+
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
@@ -62,4 +60,14 @@ app.post("/api/login", async (req, res) => {
     email: user.email,
     role: user.role,
   });
+});
+
+// ✅ Catch-all for React App should be LAST
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/public/index.html'));
+});
+
+// ✅ Start the server
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
