@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Navigation, MapPin, Route as RouteIcon, Clock, Truck } from "lucide-react";
-import type { Customer, Route } from "@shared/schema";
+import type { Customer, Route } from "/server/schema";
 
 interface RouteMapProps {
   customers: Customer[];

@@ -10,7 +10,7 @@ import { Plus, Edit, Eye, Trash2, Search } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import CustomerForm from "@/components/customer-form";
-import type { Customer } from "@shared/schema";
+import type { Customer } from "/server/schema";
 
 export default function Customers() {
   const [searchTerm, setSearchTerm] = useState("");

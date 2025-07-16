@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { insertBinCleaningAppointmentSchema } from "@shared/schema";
+import { insertBinCleaningAppointmentSchema } from "/server/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import type { BinCleaningAppointment } from "@shared/schema";
+import type { BinCleaningAppointment } from "/server/schema";
 import { z } from "zod";
 
 // Helper function to get next Monday or Thursday

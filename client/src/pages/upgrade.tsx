@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLocation, useParams } from "wouter";
 import { useQuery } from "@tanstack/react-query";
-import type { Customer } from "@shared/schema";
+import type { Customer } from "/server/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

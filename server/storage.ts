@@ -11,7 +11,7 @@ import {
   type InsertMessage,
   type BinCleaningAppointment,
   type InsertBinCleaningAppointment
-} from "@shared/schema";
+} from "/server/schema";
 
 export interface IStorage {
   // Customer operations

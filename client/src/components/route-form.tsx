@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { insertRouteSchema } from "@shared/schema";
+import { insertRouteSchema } from "/server/schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import type { Route } from "@shared/schema";
+import type { Route } from "/server/schema";
 import { z } from "zod";
 
 const formSchema = insertRouteSchema.extend({
