@@ -5,10 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { insertCustomerSchema } from "/server/schema";
+import { insertCustomerSchema } from "./schema";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import type { Customer } from "/server/schema";
+import type { Customer } from "./schema";
 import { z } from "zod";
 
 const formSchema = insertCustomerSchema.extend({

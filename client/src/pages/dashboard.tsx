@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar, Users, DollarSign, SprayCan, Droplets, MessageSquare, Clock, CheckCircle, Circle, ChevronLeft, ChevronRight } from "lucide-react";
-import type { Customer, BinCleaningAppointment, Message } from "/server/schema";
+import type { Customer, BinCleaningAppointment, Message } from "./schema";
 import { format, addDays, startOfWeek, isSameDay, startOfMonth, endOfMonth, getDaysInMonth, getDay } from "date-fns";
 
 export default function Dashboard() {

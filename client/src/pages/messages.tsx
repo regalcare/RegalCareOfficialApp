@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Send, Phone, Archive } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import type { Message } from "/server/schema";
+import type { Message } from "./schema";
 import { format } from "date-fns";
 
 export default function Messages() {

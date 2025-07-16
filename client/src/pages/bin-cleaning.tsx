@@ -8,7 +8,7 @@ import { Plus, Calendar, CheckCircle, Clock, DollarSign, ChevronLeft, ChevronRig
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import CleaningForm from "@/components/cleaning-form";
-import type { BinCleaningAppointment } from "/server/schema";
+import type { BinCleaningAppointment } from "./schema";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, addMonths, subMonths, isSameDay } from "date-fns";
 
 export default function BinCleaning() {

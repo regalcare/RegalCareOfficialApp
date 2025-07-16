@@ -10,7 +10,7 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import RouteForm from "@/components/route-form";
 import RouteMap from "@/components/route-map";
-import type { Route, Customer } from "/server/schema";
+import type { Route, Customer } from "./schema";
 import { format, startOfWeek, addDays, addWeeks, subWeeks, isSameDay } from "date-fns";
 
 export default function Routes() {
