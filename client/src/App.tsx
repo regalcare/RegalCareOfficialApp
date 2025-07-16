@@ -1,63 +1,57 @@
-// App.tsx
-import { Switch, Route, useLocation } from "wouter";
-import { useEffect } from "react";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import Header from "@/components/layout/header";
-import TabNavigation from "@/components/layout/tab-navigation";
-import Dashboard from "@/pages/dashboard";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "@/lib/auth";
+import MemberDashboard from "@/pages/member-dashboard";
 import CustomerPortal from "@/pages/customer-portal";
-import UpgradePage from "@/pages/upgrade";
-import NotFound from "@/pages/not-found";
-import LoginPage from "@/pages/customer-portal"; // 👈 your actual login/signup lives here
-import { useAuth } from "./lib/auth";
+import BusinessDashboard from "@/pages/dashboard";
 
-function Router() {
-  const [location, setLocation] = useLocation();
-  const { user, isLoading } = useAuth();
+function ProtectedRoute({ children, role }: { children: JSX.Element; role?: string }) {
+  const { user } = useAuth();
 
-  useEffect(() => {
-  if (isLoading) return; 
-    if (!user) {
-      setLocation("/login"); // 👈 go to your real login/signup page
-    } else if (user.role === "admin") {
-      setLocation("/dashboard");
-    } else if (user.role === "customer") {
-      setLocation("/customer");
-    }
-  }, [user, isLoading]);
+  if (!user) {
+    return <Navigate to="/portal" replace />;
+  }
 
-  if (isLoading) return <div>Loading...</div>;
+  if (role && user.role !== role) {
+    return <Navigate to="/portal" replace />;
+  }
+
+  return children;
+}
+
+function AppRoutes() {
+  const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
-      <TabNavigation />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <Switch>
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="/customer" component={CustomerPortal} />
-          <Route path="/customer/member/:id" component={CustomerPortal} />
-          <Route path="/customer/upgrade/:id" component={UpgradePage} />
-          <Route path="/login" component={LoginPage} /> {/* 👈 fixed */}
-          <Route component={NotFound} />
-        </Switch>
-      </main>
-    </div>
+    <Routes>
+      <Route path="/portal" element={<CustomerPortal />} />
+      <Route
+        path="/customer/member/:id"
+        element={
+          <ProtectedRoute role="customer">
+            <MemberDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/"
+        element={
+          user?.role === "admin" ? (
+            <BusinessDashboard />
+          ) : (
+            <Navigate to="/portal" replace />
+          )
+        }
+      />
+    </Routes>
   );
 }
 
-function App() {
+export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
-
-export default App;

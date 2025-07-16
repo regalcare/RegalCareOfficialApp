@@ -192,7 +192,8 @@ export default function CustomerPortal() {
 
   const createCustomerMutation = useMutation({
     mutationFn: async (customerData: any) => {
-      const response = await apiRequest("POST", "/api/customers", customerData);
+      const response = await apiRequest("POST", `${import.meta.env.VITE_API_URL}/api/customers`, customerData);
+
       return response;
     },
     onSuccess: (data) => {
@@ -245,7 +246,7 @@ export default function CustomerPortal() {
   e.preventDefault();
 
   try {
-    const response = await fetch("/api/login", {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(loginData),

@@ -1,49 +1,61 @@
 import { useState } from "react";
-import { useAuth } from "@/lib/auth";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import axios from "axios";
 
-export default function LoginPage() {
-  const { login } = useAuth();
+const Login = () => {
+  const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      const res = await axios.post(`${API_URL}/api/login`, {
+        phone,
+        email,
+        password,
       });
 
-      if (!res.ok) throw new Error("Invalid login");
-
-      const user = await res.json();
-      login(user); // <- saves to localStorage
-    } catch (err) {
-      alert("Login failed");
+      const user = res.data.user;
+      localStorage.setItem("user", JSON.stringify(user));
+      window.location.href = user.role === "admin" ? "/dashboard" : "/member-dashboard";
+    } catch (err: any) {
+      console.error("Login error:", err);
+      setError("Login failed. Please check your credentials.");
     }
   };
 
   return (
-    <form onSubmit={handleLogin} className="max-w-md mx-auto mt-12 space-y-4">
-      <Input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-      <Input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-      <Button type="submit" className="w-full">Login</Button>
-    </form>
+    <div className="login-container">
+      <h1>Login</h1>
+      <form onSubmit={handleLogin}>
+        <input
+          type="tel"
+          placeholder="Phone Number"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        <input
+          type="email"
+          placeholder="Email Address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        {error && <p className="error">{error}</p>}
+        <button type="submit">Login</button>
+      </form>
+    </div>
   );
-}
+};
+
+export default Login;
