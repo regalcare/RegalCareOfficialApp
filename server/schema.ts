@@ -1,4 +1,5 @@
 import { pgTable, serial, text, timestamp, boolean, integer, decimal, jsonb } from 'drizzle-orm/pg-core';
+import { z } from "zod"; // ✅ only once
 
 // Customers table
 export const customers = pgTable('customers', {
@@ -71,7 +72,24 @@ export const payments = pgTable('payments', {
   metadata: jsonb('metadata'),
   createdAt: timestamp('created_at').notNull().defaultNow()
 });
-import { z } from "zod";
+
+// ✅ Zod validation schemas
+export const insertCustomerSchema = z.object({
+  name: z.string(),
+  phone: z.string(),
+  email: z.string().email(),
+  address: z.string(),
+});
+
+export const insertRouteSchema = z.object({
+  driverId: z.string(),
+  routeDate: z.string(), // or z.date() if you're using Date objects
+});
+
+export const insertMessageSchema = z.object({
+  customerId: z.string(),
+  content: z.string(),
+});
 
 export const insertBinCleaningAppointmentSchema = z.object({
   customerId: z.string().uuid(),
