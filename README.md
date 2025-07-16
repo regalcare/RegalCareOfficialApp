@@ -72,6 +72,7 @@ The application will be available at `http://localhost:5000`
 ### Service Management
 - Weekly bin valet service scheduling
 - Quarterly bin cleaning appointments (Mondays/Thursdays 8am-4pm)
+- Weekly bin valet with return by 10pm
 - Route optimization and progress tracking
 - Customer communication system
 

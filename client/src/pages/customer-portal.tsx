@@ -636,7 +636,7 @@ export default function CustomerPortal() {
                   <ul className="text-sm text-blue-700 space-y-1">
                     <li>• All services begin August 1st 2025</li>
                     <li>• Weekly bin valet every {signupData.serviceDay ? signupData.serviceDay.charAt(0).toUpperCase() + signupData.serviceDay.slice(1) : 'scheduled day'}</li>
-                    <li>• Bins will be moved to curb by 10pm the night before, and returned by 5pm on your scheduled trash day</li>
+                    <li>• Bins will be moved to curb by 10pm the night before, and returned by 10pm on your scheduled trash day</li>
                     <li>• Service includes {selectedPlanData?.id === 'basic' ? 'up to 2' : selectedPlanData?.id === 'premium' ? 'up to 3' : '4+'} standard residential bins{selectedPlanData?.id === 'ultimate' ? '' : ' (additional bins may incur extra fees)'}</li>
                     <li>• Holiday schedules may vary with advance notice</li>
                   </ul>

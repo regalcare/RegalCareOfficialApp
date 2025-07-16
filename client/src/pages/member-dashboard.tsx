@@ -738,7 +738,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                         <Clock className="h-4 w-4" />
                         <span>Every {customerData.serviceDay} - Trash Bin Valet Service</span>
                       </div>
-                      <p className="text-sm text-blue-600 mt-2">Bins will be moved to curb by 10pm the night before, and returned by 5pm on your scheduled trash day</p>
+                      <p className="text-sm text-blue-600 mt-2">Bins will be moved to curb by 10pm the night before, and returned by 10pm on your scheduled trash day</p>
                     </div>
 
                     <div className="grid gap-3">
@@ -797,7 +797,7 @@ export default function MemberDashboard({ customerId, customerData }: MemberDash
                       <ul className="text-sm text-gray-600 space-y-1">
                         <li>• Service may be delayed due to weather conditions</li>
                         <li>• Holiday schedules announced in advance</li>
-                        <li>• Contact us if your bins are not serviced by 7 PM</li>
+                        <li>• Contact us if your bins are not serviced by 10 PM</li>
                         <li>• Bins should be accessible and not blocked by vehicles</li>
                         <li>• Not blocked by vehicles or locked gates</li>
                       </ul>
