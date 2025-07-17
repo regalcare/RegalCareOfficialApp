@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { MessageCircle, Calendar, Settings, Send, Clock, CheckCircle, Phone, Mail, MapPin, X, Crown, Star, ArrowUp } from "lucide-react";
+import { MessageCircle, Calendar, Settings, Send, Clock, CheckCircle, Phone, Mail, MapPin, X, Crown, Star, ArrowUp, Zap, Shield } from "lucide-react";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Customer, Message, BinCleaningAppointment } from "./schema";
@@ -22,6 +22,7 @@ import { useAuth } from "@/lib/auth";
 
 export default function MemberDashboard() {
   const { user } = useAuth();
+  const [, setLocation] = useLocation();
 
   if (!user || user.role !== "customer") {
     return <div>Loading your dashboard...</div>;
@@ -37,7 +38,6 @@ export default function MemberDashboard() {
   const [pressureWashArea, setPressureWashArea] = useState("");
   const [showPlanModal, setShowPlanModal] = useState(false);
   const { toast } = useToast();
-  const [, setLocation] = useLocation();
 
   const { data: messages, isLoading: messagesLoading } = useQuery<Message[]>({
     queryKey: ["/api/messages"],
@@ -149,8 +149,8 @@ export default function MemberDashboard() {
       const binCountNum = parseInt(binCount);
       const customerPlan = customerData.plan;
       
-      if (customerPlan === 'basic') {
-        // Basic plan: $40 per bin
+      if (customerPlan === 'free' || customerPlan === 'basic') {
+        // Free and Basic plan: $40 per bin
         servicePrice = binCountNum * 4000; // $40.00 in cents
       } else if (customerPlan === 'premium') {
         // Premium plan: 2 free bins, then $34 per bin
@@ -231,8 +231,36 @@ export default function MemberDashboard() {
     setShowPlanModal(false);
   };
 
+  // Check if user needs to select a plan
+  const needsPlanSelection = !customerData.plan || customerData.plan === 'free';
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Plan Selection Banner - show if user has no plan or basic plan */}
+      {needsPlanSelection && (
+        <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-b border-yellow-200">
+          <div className="max-w-6xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="bg-yellow-100 p-2 rounded-full animate-pulse">
+                  <Zap className="h-5 w-5 text-yellow-600" />
+                </div>
+                <div>
+                  <p className="font-medium text-yellow-800">Complete your subscription</p>
+                  <p className="text-sm text-yellow-700">Choose a plan to start your regalcare service</p>
+                </div>
+              </div>
+              <Button 
+                onClick={() => setLocation('/portal')}
+                className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white shadow-lg"
+              >
+                Select a Plan
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="bg-white border-b">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
@@ -250,15 +278,25 @@ export default function MemberDashboard() {
             <div className="flex items-center gap-2">
               <Dialog open={showPlanModal} onOpenChange={setShowPlanModal}>
                 <DialogTrigger asChild>
-                  <Badge variant="secondary" className="bg-green-100 text-green-800 cursor-pointer hover:bg-green-200 transition-colors flex items-center gap-1">
+                  <Badge 
+                    variant="secondary" 
+                    className={`cursor-pointer hover:bg-green-200 transition-colors flex items-center gap-1 ${
+                      needsPlanSelection 
+                        ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' 
+                        : 'bg-green-100 text-green-800'
+                    }`}
+                  >
+                    {customerData.plan === 'basic' && <Shield className="h-3 w-3" />}
                     {customerData.plan === 'premium' && <Crown className="h-3 w-3" />}
                     {customerData.plan === 'ultimate' && <Star className="h-3 w-3" />}
                     {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan
+                    {needsPlanSelection && <span className="text-xs ml-1">(No active subscription)</span>}
                   </Badge>
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
+                      {customerData.plan === 'basic' && <Shield className="h-5 w-5 text-blue-500" />}
                       {customerData.plan === 'premium' && <Crown className="h-5 w-5 text-yellow-500" />}
                       {customerData.plan === 'ultimate' && <Star className="h-5 w-5 text-purple-500" />}
                       Your {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan Benefits
@@ -270,11 +308,36 @@ export default function MemberDashboard() {
                     <div className="bg-green-50 p-4 rounded-lg">
                       <h3 className="font-semibold text-green-800 mb-3">What's Included in Your Plan</h3>
                       
+                      {customerData.plan === 'free' && (
+                        <div className="space-y-2 text-sm text-green-700">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Account access
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Customer support
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            Pay-per-service scheduling
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4" />
+                            No monthly commitment
+                          </div>
+                          <div className="mt-4 p-3 bg-yellow-50 rounded-lg text-yellow-800">
+                            <p className="text-sm font-medium">⚠️ No active subscription</p>
+                            <p className="text-xs mt-1">Select a plan below to activate your weekly bin valet service</p>
+                          </div>
+                        </div>
+                      )}
+                      
                       {customerData.plan === 'basic' && (
                         <div className="space-y-2 text-sm text-green-700">
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
-                            Weekly trash bin valet
+                            Weekly trash bin valet (up to 2 cans)
                           </div>
                           <div className="flex items-center gap-2">
                             <CheckCircle className="h-4 w-4" />
@@ -343,7 +406,7 @@ export default function MemberDashboard() {
                       <div className="border border-blue-200 rounded-lg p-4">
                         <h3 className="font-semibold text-blue-800 mb-3 flex items-center gap-2">
                           <ArrowUp className="h-4 w-4" />
-                          Upgrade Your Plan
+                          {needsPlanSelection ? 'Select Your Plan' : 'Upgrade Your Plan'}
                         </h3>
                         
                         {customerData.plan === 'basic' && (
@@ -363,7 +426,12 @@ export default function MemberDashboard() {
                                 <li>• 15% discount on all pressure washing services</li>
                                 <li>• Reliable customer support</li>
                               </ul>
-                              <Button onClick={() => handleUpgrade('premium')} className="w-full">Upgrade to Premium</Button>
+                              <Button 
+                                onClick={() => setLocation('/portal')} 
+                                className="w-full"
+                              >
+                                Select Premium Plan
+                              </Button>
                             </div>
                             
                             <div className="border rounded-lg p-4 hover:bg-purple-50 transition-colors">
@@ -382,7 +450,12 @@ export default function MemberDashboard() {
                                 <li>• Priority scheduling</li>
                                 <li>• Reliable customer support</li>
                               </ul>
-                              <Button onClick={() => handleUpgrade('ultimate')} className="w-full bg-purple-600 hover:bg-purple-700">Upgrade to Ultimate</Button>
+                              <Button 
+                                onClick={() => navigate('/portal')} 
+                                className="w-full bg-purple-600 hover:bg-purple-700"
+                              >
+                                Select Ultimate Plan
+                              </Button>
                             </div>
                           </div>
                         )}
@@ -524,6 +597,9 @@ export default function MemberDashboard() {
                     <Settings className="h-5 w-5" />
                     Schedule a Service
                   </CardTitle>
+                  {needsPlanSelection && (
+                    <p className="text-sm text-yellow-600">You're on the free plan - services will be charged per use</p>
+                  )}
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleScheduleService} className="space-y-6">
@@ -613,6 +689,9 @@ export default function MemberDashboard() {
                         <h3 className="font-semibold text-green-800 mb-2">With Your {customerData.plan?.charAt(0).toUpperCase() + customerData.plan?.slice(1)} Plan:</h3>
                         {serviceType === "bin-cleaning" ? (
                           <div className="text-sm text-green-700">
+                            {customerData.plan === 'free' && (
+                              <p>• Bin cleaning: $40.00 per bin (no subscription discount)</p>
+                            )}
                             {customerData.plan === 'basic' && (
                               <p>• Bin cleaning: $40.00 per bin</p>
                             )}
@@ -730,88 +809,112 @@ export default function MemberDashboard() {
 
           <TabsContent value="calendar" className="mt-6">
             <div className="grid gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    {customerData.serviceDay} Pickup Calendar
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <h3 className="font-semibold text-blue-800 mb-2">Your Weekly Schedule</h3>
-                      <div className="flex items-center gap-2 text-blue-700">
-                        <Clock className="h-4 w-4" />
-                        <span>Every {customerData.serviceDay} - Trash Bin Valet Service</span>
+              {needsPlanSelection ? (
+                <Card className="border-yellow-200 bg-yellow-50">
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-4">
+                      <div className="bg-yellow-100 p-2 rounded-full">
+                        <Calendar className="h-6 w-6 text-yellow-600" />
                       </div>
-                      <p className="text-sm text-blue-600 mt-2">Bins will be moved to curb by 10pm the night before, and returned by 10pm on your scheduled trash day</p>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-yellow-800 mb-2">Weekly Service Not Available</h3>
+                        <p className="text-sm text-yellow-700 mb-4">
+                          Weekly trash bin valet service is only available with our paid plans. Upgrade to Basic, Premium, or Ultimate to get automatic weekly service.
+                        </p>
+                        <Button 
+                          onClick={() => setLocation('/portal')}
+                          className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                        >
+                          View Plans
+                        </Button>
+                      </div>
                     </div>
-
-                    <div className="grid gap-3">
-                      <div className="flex items-center gap-4 text-sm">
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 bg-green-500 rounded-full"></div>
-                          <span>Completed</span>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Calendar className="h-5 w-5" />
+                      {customerData.serviceDay} Pickup Calendar
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="bg-blue-50 p-4 rounded-lg">
+                        <h3 className="font-semibold text-blue-800 mb-2">Your Weekly Schedule</h3>
+                        <div className="flex items-center gap-2 text-blue-700">
+                          <Clock className="h-4 w-4" />
+                          <span>Every {customerData.serviceDay} - Trash Bin Valet Service</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-                          <span>Not Completed</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
-                          <span>Scheduled</span>
-                        </div>
+                        <p className="text-sm text-blue-600 mt-2">Bins will be moved to curb by 10pm the night before, and returned by 10pm on your scheduled trash day</p>
                       </div>
 
-                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {serviceDayCalendar.map((day, index) => (
-                          <div
-                            key={index}
-                            className={`p-3 rounded-lg border text-center ${
-                              day.isToday 
-                                ? 'bg-blue-100 border-blue-300' 
-                                : 'bg-white border-gray-200'
-                            }`}
-                          >
-                            <div className="text-sm font-medium text-gray-900">
-                              {format(day.date, 'MMM d')}
-                            </div>
-                            <div className="text-xs text-gray-500 mb-2">
-                              {format(day.date, 'yyyy')}
-                            </div>
-                            <div className="flex justify-center">
-                              {day.isFuture ? (
-                                <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
-                              ) : day.isCompleted ? (
-                                <CheckCircle className="h-4 w-4 text-green-500" />
-                              ) : (
-                                <X className="h-4 w-4 text-red-500" />
+                      <div className="grid gap-3">
+                        <div className="flex items-center gap-4 text-sm">
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                            <span>Completed</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                            <span>Not Completed</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 bg-gray-300 rounded-full"></div>
+                            <span>Scheduled</span>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                          {serviceDayCalendar.map((day, index) => (
+                            <div
+                              key={index}
+                              className={`p-3 rounded-lg border text-center ${
+                                day.isToday 
+                                  ? 'bg-blue-100 border-blue-300' 
+                                  : 'bg-white border-gray-200'
+                              }`}
+                            >
+                              <div className="text-sm font-medium text-gray-900">
+                                {format(day.date, 'MMM d')}
+                              </div>
+                              <div className="text-xs text-gray-500 mb-2">
+                                {format(day.date, 'yyyy')}
+                              </div>
+                              <div className="flex justify-center">
+                                {day.isFuture ? (
+                                  <div className="w-3 h-3 bg-gray-300 rounded-full"></div>
+                                ) : day.isCompleted ? (
+                                  <CheckCircle className="h-4 w-4 text-green-500" />
+                                ) : (
+                                  <X className="h-4 w-4 text-red-500" />
+                                )}
+                              </div>
+                              {day.isToday && (
+                                <div className="text-xs text-blue-600 mt-1 font-medium">
+                                  Today
+                                </div>
                               )}
                             </div>
-                            {day.isToday && (
-                              <div className="text-xs text-blue-600 mt-1 font-medium">
-                                Today
-                              </div>
-                            )}
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 p-4 rounded-lg">
+                        <h3 className="font-semibold mb-2">Service Notes</h3>
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Service may be delayed due to weather conditions</li>
+                          <li>• Holiday schedules announced in advance</li>
+                          <li>• Contact us if your bins are not serviced by 10 PM</li>
+                          <li>• Bins should be accessible and not blocked by vehicles</li>
+                          <li>• Not blocked by vehicles or locked gates</li>
+                        </ul>
                       </div>
                     </div>
-
-                    <div className="bg-gray-50 p-4 rounded-lg">
-                      <h3 className="font-semibold mb-2">Service Notes</h3>
-                      <ul className="text-sm text-gray-600 space-y-1">
-                        <li>• Service may be delayed due to weather conditions</li>
-                        <li>• Holiday schedules announced in advance</li>
-                        <li>• Contact us if your bins are not serviced by 10 PM</li>
-                        <li>• Bins should be accessible and not blocked by vehicles</li>
-                        <li>• Not blocked by vehicles or locked gates</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </TabsContent>
         </Tabs>
