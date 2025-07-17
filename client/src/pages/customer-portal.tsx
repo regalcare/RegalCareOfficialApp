@@ -14,7 +14,6 @@ import MemberDashboard from "./member-dashboard";
 import { useAuth } from "@/lib/auth";
 import logoImage from "@assets/IMG_2051.jpeg";
 
-
 interface SignupData {
   name: string;
   phone: string;
@@ -45,7 +44,7 @@ const plans: Plan[] = [
     color: "bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 text-gray-800",
     features: [
       "Account access",
-      "Customer support", 
+      "Customer support",
       "Pay-per-service scheduling",
       "No monthly commitment"
     ]
@@ -133,7 +132,6 @@ export default function CustomerPortal() {
   // Check if we're on the member route
   useEffect(() => {
     if (location.includes('/customer/member/') && memberId) {
-      // If user is already logged in, show member dashboard
       if (user?.role === "customer") {
         setStep('member');
       }
@@ -215,52 +213,6 @@ export default function CustomerPortal() {
     setStep('plans');
   };
 
-  const handleSkipPlan = async () => {
-    try {
-      // Create account without a plan
-      const signupResponse = await fetch('/api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: signupData.name,
-          email: signupData.email,
-          phone: signupData.phone,
-          password: signupData.password,
-          address: signupData.address,
-          plan: 'free', // Default to free plan when skipping
-          role: 'customer',
-        }),
-      });
-
-      const data = await signupResponse.json();
-
-      if (!signupResponse.ok) {
-        throw new Error(data.error || data.message || 'Signup failed');
-      }
-
-      // Store user in auth context
-      const userData = data.user;
-      login(userData);
-
-      toast({
-        title: "Account created!",
-        description: "You have a free account. You can upgrade to a paid plan anytime.",
-        variant: "default",
-      });
-
-      setStep('member');
-    } catch (error: any) {
-      console.error('Account creation failed:', error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to create account. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -307,12 +259,58 @@ export default function CustomerPortal() {
     setStep('benefits');
   };
 
+  const handleSkipPlan = async () => {
+    try {
+      // Create account without a plan
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: signupData.name,
+          email: signupData.email,
+          phone: signupData.phone,
+          password: signupData.password,
+          address: signupData.address,
+          plan: 'free',
+          role: 'customer',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || data.message || 'Signup failed');
+      }
+
+      // Store user in auth context
+      const userData = data.user;
+      login(userData);
+
+      toast({
+        title: "Account created!",
+        description: "You have a free account. You can upgrade to a paid plan anytime.",
+        variant: "default",
+      });
+
+      setStep('member');
+    } catch (error: any) {
+      console.error('Account creation failed:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create account. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     try {
-      // First create the account with password
-      const signupResponse = await fetch('/api/signup', {
+      // Create account with selected plan
+      const response = await fetch('/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -328,16 +326,15 @@ export default function CustomerPortal() {
         }),
       });
 
-      const signupData = await signupResponse.json();
+      const data = await response.json();
 
-      if (!signupResponse.ok) {
-        throw new Error(signupData.error || signupData.message || 'Signup failed');
+      if (!response.ok) {
+        throw new Error(data.error || data.message || 'Signup failed');
       }
 
       // Store user in auth context
-      const userData = signupData.user;
+      const userData = data.user;
       login(userData);
-      setCreatedCustomer(userData);
 
       toast({
         title: "Welcome to regal care!",
@@ -553,9 +550,6 @@ export default function CustomerPortal() {
   }
 
   if (step === 'plans') {
-    // Filter out free plan for display
-    const paidPlans = plans.filter(p => p.id !== 'free');
-    
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         {renderNavigation()}
@@ -564,7 +558,6 @@ export default function CustomerPortal() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">Choose Your Plan</h1>
             <p className="text-slate-600 text-xl">Select the service level that works best for you</p>
             
-            {/* Billing Cycle Toggle */}
             <div className="flex items-center justify-center mt-8 mb-4">
               <div className="bg-white/80 backdrop-blur-sm p-1.5 rounded-xl flex shadow-lg border border-slate-200">
                 <button
@@ -595,7 +588,8 @@ export default function CustomerPortal() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {paidPlans.map((plan) => {
+            {plans.map((plan) => {
+              if (plan.id === 'free') return null; // Skip free plan in grid
               const IconComponent = plan.icon;
               return (
                 <Card 
@@ -654,7 +648,7 @@ export default function CustomerPortal() {
                   </CardContent>
                 </Card>
               );
-            }            )}
+            })}
           </div>
 
           <div className="text-center mt-12 space-y-4">
@@ -683,7 +677,6 @@ export default function CustomerPortal() {
             </div>
           </div>
         </div>
-        </div>
       </div>
     );
   }
@@ -701,7 +694,6 @@ export default function CustomerPortal() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Benefits Summary */}
             <Card className="h-fit">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -723,7 +715,6 @@ export default function CustomerPortal() {
               </CardContent>
             </Card>
 
-            {/* Terms and Commitment */}
             <Card className="h-fit">
               <CardHeader>
                 <CardTitle>Service Agreement</CardTitle>
@@ -733,9 +724,9 @@ export default function CustomerPortal() {
                   <h3 className="font-semibold text-blue-800 mb-2">Service Details</h3>
                   <ul className="text-sm text-blue-700 space-y-1">
                     <li>• All services begin August 1st 2025</li>
-                    <li>• Weekly bin valet every {signupData.serviceDay ? signupData.serviceDay.charAt(0).toUpperCase() + signupData.serviceDay.slice(1) : 'scheduled day'}</li>
-                    <li>• Bins will be moved to curb by 10pm the night before, and returned by 10pm on your scheduled trash day</li>
-                    <li>• Service includes {selectedPlanData?.id === 'basic' ? 'up to 2' : selectedPlanData?.id === 'premium' ? 'up to 3' : '4+'} standard residential bins{selectedPlanData?.id === 'ultimate' ? '' : ' (additional bins may incur extra fees)'}</li>
+                    <li>• Weekly bin valet every {signupData.serviceDay || 'scheduled day'}</li>
+                    <li>• Bins will be moved to curb by 10pm the night before</li>
+                    <li>• Service includes {selectedPlanData?.id === 'basic' ? 'up to 2' : selectedPlanData?.id === 'premium' ? 'up to 3' : '4+'} standard bins</li>
                     <li>• Holiday schedules may vary with advance notice</li>
                   </ul>
                 </div>
@@ -743,7 +734,7 @@ export default function CustomerPortal() {
                 <div className="bg-yellow-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-yellow-800 mb-2">Important Terms</h3>
                   <ul className="text-sm text-yellow-700 space-y-1">
-                    <li>• {billingCycle === 'yearly' ? 'Year-to-year' : 'Month-to-month'} service commitment</li>
+                    <li>• {billingCycle === 'yearly' ? 'Year-to-year' : 'Month-to-month'} commitment</li>
                     <li>• Cancel anytime with 30-day notice</li>
                     <li>• Rates subject to change with 30-day notice</li>
                     <li>• Additional fees may apply for special requests</li>
@@ -753,8 +744,7 @@ export default function CustomerPortal() {
                 <div className="bg-green-50 p-4 rounded-lg">
                   <h3 className="font-semibold text-green-800 mb-2">Satisfaction Guarantee</h3>
                   <p className="text-sm text-green-700">
-                    We guarantee reliable service. If you're not completely satisfied, 
-                    contact us within 24 hours for immediate resolution.
+                    We guarantee reliable service. Contact us within 24 hours for immediate resolution.
                   </p>
                 </div>
               </CardContent>
@@ -805,7 +795,6 @@ export default function CustomerPortal() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Order Summary */}
             <Card>
               <CardHeader>
                 <CardTitle>Order Summary</CardTitle>
@@ -835,7 +824,6 @@ export default function CustomerPortal() {
               </CardContent>
             </Card>
 
-            {/* Payment Form */}
             <Card>
               <CardHeader>
                 <CardTitle>Payment Details</CardTitle>
@@ -942,12 +930,12 @@ export default function CustomerPortal() {
             <CardContent className="space-y-4">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold mb-2">Account Details</h3>
-                <p className="text-sm text-gray-600">Name: {signupData.name || createdCustomer?.name || user?.name}</p>
-                <p className="text-sm text-gray-600">Phone: {signupData.phone || createdCustomer?.phone || user?.phone}</p>
-                <p className="text-sm text-gray-600">Address: {signupData.address || createdCustomer?.address || user?.address}</p>
-                <p className="text-sm text-gray-600">Service Day: {signupData.serviceDay ? signupData.serviceDay.charAt(0).toUpperCase() + signupData.serviceDay.slice(1) : 'Not specified'}</p>
+                <p className="text-sm text-gray-600">Name: {signupData.name || user?.name || ''}</p>
+                <p className="text-sm text-gray-600">Phone: {signupData.phone || user?.phone || ''}</p>
+                <p className="text-sm text-gray-600">Address: {signupData.address || user?.address || ''}</p>
+                <p className="text-sm text-gray-600">Service Day: {signupData.serviceDay || 'Not specified'}</p>
                 {selectedPlanData ? (
-                  <p className="text-sm text-gray-600">Plan: {selectedPlanData.name} {selectedPlanData.price > 0 ? `(${selectedPlanData.price}/month)` : '(Free)'}</p>
+                  <p className="text-sm text-gray-600">Plan: {selectedPlanData.name} {selectedPlanData.price > 0 ? `($${selectedPlanData.price}/month)` : '(Free)'}</p>
                 ) : (
                   <p className="text-sm text-gray-600">Plan: Free (No subscription)</p>
                 )}

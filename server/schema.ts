@@ -9,7 +9,7 @@ export const customers = pgTable('customers', {
   phone: text('phone').notNull().unique(),
   password: text('password').notNull(), // ✅ Added password field
   address: text('address').notNull().default(''),
-  plan: text('plan').notNull().default('basic'), // basic, premium, ultimate
+  plan: text('plan').notNull().default('free'), // free, basic, premium, ultimate
   status: text('status').notNull().default('active'),
   role: text('role').notNull().default('customer'), // customer, admin
   joinDate: timestamp('join_date').notNull().defaultNow(),
@@ -82,7 +82,7 @@ export const insertCustomerSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   address: z.string().default(''),
-  plan: z.enum(['basic', 'premium', 'ultimate']).default('basic'),
+  plan: z.enum(['free', 'basic', 'premium', 'ultimate']).default('free'),
   role: z.enum(['customer', 'admin']).default('customer'),
 });
 
