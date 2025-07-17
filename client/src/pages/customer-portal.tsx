@@ -37,6 +37,20 @@ interface Plan {
 
 const plans: Plan[] = [
   {
+    id: "free",
+    name: "Free",
+    price: 0,
+    yearlyPrice: 0,
+    icon: Shield,
+    color: "bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200 text-gray-800",
+    features: [
+      "Account access",
+      "Customer support", 
+      "Pay-per-service scheduling",
+      "No monthly commitment"
+    ]
+  },
+  {
     id: "basic",
     name: "Basic",
     price: 59.99,
@@ -200,6 +214,52 @@ export default function CustomerPortal() {
       return;
     }
     setStep('plans');
+  };
+
+  const handleSkipPlan = async () => {
+    try {
+      // Create account without a plan
+      const signupResponse = await fetch('/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: signupData.name,
+          email: signupData.email,
+          phone: signupData.phone,
+          password: signupData.password,
+          address: signupData.address,
+          plan: 'free', // Default to free plan when skipping
+          role: 'customer',
+        }),
+      });
+
+      const data = await signupResponse.json();
+
+      if (!signupResponse.ok) {
+        throw new Error(data.error || data.message || 'Signup failed');
+      }
+
+      // Store user in auth context
+      const userData = data.user;
+      login(userData);
+
+      toast({
+        title: "Account created!",
+        description: "You have a free account. You can upgrade to a paid plan anytime.",
+        variant: "default",
+      });
+
+      setStep('member');
+    } catch (error: any) {
+      console.error('Account creation failed:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to create account. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -494,6 +554,9 @@ export default function CustomerPortal() {
   }
 
   if (step === 'plans') {
+    // Filter out the free plan from display
+    const displayPlans = plans.filter(plan => plan.id !== 'free');
+    
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
         {renderNavigation()}
@@ -533,7 +596,7 @@ export default function CustomerPortal() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {plans.map((plan) => {
+            {displayPlans.map((plan) => {
               const IconComponent = plan.icon;
               return (
                 <Card 
@@ -592,18 +655,35 @@ export default function CustomerPortal() {
                   </CardContent>
                 </Card>
               );
-            })}
+            }            )}
           </div>
 
-          <div className="text-center mt-8">
-            <Button 
-              variant="ghost" 
-              onClick={() => setStep('signup')}
-              className="text-gray-600"
-            >
-              ← Back to Sign Up
-            </Button>
+          <div className="text-center mt-12 space-y-4">
+            <div className="bg-gray-50 rounded-lg p-6 max-w-md mx-auto">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Not ready for a subscription?</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Start with a free account and pay per service. You can upgrade anytime.
+              </p>
+              <Button 
+                variant="outline"
+                onClick={handleSkipPlan}
+                className="text-blue-600 border-blue-300 hover:bg-blue-50 px-8"
+              >
+                Continue with Free Account
+              </Button>
+            </div>
+            
+            <div>
+              <Button 
+                variant="ghost" 
+                onClick={() => setStep('signup')}
+                className="text-gray-600"
+              >
+                ← Back to Sign Up
+              </Button>
+            </div>
           </div>
+        </div>
         </div>
       </div>
     );
@@ -696,6 +776,16 @@ export default function CustomerPortal() {
             >
               Continue to Payment
               <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+          
+          <div className="text-center mt-6 pt-6 border-t">
+            <Button 
+              variant="ghost"
+              onClick={handleSkipPlan}
+              className="text-blue-600 hover:text-blue-700"
+            >
+              Continue with Free Account Instead
             </Button>
           </div>
         </div>
@@ -853,12 +943,14 @@ export default function CustomerPortal() {
             <CardContent className="space-y-4">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold mb-2">Account Details</h3>
-                <p className="text-sm text-gray-600">Name: {signupData.name || createdCustomer?.name}</p>
-                <p className="text-sm text-gray-600">Phone: {signupData.phone || createdCustomer?.phone}</p>
-                <p className="text-sm text-gray-600">Address: {signupData.address || createdCustomer?.address}</p>
+                <p className="text-sm text-gray-600">Name: {signupData.name || createdCustomer?.name || user?.name}</p>
+                <p className="text-sm text-gray-600">Phone: {signupData.phone || createdCustomer?.phone || user?.phone}</p>
+                <p className="text-sm text-gray-600">Address: {signupData.address || createdCustomer?.address || user?.address}</p>
                 <p className="text-sm text-gray-600">Service Day: {signupData.serviceDay ? signupData.serviceDay.charAt(0).toUpperCase() + signupData.serviceDay.slice(1) : 'Not specified'}</p>
-                {selectedPlanData && (
-                  <p className="text-sm text-gray-600">Plan: {selectedPlanData.name} (${selectedPlanData.price}/month)</p>
+                {selectedPlanData ? (
+                  <p className="text-sm text-gray-600">Plan: {selectedPlanData.name} {selectedPlanData.price > 0 ? `(${selectedPlanData.price}/month)` : '(Free)'}</p>
+                ) : (
+                  <p className="text-sm text-gray-600">Plan: Free (No subscription)</p>
                 )}
               </div>
               
