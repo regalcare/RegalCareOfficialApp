@@ -61,7 +61,7 @@ app.post("/api/signup", async (req, res) => {
       password: hashedPassword,
       role,
       address: '', // Default empty address
-      plan: 'basic', // Default plan
+      plan: 'free', // Default plan
       status: 'active', // Default status
     }).returning();
 
