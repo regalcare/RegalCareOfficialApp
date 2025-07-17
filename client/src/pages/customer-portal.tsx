@@ -122,7 +122,6 @@ export default function CustomerPortal() {
     password: "",
   });
   const { toast } = useToast();
-  const [createdCustomer, setCreatedCustomer] = useState<any>(null);
 
   // Check if user is already logged in
   useEffect(() => {
@@ -554,8 +553,8 @@ export default function CustomerPortal() {
   }
 
   if (step === 'plans') {
-    // Filter out the free plan from display
-    const displayPlans = plans.filter(plan => plan.id !== 'free');
+    // Filter out free plan for display
+    const paidPlans = plans.filter(p => p.id !== 'free');
     
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -596,7 +595,7 @@ export default function CustomerPortal() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {displayPlans.map((plan) => {
+            {paidPlans.map((plan) => {
               const IconComponent = plan.icon;
               return (
                 <Card 
@@ -974,7 +973,6 @@ export default function CustomerPortal() {
                     setSignupData({ name: "", phone: "", email: "", address: "", password: "", serviceDay: "" });
                     setSelectedPlan("");
                     setPaymentData({ cardNumber: "", expiryDate: "", cvv: "", nameOnCard: "", billingAddress: "" });
-                    setCreatedCustomer(null);
                   }}
                 >
                   Sign Up Another Customer
